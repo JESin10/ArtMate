@@ -12,7 +12,9 @@ module.exports = {
         },
         secondary: {},
       },
-      spacing: {},
+      spacing: {
+        mobileWidth: "375px",
+      },
     },
     fontFamily: {
       NotoSansCJK: ["NotoSansCJK KR"],
