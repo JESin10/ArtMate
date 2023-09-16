@@ -1,70 +1,90 @@
-# Getting Started with Create React App
+<!-- # artmate
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img width="100%" alt="Top-Bar" src="https://github.com/JESin10/PortFolio/assets/119720123/9f1f77e6-0428-4294-b67b-f6140b70b917">
 
-## Available Scripts
+23.09.13 - 23.
 
-In the project directory, you can run:
+artmate URL : [artmate](https://jin-portfolio-drab.vercel.app/)
 
-### `yarn start`
+📎 회고 URL
+[1차 배포 후 회고](https://velog.io/@jin_s/WIL-23.07.16)
+[2차 수정 후 회고](https://velog.io/@jin_s/WIL-23.09.17)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Notion URL
+[artmate-Notion](https://jin29.notion.site/ArtMate-7a7b69e3c1da4f4bbf64cda1999a9ab0?pvs=4)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 📌 서비스 소개
 
-### `yarn test`
+개인 포트폴리오 용도로 제작된 사이트입니다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+스크롤 다운 형태로 진행하였으며, TypeScript를 기반으로 하였으며, Tailwind CSS framework를 사용하였습니다.
 
-### `yarn build`
+## 📌 기술 스택
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+FrontEnd: React, Typescript, TailwindCss
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Deployment : Vercel
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 📌 서비스 예시
 
-### `yarn eject`
+<details><summary> Desktop Version </summary>
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+<img width="40%" alt="Portfolio_about" src="https://github.com/JESin10/PortFolio/assets/119720123/ad3197d3-2a24-4a3f-a4b5-3b891645f8eb">
+<img width="40%" alt="Portfolio_project" src="https://github.com/JESin10/PortFolio/assets/119720123/cb1c9c4a-4ac1-46b9-a0d6-a4f469e6c418">
+<img width="40%" alt="Portfolio_skill" src="https://github.com/JESin10/PortFolio/assets/119720123/20387672-80a6-4b33-9ea6-24914d738992">
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+</details>
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+<details><summary> Mobile Version </summary>
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+<img width="25%" alt="Portfolio_mobile_about" src="https://github.com/JESin10/PortFolio/assets/119720123/f2a47790-6615-4e25-92d8-adc4ad248f3b">
+<img width="25%" alt="Portfolio_mobile_project" src="https://github.com/JESin10/PortFolio/assets/119720123/5721ad5f-3c08-4995-a2cb-d729e57375b5">
+<img width="25%" alt="Portfolio_mobile_project_2" src="https://github.com/JESin10/PortFolio/assets/119720123/08ace3e3-035a-4c9c-a8c6-f63b361edbac">
+<img width="25%" alt="Portfolio_mobile_skill" src="https://github.com/JESin10/PortFolio/assets/119720123/04a06934-2232-4ef5-9f93-7feaf9dddd57">
+<img width="25%" alt="Portfolio_mobile_skill2" src="https://github.com/JESin10/PortFolio/assets/119720123/f1775704-d13e-4b71-ba70-095a9765b190">
 
-## Learn More
+</details>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📌 서비스 구현 상세
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+<details><summary> 🎨 WireFrame </summary>
 
-### Code Splitting
+<img width="80%" alt="Initial_wireframe" src="https://github.com/JESin10/PortFolio/assets/119720123/4f0fdc0f-83a4-4c68-90b8-bc80f183a94c">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+</details>
 
-### Analyzing the Bundle Size
+✅ UX를 고려해 디자인한 UI
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+포트폴리오에 적절한 UX/UI를 고려하여 웹 페이지를 디자인하였습니다.
 
-### Making a Progressive Web App
+페이지 전환보다는 스크롤다운의 형식이 전체적인 프로젝트를 파악하기 좋다고 생각하였습니다.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+또한, 스크롤 다운형식이므로 빠른 이동을 위해 상단에 Navigation Bar를 고정시켜 주제별로 이동이 용이하도록 하였습니다.
 
-### Advanced Configuration
+✅ Tailwind + Styled-component
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+스타일의 확장성 및 커스터마이징을 위해 기본적으로는 Tailwind를 사용하였습니다.
 
-### Deployment
+다만, 가독성과 컴포넌트 단위의 장점을 살리기위하여 styled-component를 함께 결합한 tailwind-styled-component를 사용했습니다.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+✅ 반응형
 
-### `yarn build` fails to minify
+접근성이 좋은 UX를 위해 반응형 웹사이트로 구현하였습니다.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+화면의 크기에 따라 다른 스타일을 부여할 수 있도록 지정한 screen, color 속성을 사용하였습니다.
+
+모바일, 웹은 물론 다양한 기기에 맞게 반응형으로 작용되는 사이트를 구현할 수 있었습니다.
+
+✅ Vercel를 통한 배포
+
+사용이 간편하고 용한 vercel을 이용하여 배포했습니다.
+
+세팅부터 배포까지 진행하며 서비스를 구현하는 전체적인 사이클을 경험할 수 있었습니다.
+
+✅ Typescript
+
+처음으로 프로젝트에 적용해보며 문법에 익숙해질 수 있었습니다.
+
+컴파일 단계에서 에러를 발견했기에 빠른 유지보수가 가능했고,
+
+규모가 큰 서비스일수록 타입스크립트를 사용해야한다는 이유를 체감했습니다. -->
