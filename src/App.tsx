@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import "./App.css";
 import tw from "tailwind-styled-components";
 import Home from "./page/Home";
@@ -9,6 +9,7 @@ import Mypage from "./page/Mypage";
 import Review from "./page/Review";
 import NearBy from "./page/NearBy";
 import SearchPage from "./page/SearchPage";
+import Loading from "./page/exception/Loading";
 
 function App() {
   // const Signup = lazy(() => import("./page/Signup"));
@@ -23,7 +24,6 @@ function App() {
       <React.Fragment>
         <BrowserRouter>
           {/* <Suspense fallback={<Loading />}> */}
-
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -31,6 +31,7 @@ function App() {
             <Route path="/review" element={<Review />} />
             <Route path="/nearby" element={<NearBy />} />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/loading" element={<Loading />} />
 
             {/* <Route
                 path="/dashboard"
