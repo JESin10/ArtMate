@@ -15,7 +15,7 @@ export default function Error() {
           <LogoImg src={IconLoad.Main_TextLogo} />
         </LogoDiv>
         <div className="flex my-4 items-center">
-          <p className="text-white text-2xl font-bold mr-4">I can't find</p>
+          {/* <p className="text-white text-2xl font-bold mr-4">I can't find</p> */}
           <GotoMainBtn onClick={() => navigate("/")}>Go to Main</GotoMainBtn>
         </div>
       </div>
