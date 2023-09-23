@@ -10,6 +10,7 @@ import Review from "./page/Review";
 import NearBy from "./page/NearBy";
 import SearchPage from "./page/SearchPage";
 import Loading from "./page/exception/Loading";
+import MenuBar from "./component/MenuBar";
 
 function App() {
   // const Signup = lazy(() => import("./page/Signup"));
@@ -23,6 +24,7 @@ function App() {
     <BasicDiv>
       <React.Fragment>
         <BrowserRouter>
+          <MenuBar />
           {/* <Suspense fallback={<Loading />}> */}
           <Routes>
             <Route path="/" element={<Home />} />
@@ -51,5 +53,5 @@ export default App;
 
 const BasicDiv = tw.div`
 w-mobileWidth h-screen mx-auto
-border-2 border-solid border-black
+border-2 border-solid border-black z-9
 `;
