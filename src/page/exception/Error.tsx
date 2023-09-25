@@ -1,5 +1,5 @@
 import React from "react";
-import { IconLoad } from "../../assets/images";
+import { loadImg } from "../../assets/images";
 import tw from "tailwind-styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -11,8 +11,8 @@ export default function Error() {
       <div className="flex flex-col items-center">
         <p className="text-3xl text-white font-extrabold mb-5">404 Error</p>
         <LogoDiv>
-          <LogoImg src={IconLoad.Main_Logo} />
-          <LogoImg src={IconLoad.Main_TextLogo} />
+          <LogoImg src={loadImg.Main_Logo} />
+          <LogoImg src={loadImg.Main_TextLogo} />
         </LogoDiv>
         <div className="flex my-4 items-center">
           {/* <p className="text-white text-2xl font-bold mr-4">I can't find</p> */}

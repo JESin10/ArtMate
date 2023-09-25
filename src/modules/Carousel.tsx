@@ -84,7 +84,7 @@ bg-black/50
 const StyledSlider = tw(Slider)`
 mx-auto mb-5 
 w-11/12 h-auto
-items-center
+items-center 
 
 border-primary-YellowGreen border-4 rounded-xl
 

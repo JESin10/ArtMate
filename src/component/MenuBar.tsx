@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IconLoad } from "../assets/images";
+import { loadImg } from "../assets/images";
 import tw from "tailwind-styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -14,9 +14,7 @@ export default function MenuBar() {
           style={{ filter: "brightness(0) invert(1)" }}
           alt="home_menu"
           src={
-            hoveredImage === "home"
-              ? IconLoad.Fill_Menu_Home
-              : IconLoad.Menu_Home
+            hoveredImage === "home" ? loadImg.Fill_Menu_Home : loadImg.Menu_Home
           }
           onMouseEnter={() => setHoveredImage("home")}
           onMouseLeave={() => setHoveredImage("")}
@@ -27,8 +25,8 @@ export default function MenuBar() {
           alt="image_menu"
           src={
             hoveredImage === "image"
-              ? IconLoad.Fill_Menu_Image
-              : IconLoad.Menu_Image
+              ? loadImg.Fill_Menu_Image
+              : loadImg.Menu_Image
           }
           onMouseEnter={() => setHoveredImage("image")}
           onMouseLeave={() => setHoveredImage("")}
@@ -39,8 +37,8 @@ export default function MenuBar() {
           alt="gallery_menu"
           src={
             hoveredImage === "gallery"
-              ? IconLoad.Fill_Menu_Gallery
-              : IconLoad.Menu_Gallery
+              ? loadImg.Fill_Menu_Gallery
+              : loadImg.Menu_Gallery
           }
           onMouseEnter={() => setHoveredImage("gallery")}
           onMouseLeave={() => setHoveredImage("")}
@@ -51,8 +49,8 @@ export default function MenuBar() {
           alt="bookmark_menu"
           src={
             hoveredImage === "bookmark"
-              ? IconLoad.Fill_Menu_Bookmark
-              : IconLoad.Menu_Bookmark
+              ? loadImg.Fill_Menu_Bookmark
+              : loadImg.Menu_Bookmark
           }
           onMouseEnter={() => setHoveredImage("bookmark")}
           onMouseLeave={() => setHoveredImage("")}
@@ -62,9 +60,7 @@ export default function MenuBar() {
           style={{ filter: "brightness(0) invert(1)" }}
           alt="user_menu"
           src={
-            hoveredImage === "user"
-              ? IconLoad.Fill_Menu_User
-              : IconLoad.Menu_User
+            hoveredImage === "user" ? loadImg.Fill_Menu_User : loadImg.Menu_User
           }
           onMouseEnter={() => setHoveredImage("user")}
           onMouseLeave={() => setHoveredImage("")}

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
-import { IconLoad } from "../../assets/images";
+import { loadImg } from "../../assets/images";
 import { Oval } from "react-loader-spinner";
 
 export default function Loading() {
@@ -24,8 +24,8 @@ export default function Loading() {
           </div>
         </div>
         <LogoDiv>
-          <LogoImg src={IconLoad.Main_Logo} />
-          <LogoImg src={IconLoad.Main_TextLogo} />
+          <LogoImg src={loadImg.Main_Logo} />
+          <LogoImg src={loadImg.Main_TextLogo} />
         </LogoDiv>
       </div>
     </LoadingContainer>

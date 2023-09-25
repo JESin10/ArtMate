@@ -1,6 +1,6 @@
 import React from "react";
 import tw from "tailwind-styled-components";
-import { IconLoad } from "../assets/images";
+import { loadImg } from "../assets/images";
 
 export default function Footer() {
   return (
@@ -14,7 +14,7 @@ export default function Footer() {
         >
           <SNSLogoImg
             alt="insta-logo"
-            src={IconLoad.SNS_Insta_Logo}
+            src={loadImg.SNS_Insta_Logo}
             style={{ filter: "brightness(0) invert(1)" }}
           />
         </a>
@@ -26,7 +26,7 @@ export default function Footer() {
         >
           <SNSLogoImg
             alt="youtube-logo"
-            src={IconLoad.SNS_YouTube_Logo}
+            src={loadImg.SNS_YouTube_Logo}
             style={{ filter: "brightness(0) invert(1)" }}
           />
         </a>
@@ -38,7 +38,7 @@ export default function Footer() {
         >
           <SNSLogoImg
             alt="twitter-logo"
-            src={IconLoad.SNS_Twitter_Logo}
+            src={loadImg.SNS_Twitter_Logo}
             style={{ filter: "brightness(0) invert(1)" }}
           />
         </a>
