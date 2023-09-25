@@ -17,4 +17,7 @@ export const IconLoad = {
   Fill_Menu_Gallery: "./icons/Solid/Menubar_gallery.svg",
   Fill_Menu_Bookmark: "./icons/Solid/Menubar_bookmark.svg",
   Fill_Menu_User: "./icons/Solid/Menubar_user.svg",
+
+  EX_image1: "./images/main_img_ex1.png",
+  EX_image2: "./images/main_img_ex2.png",
 };
