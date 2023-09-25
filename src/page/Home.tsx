@@ -4,25 +4,28 @@ import Footer from "../component/Footer";
 import Carousel from "../modules/Carousel";
 import { loadImg } from "../assets/images";
 import RecommendSlider from "../modules/RecommendSlider";
+import Searching from "../component/Searching";
 
 export default function Home() {
   const example: string[] = [loadImg.EX_image1, loadImg.EX_image2];
   return (
     <div className="h-fit border-red-400 border-2">
-      <div className="border-blue-400 border-2">
-        <div>
-          {/* 취향저격 전시 */}
-          <h1>ㅇㅇ님의 취향저격 전시 모음</h1>
-          <Carousel>
-            {example &&
-              example.map((image: string, index: number) => (
-                <img key={index} src={image} alt={`image-${index}`} />
-              ))}
-          </Carousel>
-        </div>
-        {/* 최신 전시 */}
-        <RecommendSlider />
+      <Searching />
+      <div className="my-3">
+        <img src={loadImg.EX_Event_Banner} />
       </div>
+      {/* 취향저격 전시 */}
+      <div className="border-blue-400 border-2">
+        <h1>ㅇㅇ님의 취향저격 전시 모음</h1>
+        <Carousel>
+          {example &&
+            example.map((image: string, index: number) => (
+              <img key={index} src={image} alt={`image-${index}`} />
+            ))}
+        </Carousel>
+      </div>
+      {/* 최신 전시 */}
+      <RecommendSlider />
       {/* 종료예정 전시 */}
       <div className="h-[386px] bg-yellow-100 flex flex-col ">
         <h1>종료예정 전시 모음</h1>

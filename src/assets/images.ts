@@ -20,4 +20,5 @@ export const loadImg = {
 
   EX_image1: "./images/main_img_ex1.png",
   EX_image2: "./images/main_img_ex2.png",
+  EX_Event_Banner: "./images/Event_Banner.png",
 };
