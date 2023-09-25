@@ -21,9 +21,9 @@ function App() {
   // const Navbar = lazy(() => import("./components/Navbar"));
 
   return (
-    <BasicDiv>
-      <React.Fragment>
-        <BrowserRouter>
+    <React.Fragment>
+      <BrowserRouter>
+        <BasicDiv>
           <MenuBar />
           {/* <Suspense fallback={<Loading />}> */}
           <Routes>
@@ -43,15 +43,16 @@ function App() {
             <Route path="/*" element={<Error />} />
           </Routes>
           {/* </Suspense> */}
-        </BrowserRouter>
-      </React.Fragment>
-    </BasicDiv>
+        </BasicDiv>
+      </BrowserRouter>
+    </React.Fragment>
   );
 }
 
 export default App;
 
 const BasicDiv = tw.div`
-w-mobileWidth h-screen mx-auto
-border-2 border-solid border-black z-9
+w-mobileWidth h-full mx-auto
+border-2 border-solid border-black
+
 `;

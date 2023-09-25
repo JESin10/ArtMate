@@ -5,6 +5,9 @@ module.exports = {
   theme: {
     screens: {},
     extend: {
+      //   boxShadow :{
+      //   'top' :
+      // }
       colors: {
         primary: {
           YellowGreen: "#608D00",
