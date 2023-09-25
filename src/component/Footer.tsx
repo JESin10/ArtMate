@@ -6,14 +6,41 @@ export default function Footer() {
   return (
     <FooterContainer>
       <SNSLogoContainer>
-        <a href="https://www.instagram.com" target="_blank" rel="noreferrer" aria-label="instagram-link">
-          <SNSLogoImg alt="insta-logo" src={IconLoad.SNS_Insta_Logo} style={{ filter: "brightness(0) invert(1)" }} />
+        <a
+          href="https://www.instagram.com"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="instagram-link"
+        >
+          <SNSLogoImg
+            alt="insta-logo"
+            src={IconLoad.SNS_Insta_Logo}
+            style={{ filter: "brightness(0) invert(1)" }}
+          />
         </a>
-        <a href="https://www.youtube.com" target="_blank" rel="noreferrer" aria-label="youtube-link">
-          <SNSLogoImg alt="youtube-logo" src={IconLoad.SNS_YouTube_Logo} style={{ filter: "brightness(0) invert(1)" }} />
+        <a
+          href="https://www.youtube.com"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="youtube-link"
+        >
+          <SNSLogoImg
+            alt="youtube-logo"
+            src={IconLoad.SNS_YouTube_Logo}
+            style={{ filter: "brightness(0) invert(1)" }}
+          />
         </a>
-        <a href="https://twitter.com/?lang=ko" target="_blank" rel="noreferrer" aria-label="twittwe-link">
-          <SNSLogoImg alt="twitter-logo" src={IconLoad.SNS_Twitter_Logo} style={{ filter: "brightness(0) invert(1)" }} />
+        <a
+          href="https://twitter.com/?lang=ko"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="twittwe-link"
+        >
+          <SNSLogoImg
+            alt="twitter-logo"
+            src={IconLoad.SNS_Twitter_Logo}
+            style={{ filter: "brightness(0) invert(1)" }}
+          />
         </a>
       </SNSLogoContainer>
       <FooterInfoContainer>
@@ -26,8 +53,9 @@ export default function Footer() {
 }
 
 const FooterContainer = tw.div`
-bg-primary-Gray h-[150px] w-full
+bg-primary-Gray h-[240px] w-full
 flex flex-col justify-center items-center
+z-10 pb-[90px]
 `;
 
 const SNSLogoContainer = tw.div`
