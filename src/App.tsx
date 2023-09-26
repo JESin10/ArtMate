@@ -39,7 +39,6 @@ function App() {
                 path="/dashboard"
                 element={<PrivateRoute element={<Dashboard />} />}
               /> */}
-            <Route path="/notfound" element={<Error />} />
             <Route path="/*" element={<Error />} />
           </Routes>
           {/* </Suspense> */}
