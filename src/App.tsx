@@ -25,23 +25,23 @@ function App() {
       <BrowserRouter>
         <BasicDiv>
           <MenuBar />
-          {/* <Suspense fallback={<Loading />}> */}
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/mypage" element={<Mypage />} />
-            <Route path="/review" element={<Review />} />
-            <Route path="/nearby" element={<NearBy />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/loading" element={<Loading />} />
+          <Suspense fallback={<Loading />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/mypage" element={<Mypage />} />
+              <Route path="/review" element={<Review />} />
+              <Route path="/nearby" element={<NearBy />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/loading" element={<Loading />} />
 
-            {/* <Route
+              {/* <Route
                 path="/dashboard"
                 element={<PrivateRoute element={<Dashboard />} />}
               /> */}
-            <Route path="/*" element={<Error />} />
-          </Routes>
-          {/* </Suspense> */}
+              <Route path="/*" element={<Error />} />
+            </Routes>
+          </Suspense>
         </BasicDiv>
       </BrowserRouter>
     </React.Fragment>
