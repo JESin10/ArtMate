@@ -11,6 +11,7 @@ export const loadImg = {
   Menu_Gallery: "./icons/Outline/Menubar_gallery.svg",
   Menu_Bookmark: "./icons/Outline/Menubar_bookmark.svg",
   Menu_User: "./icons/Outline/Menubar_user.svg",
+  Menu_List: "./icons/Outline/menu_list.svg",
 
   Fill_Menu_Home: "./icons/Solid/Menubar_home.svg",
   Fill_Menu_Image: "./icons/Solid/Menubar_image.svg",
@@ -20,5 +21,11 @@ export const loadImg = {
 
   EX_image1: "./images/main_img_ex1.png",
   EX_image2: "./images/main_img_ex2.png",
+  EX_image3: "./images/gallery_img_ex1.png",
+  EX_image4: "./images/gallery_img_ex2.png",
   EX_Event_Banner: "./images/Event_Banner.png",
+
+  Map_all: "./icons/Outline/location_map.svg",
+  Map_current1: "./icons/Outline/location_current1.svg",
+  Map_current2: "./icons/Outline/location_current2.svg",
 };
