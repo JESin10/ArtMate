@@ -6,8 +6,6 @@ export default function Search_Bar() {
     fill: "#608D00",
   };
 
-  const SearchIcon = "./icons/Outline/search.svg";
-
   return (
     <div className="py-4 bg-red-100 flex-col mx-auto justify-center ">
       <img
@@ -21,7 +19,7 @@ export default function Search_Bar() {
         <input type="text" className="border-primary-YellowGreen border-2" />
         <img
           className="w-10 h-10"
-          src={SearchIcon}
+          src={loadImg.Main_Logo}
           alt="Search"
           style={{ fill: "#608D00" }}
         />

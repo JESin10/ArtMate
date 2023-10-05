@@ -1,8 +1,11 @@
+/* eslint-disable react/jsx-pascal-case */
 import React, { useState } from "react";
 import KaKaoMap from "../modules/KaKaoMap";
 import { loadImg } from "../assets/images";
 import { useNavigate } from "react-router-dom";
 import Search_Bar from "../component/Search_Bar";
+import tw from "tailwind-styled-components";
+import Gallery_Modal from "../component/Gallery_Modal";
 
 export default function Gallery() {
   const navigate = useNavigate();
@@ -10,6 +13,23 @@ export default function Gallery() {
 
   const MapModeHandler = () => {
     setMapMode(true);
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const galleryInfo = {
+    name: "갤러리명",
+    address: "상세주소",
+    closedDay: "휴관일",
+    distance: "00m",
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -27,7 +47,7 @@ export default function Gallery() {
           {mapMode ? (
             <KaKaoMap mapMode={mapMode} setMapMode={setMapMode} />
           ) : (
-            <div className="w-11/12 mx-auto">
+            <div className="w-11/12 mx-auto ">
               <div className="flex justify-between">
                 <h1 className="text-3xl font-extrabold my-2">가까운 전시장</h1>
                 <div className="flex space-x-1">
@@ -40,7 +60,7 @@ export default function Gallery() {
                 </div>
               </div>
               <div className="flex flex-col space-y-2">
-                <div className="flex h-fit w-full justify-center bg-white ">
+                <GalleryContainer onClick={openModal}>
                   <img
                     className="w-36 h-36 rounded-xl mx-2 justify-center shadow-Ver1"
                     alt="gallery"
@@ -51,10 +71,15 @@ export default function Gallery() {
                     <div className="text-sm">상세주소</div>
                     <div className="text-sm">휴관일</div>
                     <div className="text-right text-sm">00m</div>
+                    <Gallery_Modal
+                      isOpen={isModalOpen}
+                      closeModal={closeModal}
+                      galleryInfo={galleryInfo}
+                    />
                   </div>
-                </div>
+                </GalleryContainer>
                 {/*  */}
-                <div className="flex h-fit w-full justify-center bg-white ">
+                <GalleryContainer>
                   <img
                     className="w-36 h-36 rounded-xl mx-2 justify-center shadow-Ver1"
                     alt="gallery"
@@ -66,9 +91,9 @@ export default function Gallery() {
                     <div className="text-sm">휴관일</div>
                     <div className="text-right text-sm">00m</div>
                   </div>
-                </div>
+                </GalleryContainer>
                 {/*  */}
-                <div className="flex h-fit w-full justify-center bg-white ">
+                <GalleryContainer>
                   <img
                     className="w-36 h-36 rounded-xl mx-2 justify-center shadow-Ver1"
                     alt="gallery"
@@ -80,9 +105,9 @@ export default function Gallery() {
                     <div className="text-sm">휴관일</div>
                     <div className="text-right text-sm">00m</div>
                   </div>
-                </div>
+                </GalleryContainer>
                 {/*  */}
-                <div className="flex h-fit w-full justify-center bg-white ">
+                <GalleryContainer>
                   <img
                     className="w-36 h-36 rounded-xl mx-2 justify-center shadow-Ver1"
                     alt="gallery"
@@ -94,9 +119,9 @@ export default function Gallery() {
                     <div className="text-sm">휴관일</div>
                     <div className="text-right text-sm">00m</div>
                   </div>
-                </div>
+                </GalleryContainer>
                 {/*  */}
-                <div className="flex h-fit w-full justify-center bg-white ">
+                <GalleryContainer>
                   <img
                     className="w-36 h-36 rounded-xl mx-2 justify-center shadow-Ver1"
                     alt="gallery"
@@ -108,7 +133,7 @@ export default function Gallery() {
                     <div className="text-sm">휴관일</div>
                     <div className="text-right text-sm">00m</div>
                   </div>
-                </div>
+                </GalleryContainer>
               </div>
             </div>
           )}
@@ -117,3 +142,9 @@ export default function Gallery() {
     </>
   );
 }
+
+const GalleryContainer = tw.div`
+flex h-fit w-full justify-center
+cursor-pointer rounded-lg
+hover:bg-primary-YellowGreen/10
+`;

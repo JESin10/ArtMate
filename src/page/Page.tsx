@@ -4,7 +4,6 @@ import { Route, Routes } from "react-router-dom";
 import Menu_Bar from "../component/Menu_Bar";
 import Loading from "./exception/Loading";
 import Error from "./exception/Error";
-import KaKaoMap from "../modules/KaKaoMap";
 
 function Page() {
   const Signup = lazy(() => import("./Login"));
@@ -29,6 +28,7 @@ function Page() {
             <Route path="/mypage" element={<Mypage />} />
             <Route path="/review" element={<Review />} />
             <Route path="/gallery" element={<Gallery />} />
+
             <Route
               path="/map"
               element={<KaKaoMap setMapMode={setMapMode} mapMode={mapMode} />}
