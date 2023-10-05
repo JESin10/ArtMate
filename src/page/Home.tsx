@@ -1,16 +1,16 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from "react";
-import Footer from "../component/Footer";
+import Menu_Footer from "../component/Menu_Footer";
 import Carousel from "../modules/Carousel";
 import { loadImg } from "../assets/images";
 import RecommendSlider from "../modules/RecommendSlider";
-import Searching from "../component/Searching";
+import Search_Bar from "../component/Search_Bar";
 
 export default function Home() {
   const example: string[] = [loadImg.EX_image1, loadImg.EX_image2];
   return (
     <div className="h-fit border-red-400 border-2">
-      <Searching />
+      <Search_Bar />
       <div className="my-3">
         <img src={loadImg.EX_Event_Banner} />
       </div>
@@ -76,7 +76,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <Footer />
+      <Menu_Footer />
     </div>
   );
 }

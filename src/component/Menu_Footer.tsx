@@ -2,7 +2,7 @@ import React from "react";
 import tw from "tailwind-styled-components";
 import { loadImg } from "../assets/images";
 
-export default function Footer() {
+export default function Menu_Footer() {
   return (
     <FooterContainer>
       <SNSLogoContainer>

@@ -3,7 +3,7 @@ import { loadImg } from "../assets/images";
 import tw from "tailwind-styled-components";
 import { useNavigate } from "react-router-dom";
 
-export default function MenuBar() {
+export default function Menu_Bar() {
   const [hoveredImage, setHoveredImage] = useState<string>("");
   const navigate = useNavigate();
 
@@ -42,7 +42,7 @@ export default function MenuBar() {
           }
           onMouseEnter={() => setHoveredImage("gallery")}
           onMouseLeave={() => setHoveredImage("")}
-          onClick={() => navigate("/nearby")}
+          onClick={() => navigate("/gallery")}
         />
         <img
           style={{ filter: "brightness(0) invert(1)" }}

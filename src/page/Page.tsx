@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useState } from "react";
 import tw from "tailwind-styled-components";
 import { Route, Routes } from "react-router-dom";
-import MenuBar from "../component/MenuBar";
+import Menu_Bar from "../component/Menu_Bar";
 import Loading from "./exception/Loading";
 import Error from "./exception/Error";
 import KaKaoMap from "../modules/KaKaoMap";
@@ -12,7 +12,7 @@ function Page() {
   const Home = lazy(() => import("./Home"));
   const Mypage = lazy(() => import("./Mypage"));
   const Review = lazy(() => import("./Review"));
-  const NearBy = lazy(() => import("./NearBy"));
+  const Gallery = lazy(() => import("./Gallery"));
   const SearchPage = lazy(() => import("./SearchPage"));
   const KaKaoMap = lazy(() => import("../modules/KaKaoMap"));
 
@@ -20,15 +20,15 @@ function Page() {
 
   return (
     <BasicDiv>
-      <MenuBar />
-      <>
+      <Menu_Bar />
+      <div className="pb-[80px]">
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/mypage" element={<Mypage />} />
             <Route path="/review" element={<Review />} />
-            <Route path="/nearby" element={<NearBy />} />
+            <Route path="/gallery" element={<Gallery />} />
             <Route
               path="/map"
               element={<KaKaoMap setMapMode={setMapMode} mapMode={mapMode} />}
@@ -43,7 +43,7 @@ function Page() {
             <Route path="/*" element={<Error />} />
           </Routes>
         </Suspense>
-      </>
+      </div>
     </BasicDiv>
   );
 }
