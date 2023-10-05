@@ -1,21 +1,19 @@
 /* eslint-disable react/jsx-pascal-case */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import KaKaoMap from "../modules/KaKaoMap";
 import { loadImg } from "../assets/images";
 import { useNavigate } from "react-router-dom";
 import Search_Bar from "../component/Search_Bar";
 import tw from "tailwind-styled-components";
 import Gallery_Modal from "../component/Gallery_Modal";
+import { useQuery } from "react-query";
+import { SeoulArtMuseum_OpenData } from "../api/Gallery_OpenApi";
 
 export default function Gallery() {
   const navigate = useNavigate();
   const [mapMode, setMapMode] = useState<boolean>(false);
-
-  const MapModeHandler = () => {
-    setMapMode(true);
-  };
-
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [Opendata, setOpenData] = useState();
 
   const galleryInfo = {
     name: "갤러리명",
@@ -29,6 +27,18 @@ export default function Gallery() {
       " https://www.naver.com/",
     ],
     desc: "blah blah",
+  };
+
+  const { data } = useQuery("DP_EX_NO", SeoulArtMuseum_OpenData);
+  console.log(data);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  console.log(Opendata);
+
+  const MapModeHandler = () => {
+    setMapMode(true);
   };
 
   const openModal = () => {
