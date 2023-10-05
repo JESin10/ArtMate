@@ -73,6 +73,6 @@ export default function Menu_Bar() {
 
 const MenubarContainer = tw.div`
 bg-primary-YellowGreen w-mobileWidth fixed bottom-0
-z-20
+z-50
 `;
 // shadow-[0px_0px_10px_5px] shadow-black

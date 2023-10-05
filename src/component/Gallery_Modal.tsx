@@ -1,4 +1,6 @@
 import React from "react";
+import { loadImg } from "../assets/images";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
 interface ModalProps {
   isOpen: boolean;
@@ -6,8 +8,11 @@ interface ModalProps {
   galleryInfo: {
     name: string;
     address: string;
+    contact: string;
+    operation_Hour: string;
     closedDay: string;
-    distance: string;
+    social_link: string[];
+    desc: string;
   };
 }
 export default function Gallery_Modal({
@@ -17,19 +22,53 @@ export default function Gallery_Modal({
 }: ModalProps) {
   if (!isOpen) return null;
 
+  console.log(isOpen);
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-white w-96 p-4 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold">{galleryInfo.name}</h2>
-        <p className="text-sm">{galleryInfo.address}</p>
-        <p className="text-sm">휴관일: {galleryInfo.closedDay}</p>
-        <p className="text-right text-sm">{galleryInfo.distance}m</p>
-        <button
-          className="mt-4 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          onClick={closeModal}
-        >
-          닫기
-        </button>
+    <div className="fixed inset-0 flex items-center justify-center z-30  ">
+      <div className="bg-blue-200 w-[370px] h-4/5 rounded-t-xl shadow-lg overflow-y-auto pb-[70px]">
+        <div className="fixed z-10">
+          <button
+            className="my-2 ml-80 justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"
+            onClick={closeModal}
+          >
+            <IoIosCloseCircleOutline size="100%" />
+          </button>
+        </div>
+        <img
+          alt="example"
+          className="w-full h-[350px] object-cover mt-12"
+          src={loadImg.EX_image1}
+        />
+        <div className="px-4">
+          <h2 className="text-xl font-bold my-3">{galleryInfo.name}</h2>
+          {/* 상세정보 */}
+          <div className="space-y-1">
+            <div className="flex">
+              <p className="text-sm flex w-20">주소 </p>
+              <p className="text-sm flex ">{galleryInfo.address}</p>
+            </div>
+            <div className="flex">
+              <p className="text-sm flex w-20">운영시간 </p>
+              <p className="text-sm flex ">{galleryInfo.operation_Hour}</p>
+            </div>
+            <div className="flex">
+              <p className="text-sm flex w-20">휴관일 </p>
+              <p className="text-sm flex ">{galleryInfo.closedDay}</p>
+            </div>
+            <div className="flex">
+              <p className="text-sm flex w-20">전화번호 </p>
+              <p className="text-sm flex ">{galleryInfo.contact}</p>
+            </div>
+            <div className="flex">
+              <p className="text-sm flex w-20">SNS </p>
+              <p className="text-sm flex">{galleryInfo.social_link[1]}</p>
+            </div>
+          </div>
+          {/* 갤러리 상세설명 */}
+          <p className="text-xs text-primary-Gray my-4 flex">
+            {galleryInfo.desc}
+          </p>
+        </div>
       </div>
     </div>
   );

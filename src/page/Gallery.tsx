@@ -21,7 +21,14 @@ export default function Gallery() {
     name: "갤러리명",
     address: "상세주소",
     closedDay: "휴관일",
-    distance: "00m",
+    contact: "123-123-123",
+    operation_Hour: "9:00-20:00",
+    social_link: [
+      "https://www.youtube.com/",
+      "https://www.instagram.com/",
+      " https://www.naver.com/",
+    ],
+    desc: "blah blah",
   };
 
   const openModal = () => {
@@ -71,69 +78,13 @@ export default function Gallery() {
                     <div className="text-sm">상세주소</div>
                     <div className="text-sm">휴관일</div>
                     <div className="text-right text-sm">00m</div>
-                    <Gallery_Modal
-                      isOpen={isModalOpen}
-                      closeModal={closeModal}
-                      galleryInfo={galleryInfo}
-                    />
                   </div>
                 </GalleryContainer>
-                {/*  */}
-                <GalleryContainer>
-                  <img
-                    className="w-36 h-36 rounded-xl mx-2 justify-center shadow-Ver1"
-                    alt="gallery"
-                    src={loadImg.EX_image3}
-                  />
-                  <div className="flex flex-col  w-full justify-center px-2">
-                    <div className="font-extrabold text-lg my-1">갤러리명</div>
-                    <div className="text-sm">상세주소</div>
-                    <div className="text-sm">휴관일</div>
-                    <div className="text-right text-sm">00m</div>
-                  </div>
-                </GalleryContainer>
-                {/*  */}
-                <GalleryContainer>
-                  <img
-                    className="w-36 h-36 rounded-xl mx-2 justify-center shadow-Ver1"
-                    alt="gallery"
-                    src={loadImg.EX_image3}
-                  />
-                  <div className="flex flex-col  w-full justify-center px-2">
-                    <div className="font-extrabold text-lg my-1">갤러리명</div>
-                    <div className="text-sm">상세주소</div>
-                    <div className="text-sm">휴관일</div>
-                    <div className="text-right text-sm">00m</div>
-                  </div>
-                </GalleryContainer>
-                {/*  */}
-                <GalleryContainer>
-                  <img
-                    className="w-36 h-36 rounded-xl mx-2 justify-center shadow-Ver1"
-                    alt="gallery"
-                    src={loadImg.EX_image3}
-                  />
-                  <div className="flex flex-col  w-full justify-center px-2">
-                    <div className="font-extrabold text-lg my-1">갤러리명</div>
-                    <div className="text-sm">상세주소</div>
-                    <div className="text-sm">휴관일</div>
-                    <div className="text-right text-sm">00m</div>
-                  </div>
-                </GalleryContainer>
-                {/*  */}
-                <GalleryContainer>
-                  <img
-                    className="w-36 h-36 rounded-xl mx-2 justify-center shadow-Ver1"
-                    alt="gallery"
-                    src={loadImg.EX_image3}
-                  />
-                  <div className="flex flex-col  w-full justify-center px-2">
-                    <div className="font-extrabold text-lg my-1">갤러리명</div>
-                    <div className="text-sm">상세주소</div>
-                    <div className="text-sm">휴관일</div>
-                    <div className="text-right text-sm">00m</div>
-                  </div>
-                </GalleryContainer>
+                <Gallery_Modal
+                  isOpen={isModalOpen}
+                  closeModal={closeModal}
+                  galleryInfo={galleryInfo}
+                />
               </div>
             </div>
           )}
