@@ -7,35 +7,37 @@ import Search_Bar from "../component/Search_Bar";
 import tw from "tailwind-styled-components";
 import Gallery_Modal from "../component/Gallery_Modal";
 import { useQuery } from "react-query";
-import { SeoulArtMuseum_OpenData } from "../api/Gallery_OpenApi";
+import {
+  SeoulArtMuseum_ArtWork_OpenData,
+  Seoul_Museum_Gallery_OpenData,
+} from "../api/Gallery_OpenApi";
+
+export interface GalleryInfo {
+  CATEGORY: string;
+  ENG_NAME: string;
+  HOME_PAGE?: string | null;
+  KOR_ADD: string;
+  KOR_ADD_ROAD: string;
+  KOR_GU: string;
+  KOR_NAME: string;
+  MAIN_KEY: number;
+  OPENING_YEAR: number;
+  PHONE: string | null;
+  ZIP_CODE: number;
+}
 
 export default function Gallery() {
   const navigate = useNavigate();
   const [mapMode, setMapMode] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [Opendata, setOpenData] = useState();
+  const [openGalleryData, setGalleryOpenData] = useState([]);
 
-  const galleryInfo = {
-    name: "갤러리명",
-    address: "상세주소",
-    closedDay: "휴관일",
-    contact: "123-123-123",
-    operation_Hour: "9:00-20:00",
-    social_link: [
-      "https://www.youtube.com/",
-      "https://www.instagram.com/",
-      " https://www.naver.com/",
-    ],
-    desc: "blah blah",
-  };
-
-  const { data } = useQuery("DP_EX_NO", SeoulArtMuseum_OpenData);
-  console.log(data);
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  console.log(Opendata);
+  const res = useQuery("NAME_ENG", Seoul_Museum_Gallery_OpenData, {
+    onSuccess: (data) => {
+      setGalleryOpenData(data.SebcArtGalleryKor.row);
+    },
+  });
+  console.log(openGalleryData);
 
   const MapModeHandler = () => {
     setMapMode(true);
@@ -76,26 +78,33 @@ export default function Gallery() {
                   </button>
                 </div>
               </div>
-              <div className="flex flex-col space-y-2">
-                <GalleryContainer onClick={openModal}>
-                  <img
-                    className="w-36 h-36 rounded-xl mx-2 justify-center shadow-Ver1"
-                    alt="gallery"
-                    src={loadImg.EX_image3}
-                  />
-                  <div className="flex flex-col w-full justify-center px-2">
-                    <div className="font-extrabold text-lg my-1">갤러리명</div>
-                    <div className="text-sm">상세주소</div>
-                    <div className="text-sm">휴관일</div>
-                    <div className="text-right text-sm">00m</div>
+              {openGalleryData.length > 0 &&
+                openGalleryData.map((list: GalleryInfo, index: number) => (
+                  <div className="flex flex-col space-y-2">
+                    <GalleryContainer onClick={openModal}>
+                      {/* <div className="w-36 h-36 my-2">
+                        <img
+                          className="w-full h-full object-cover rounded-xl mx-2 justify-center shadow-Ver1"
+                          alt="gallery"
+                          src={list.DP_MAIN_IMG}
+                        />
+                      </div> */}
+                      <div className="flex flex-col h-fit my-auto justify-center px-2">
+                        <div className="w-40 h-[22px] bg-white font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap my-1">
+                          {list.KOR_NAME}
+                        </div>
+                        <div className="text-sm">{list.KOR_ADD}</div>
+                        <div className="text-sm">{list.KOR_GU}</div>
+                        <div className="text-right text-sm">00m</div>
+                      </div>
+                    </GalleryContainer>
+                    <Gallery_Modal
+                      isOpen={isModalOpen}
+                      closeModal={closeModal}
+                      galleryInfo={list}
+                    />
                   </div>
-                </GalleryContainer>
-                <Gallery_Modal
-                  isOpen={isModalOpen}
-                  closeModal={closeModal}
-                  galleryInfo={galleryInfo}
-                />
-              </div>
+                ))}
             </div>
           )}
         </div>
@@ -105,7 +114,8 @@ export default function Gallery() {
 }
 
 const GalleryContainer = tw.div`
-flex h-fit w-full justify-center
+flex h-fit w-full justify-between
 cursor-pointer rounded-lg
+space-x-3
 hover:bg-primary-YellowGreen/10
 `;
