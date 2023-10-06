@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactHTML, useState } from "react";
 import { loadImg } from "../assets/images";
 
 export default function Search_Bar() {
@@ -7,10 +7,21 @@ export default function Search_Bar() {
   };
 
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
+  const [searchInput, setSearchInput] = useState("");
 
   const handleSearchClick = () => {
     setInputVisible((prevVisible) => !prevVisible);
   };
+
+  const onKeyPressHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      // onSearchHandler();
+      window.alert("검색완료");
+    }
+    setSearchInput("");
+  };
+
+  const onSearchHandler = async () => {};
 
   return (
     <div className="py-4 bg-red-100 flex-col mx-auto justify-center ">
@@ -26,14 +37,20 @@ export default function Search_Bar() {
                 src={loadImg.Main_TextLogo}
               />
             </div>
-            <div className="flex justify-between border-primary-YellowGreen border-2 bg-white w-4/5 rounded-xl mt-4 mx-auto">
+            <div className="flex justify-between border-primary-YellowGreen border-2 bg-white w-4/5 rounded-2xl mt-4 mx-auto">
               <input
                 type="text"
-                className="w-full h-fit rounded-l-xl bg-transparent indent-0 px-3"
+                placeholder="전시, 작품, 작가를 검색해보세요."
+                className="w-full h-8 bg-transparent rounded-2xl indent-0 px-3"
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyUp={onKeyPressHandler}
               />
-              <button onClick={handleSearchClick}>
+              <button
+                onClick={handleSearchClick}
+                // onKeyPress={onKeyPressHandler}
+              >
                 <img
-                  className="w-6 h-6 "
+                  className="w-6 h-6 mr-2"
                   src={"./icons/Outline/search.svg"}
                   alt="Search"
                   style={{ fill: "#608D00" }}
