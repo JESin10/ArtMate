@@ -30,7 +30,7 @@ export default function Menu_Bar() {
           }
           onMouseEnter={() => setHoveredImage("image")}
           onMouseLeave={() => setHoveredImage("")}
-          onClick={() => navigate("/search")}
+          onClick={() => navigate("/artwork")}
         />
         <img
           style={{ filter: "brightness(0) invert(1)" }}

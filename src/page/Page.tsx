@@ -12,7 +12,7 @@ function Page() {
   const Mypage = lazy(() => import("./Mypage"));
   const Review = lazy(() => import("./Review"));
   const Gallery = lazy(() => import("./Gallery"));
-  const SearchPage = lazy(() => import("./SearchPage"));
+  const Artwork = lazy(() => import("./Artwork"));
   const KaKaoMap = lazy(() => import("../modules/KaKaoMap"));
 
   const [mapMode, setMapMode] = useState(false);
@@ -33,7 +33,7 @@ function Page() {
               path="/map"
               element={<KaKaoMap setMapMode={setMapMode} mapMode={mapMode} />}
             />
-            <Route path="/search" element={<SearchPage />} />
+            <Route path="/artwork" element={<Artwork />} />
             <Route path="/loading" element={<Loading />} />
 
             {/* <Route

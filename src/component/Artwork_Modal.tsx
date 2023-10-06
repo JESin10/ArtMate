@@ -1,20 +1,28 @@
 import React from "react";
 import { loadImg } from "../assets/images";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { GalleryInfo } from "../page/Gallery";
+import { ArtworkInfo } from "../page/Artwork";
 
 interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  galleryInfo: GalleryInfo;
+  artworkInfo: ArtworkInfo;
 }
 
-export default function Gallery_Modal({
+export default function Artwork_Modal({
   isOpen,
   closeModal,
-  galleryInfo,
+  artworkInfo,
 }: ModalProps) {
   if (!isOpen) return null;
+
+  function parseAndStyleInfo(info: string) {
+    const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
+      return `<span style="font-weight: bold;">${content}</span>`;
+    });
+
+    return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-30  ">
@@ -27,50 +35,48 @@ export default function Gallery_Modal({
             <IoIosCloseCircleOutline size="100%" />
           </button>
         </div>
-        {/* <img
+        <img
           alt="example"
           className="w-full h-[350px] object-cover mt-12"
-          src={galleryInfo.DP_MAIN_IMG}
-        /> */}
+          src={artworkInfo.DP_MAIN_IMG}
+        />
         <div className="px-4">
-          <h2 className="text-xl font-bold my-3">{galleryInfo.KOR_NAME}</h2>
+          <h2 className="text-xl font-bold my-3">{artworkInfo.DP_NAME}</h2>
           {/* 상세정보 */}
           <div className="space-y-1">
             <div className="flex">
               <p className="text-sm flex w-20">주소 </p>
-              <p className="text-sm flex ">{galleryInfo.KOR_ADD}</p>
+              <p className="text-sm flex ">{artworkInfo.DP_PLACE}</p>
             </div>
-            {/* <div className="flex">
+            <div className="flex">
               <p className="text-sm flex w-20">운영시간 </p>
-              <p className="text-sm flex ">{galleryInfo.DP_START}</p>
+              <p className="text-sm flex ">{artworkInfo.DP_START}</p>
             </div>
             <div className="flex">
               <p className="text-sm flex w-20">휴관일 </p>
-              <p className="text-sm flex ">{galleryInfo.DP_END}</p>
+              <p className="text-sm flex ">{artworkInfo.DP_END}</p>
             </div>
             <div className="flex">
               <p className="text-sm flex w-20">전화번호 </p>
-              <p className="text-sm flex ">{galleryInfo.DP_ARTIST}</p>
-            </div> */}
+              <p className="text-sm flex ">{artworkInfo.DP_ARTIST}</p>
+            </div>
             <div className="flex">
               <p className="text-sm flex w-20">SNS </p>
-              {galleryInfo.HOME_PAGE && (
-                <p className="text-sm flex">
-                  <a
-                    href={galleryInfo.HOME_PAGE}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="resume-link"
-                  >
-                    <img src={loadImg.Main_Logo} alt="Resume" /> 홈페이지 방문
-                  </a>
-                </p>
-              )}
+              <p className="text-sm flex">
+                <a
+                  href={artworkInfo.DP_LNK}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="resume-link"
+                >
+                  {/* <img src='' alt="Resume" /> */} 홈페이지 방문
+                </a>
+              </p>
             </div>
           </div>
           {/* 갤러리 상세설명 */}
           <p className="text-xs text-primary-Gray my-4 flex">
-            {/* {parseAndStyleInfo(galleryInfo.DP_INFO)} */}
+            {parseAndStyleInfo(artworkInfo.DP_INFO)}
           </p>
         </div>
       </div>
