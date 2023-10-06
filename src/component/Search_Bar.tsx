@@ -17,12 +17,14 @@ export default function Search_Bar() {
       />
       <div className="flex">
         <input type="text" className="border-primary-YellowGreen border-2" />
-        <img
-          className="w-10 h-10"
-          src={loadImg.Main_Logo}
-          alt="Search"
-          style={{ fill: "#608D00" }}
-        />
+        <button onClick={() => window.alert("준비중입니다")}>
+          <img
+            className="w-10 h-10"
+            src={"./icons/Outline/search.svg"}
+            alt="Search"
+            style={{ fill: "#608D00" }}
+          />
+        </button>
       </div>
     </div>
   );
