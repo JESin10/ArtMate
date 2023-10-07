@@ -7,10 +7,8 @@ import Search_Bar from "../component/Search_Bar";
 import tw from "tailwind-styled-components";
 import Gallery_Modal from "../component/Gallery_Modal";
 import { useQuery } from "react-query";
-import {
-  SeoulArtMuseum_ArtWork_OpenData,
-  Seoul_Museum_Gallery_OpenData,
-} from "../api/Gallery_OpenApi";
+import "react-link-previewer/src/style.css";
+import { Seoul_Museum_Gallery_OpenData } from "../api/Gallery_OpenApi";
 
 export interface GalleryInfo {
   CATEGORY: string;
@@ -30,14 +28,17 @@ export default function Gallery() {
   const navigate = useNavigate();
   const [mapMode, setMapMode] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [openGalleryData, setGalleryOpenData] = useState([]);
+  const [GalleryOpenData, setGalleryOpenData] = useState([]);
+  // const [linkList, setLinkList] = useState<string[]>([]);
+  // const [linkPreviews, setLinkPreviews] = useState<React.ReactNode[]>([]);
 
   const res = useQuery("NAME_ENG", Seoul_Museum_Gallery_OpenData, {
     onSuccess: (data) => {
       setGalleryOpenData(data.SebcArtGalleryKor.row);
+      // const linkArray = GalleryOpenData.map((item: any) => item.HOME_PAGE);
+      // setLinkList(linkArray);
     },
   });
-  console.log(openGalleryData);
 
   const MapModeHandler = () => {
     setMapMode(true);
@@ -69,6 +70,7 @@ export default function Gallery() {
             <div className="w-11/12 mx-auto ">
               <div className="flex justify-between">
                 <h1 className="text-3xl font-extrabold my-2">가까운 전시장</h1>
+
                 <div className="flex space-x-1">
                   <button>
                     <img src={loadImg.Map_current1} />
@@ -78,19 +80,15 @@ export default function Gallery() {
                   </button>
                 </div>
               </div>
-              {openGalleryData.length > 0 &&
-                openGalleryData.map((list: GalleryInfo, index: number) => (
+              {GalleryOpenData.length > 0 &&
+                GalleryOpenData.map((list: GalleryInfo, index: number) => (
                   <div className="flex flex-col space-y-2">
                     <GalleryContainer onClick={openModal}>
-                      {/* <div className="w-36 h-36 my-2">
-                        <img
-                          className="w-full h-full object-cover rounded-xl mx-2 justify-center shadow-Ver1"
-                          alt="gallery"
-                          src={list.DP_MAIN_IMG}
-                        />
-                      </div> */}
-                      <div className="flex flex-col h-fit my-auto justify-center px-2">
-                        <div className="w-40 h-[22px] bg-white font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap my-1">
+                      <div className="w-36 h-36 my-2 bg-blue-200 rounded-2xl">
+                        이미지
+                      </div>
+                      <div className="flex flex-col w-40 h-fit my-auto justify-center">
+                        <div className=" w-fit h-[22px] bg-white font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap my-1">
                           {list.KOR_NAME}
                         </div>
                         <div className="text-sm">{list.KOR_ADD}</div>
@@ -114,8 +112,8 @@ export default function Gallery() {
 }
 
 const GalleryContainer = tw.div`
-flex h-fit w-full justify-between
+flex h-fit w-full justify-center
 cursor-pointer rounded-lg
-space-x-3
+space-x-4
 hover:bg-primary-YellowGreen/10
 `;
