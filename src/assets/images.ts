@@ -28,4 +28,6 @@ export const loadImg = {
   Map_all: "./icons/Outline/location_map.svg",
   Map_current1: "./icons/Outline/location_current1.svg",
   Map_current2: "./icons/Outline/location_current2.svg",
+
+  Like_Icon: "./icons/Outline/like.svg",
 };
