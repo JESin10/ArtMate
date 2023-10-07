@@ -13,10 +13,10 @@ export default function Review() {
               <h1 className="text-3xl font-extrabold my-2">관람 후기</h1>
               <div className="flex space-x-1">
                 <button>
-                  <img src={"./icons/Outline/filter.svg"} />
+                  <img alt="filter-btn" src={"./icons/Outline/filter.svg"} />
                 </button>
                 <button>
-                  <img src={"./icons/Outline/reload.svg"} />
+                  <img alt="reload-btn" src={"./icons/Outline/reload.svg"} />
                 </button>
               </div>
             </div>

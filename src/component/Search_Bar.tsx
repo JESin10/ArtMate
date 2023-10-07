@@ -1,7 +1,7 @@
 import React, { ReactHTML, useState } from "react";
 import { loadImg } from "../assets/images";
 
-export default function Search_Bar() {
+export default function Search_Bar(): JSX.Element {
   const svgStyle = {
     fill: "#608D00",
   };
