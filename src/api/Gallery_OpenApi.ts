@@ -1,10 +1,10 @@
 import axios from "axios";
 
 //서울시립미술관 전시 정보
-const SeoulMuseum_artwor_URL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/ListExhibitionOfSeoulMOAInfo/1/30/`;
+const SeoulMuseum_artwor_URL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/ListExhibitionOfSeoulMOAInfo/1/10/`;
 //서울시 문화시설현황
 const GalleyURL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/SebcArtGalleryKor/1/30/`;
-//서울시 관광명소
+//서울시 관광명소 - Eng
 const VisitSeoulURL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/TbVwAttractions/1/30/`;
 
 // export const baseURL = axios.create({

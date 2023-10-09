@@ -6,7 +6,6 @@ import Loading from "./exception/Loading";
 import Error from "./exception/Error";
 
 function Page() {
-  const Signup = lazy(() => import("./Login"));
   const Login = lazy(() => import("./Login"));
   const Home = lazy(() => import("./Home"));
   const Mypage = lazy(() => import("./Mypage"));

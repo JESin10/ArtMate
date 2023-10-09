@@ -7,7 +7,6 @@ import Search_Bar from "../component/Search_Bar";
 import tw from "tailwind-styled-components";
 import Gallery_Modal from "../component/Gallery_Modal";
 import { useQuery } from "react-query";
-import "react-link-previewer/src/style.css";
 import { Seoul_Museum_Gallery_OpenData } from "../api/Gallery_OpenApi";
 
 export interface GalleryInfo {
@@ -39,7 +38,7 @@ export default function Gallery() {
       // setLinkList(linkArray);
     },
   });
-
+  console.log(GalleryOpenData);
   const MapModeHandler = () => {
     setMapMode(true);
   };

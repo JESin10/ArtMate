@@ -45,23 +45,28 @@ export default function Artwork_Modal({
           {/* 상세정보 */}
           <div className="space-y-1">
             <div className="flex">
-              <p className="text-sm flex w-20">주소 </p>
+              <p className="text-sm flex w-20 font-bold">전시장소 </p>
               <p className="text-sm flex ">{artworkInfo.DP_PLACE}</p>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20">운영시간 </p>
-              <p className="text-sm flex ">{artworkInfo.DP_START}</p>
+              <p className="text-sm flex w-20 font-bold">전시기간 </p>
+              <p className="text-sm flex ">
+                {artworkInfo.DP_START} ~ {artworkInfo.DP_END}
+              </p>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20">휴관일 </p>
-              <p className="text-sm flex ">{artworkInfo.DP_END}</p>
+              <p className="text-sm flex w-20 font-bold">운영시간</p>
+              <div className="">
+                <p className="text-sm flex">평일 10:00-20:00</p>
+                <p className="text-sm flex">주말 10:00-19:00</p>
+              </div>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20">전화번호 </p>
+              <p className="text-sm flex w-20 font-bold">작가 </p>
               <p className="text-sm flex ">{artworkInfo.DP_ARTIST}</p>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20">SNS </p>
+              <p className="text-sm flex w-20 font-bold">HOME </p>
               <p className="text-sm flex">
                 <a
                   href={artworkInfo.DP_LNK}
