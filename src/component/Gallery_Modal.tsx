@@ -27,33 +27,33 @@ export default function Gallery_Modal({
             <IoIosCloseCircleOutline size="100%" />
           </button>
         </div>
-        {/* <img
+        <img
           alt="example"
           className="w-full h-[350px] object-cover mt-12"
-          src={galleryInfo.DP_MAIN_IMG}
-        /> */}
+          src={loadImg.EX_image3}
+        />
         <div className="px-4">
           <h2 className="text-xl font-bold my-3">{galleryInfo.KOR_NAME}</h2>
           {/* 상세정보 */}
           <div className="space-y-1">
             <div className="flex">
-              <p className="text-sm flex w-20">주소 </p>
+              <p className="text-sm flex w-20 font-bold">주소 </p>
               <p className="text-sm flex ">{galleryInfo.KOR_ADD}</p>
             </div>
-            {/* <div className="flex">
-              <p className="text-sm flex w-20">운영시간 </p>
-              <p className="text-sm flex ">{galleryInfo.DP_START}</p>
+            <div className="flex">
+              <p className="text-sm flex w-20 font-bold">운영시간 </p>
+              <p className="text-sm flex ">10:00-20:00</p>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20">휴관일 </p>
-              <p className="text-sm flex ">{galleryInfo.DP_END}</p>
+              <p className="text-sm flex w-20 font-bold">휴관일 </p>
+              <p className="text-sm flex ">메주 월 휴무</p>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20">전화번호 </p>
-              <p className="text-sm flex ">{galleryInfo.DP_ARTIST}</p>
-            </div> */}
+              <p className="text-sm flex w-20 font-bold">전화번호 </p>
+              <p className="text-sm flex ">02-1234-1234</p>
+            </div>
             <div className="flex">
-              <p className="text-sm flex w-20">SNS </p>
+              <p className="text-sm flex w-20 font-bold">홈페이지 </p>
               {galleryInfo.HOME_PAGE && (
                 <p className="text-sm flex">
                   <a
@@ -62,7 +62,8 @@ export default function Gallery_Modal({
                     rel="noreferrer"
                     aria-label="resume-link"
                   >
-                    <img src={loadImg.Main_Logo} alt="Resume" /> 홈페이지 방문
+                    {/* <img src={loadImg.Main_Logo} alt="Resume" /> */}
+                    홈페이지 방문
                   </a>
                 </p>
               )}
