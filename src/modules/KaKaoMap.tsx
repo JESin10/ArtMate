@@ -9,6 +9,12 @@ export interface MapModeProps {
   setMapMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+// declare global {
+//   interface Window {
+//     kakao: any;
+//   }
+// }
+
 export default function KaKaoMap({ mapMode, setMapMode }: MapModeProps) {
   const MapModeHandler = (mapMode: boolean) => {
     setMapMode(false);
