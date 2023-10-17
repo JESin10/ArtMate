@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import Menu_Bar from "../component/Menu_Bar";
 import Loading from "./exception/Loading";
 import Error from "./exception/Error";
+import { AuthProvider } from "../modules/UserAuth";
 
 function Page() {
   const Login = lazy(() => import("./Login"));
@@ -13,6 +14,7 @@ function Page() {
   const Gallery = lazy(() => import("./Gallery"));
   const Artwork = lazy(() => import("./Artwork"));
   const KaKaoMap = lazy(() => import("../modules/KaKaoMap"));
+  const PrivateRoute = lazy(() => import("../modules/PrivateRoute"));
 
   const [mapMode, setMapMode] = useState(false);
 
@@ -20,28 +22,32 @@ function Page() {
     <BasicDiv>
       <Menu_Bar />
       <div className="pb-[80px]">
-        <Suspense fallback={<Loading />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/mypage" element={<Mypage />} />
-            <Route path="/review" element={<Review />} />
-            <Route path="/gallery" element={<Gallery />} />
+        <AuthProvider>
+          <Suspense fallback={<Loading />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/mypage" element={<Mypage />} />
+              <Route path="/review" element={<Review />} />
+              <Route path="/gallery" element={<Gallery />} />
 
-            <Route
-              path="/map"
-              element={<KaKaoMap setMapMode={setMapMode} mapMode={mapMode} />}
-            />
-            <Route path="/artwork" element={<Artwork />} />
-            <Route path="/loading" element={<Loading />} />
+              <Route
+                path="/map"
+                element={<KaKaoMap setMapMode={setMapMode} mapMode={mapMode} />}
+              />
+              <Route path="/artwork" element={<Artwork />} />
+              <Route path="/loading" element={<Loading />} />
 
-            {/* <Route
-                path="/dashboard"
-                element={<PrivateRoute element={<Dashboard />} />}
+              {/* <Route
+                path="/mypage"
+                element={<PrivateRoute element={<Mypage />} />}
               /> */}
-            <Route path="/*" element={<Error />} />
-          </Routes>
-        </Suspense>
+              {/* <PrivateRoute path="/mypage" element={<Mypage />} /> */}
+
+              <Route path="/*" element={<Error />} />
+            </Routes>
+          </Suspense>
+        </AuthProvider>
       </div>
     </BasicDiv>
   );

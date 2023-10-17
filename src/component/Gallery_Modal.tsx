@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { loadImg } from "../assets/images";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { GalleryInfo } from "../page/Gallery";
@@ -70,9 +70,10 @@ export default function Gallery_Modal({
             </div>
           </div>
           {/* 갤러리 상세설명 */}
-          <p className="text-xs text-primary-Gray my-4 flex">
-            {/* {parseAndStyleInfo(galleryInfo.DP_INFO)} */}
-          </p>
+          {/* <p className="text-xs text-primary-Gray my-4 flex">
+             {parseAndStyleInfo(galleryInfo.DP_INFO)}
+          </p> */}
+          {/* 위치 map */}
         </div>
       </div>
     </div>
