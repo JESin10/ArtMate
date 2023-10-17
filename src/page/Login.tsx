@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { loadImg } from "../assets/images";
+import { useAuth } from "../modules/UserAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const { signup, signupWithGoogle, currentUser } = useAuth();
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const SignupWithGoogleHandler = () => {
+    setLoading(true);
+    signupWithGoogle();
+    navigate("/");
+    setLoading(false);
+  };
+
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
       <img
@@ -41,7 +55,10 @@ export default function Login() {
             <button className="bg-yellow-400 rounded-3xl w-[320px] h-[42px]">
               카카오 로그인
             </button>
-            <button className="bg-white border-black border-2 rounded-3xl w-[320px] h-[42px]">
+            <button
+              onClick={SignupWithGoogleHandler}
+              className="bg-white border-black border-2 rounded-3xl w-[320px] h-[42px]"
+            >
               구글 로그인
             </button>
             <button className="bg-green-600 rounded-3xl w-[320px] h-[42px]">
