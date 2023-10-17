@@ -38,7 +38,7 @@ export default function Gallery() {
       // setLinkList(linkArray);
     },
   });
-  console.log(GalleryOpenData);
+  // console.log(GalleryOpenData);
   const MapModeHandler = () => {
     setMapMode(true);
   };
@@ -81,7 +81,7 @@ export default function Gallery() {
               </div>
               {GalleryOpenData.length > 0 &&
                 GalleryOpenData.map((list: GalleryInfo, index: number) => (
-                  <div className="flex flex-col space-y-2">
+                  <div className="flex flex-col space-y-2" key={index}>
                     <GalleryContainer onClick={openModal}>
                       <div className="w-36 h-36 my-2 bg-blue-200 rounded-2xl">
                         이미지

@@ -71,7 +71,10 @@ export default function Artwork() {
             <div className="flex flex-wrap justify-center">
               {artworkList.length > 0 &&
                 artworkList.map((list: ArtworkInfo, index: number) => (
-                  <div className="flex flex-col w-fit justify-center mx-auto">
+                  <div
+                    key={index}
+                    className="flex flex-col w-fit justify-center mx-auto"
+                  >
                     <GalleryContainer onClick={openModal}>
                       <div className="w-36 h-32 my-3">
                         <img
