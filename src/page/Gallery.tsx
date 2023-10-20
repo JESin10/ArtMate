@@ -30,6 +30,9 @@ export default function Gallery() {
   const [GalleryOpenData, setGalleryOpenData] = useState([]);
   // const [linkList, setLinkList] = useState<string[]>([]);
   // const [linkPreviews, setLinkPreviews] = useState<React.ReactNode[]>([]);
+  const [selectedArtwork, setSelectedArtwork] = useState<GalleryInfo | null>(
+    null
+  );
 
   const res = useQuery("NAME_ENG", Seoul_Museum_Gallery_OpenData, {
     onSuccess: (data) => {
@@ -38,17 +41,17 @@ export default function Gallery() {
       // setLinkList(linkArray);
     },
   });
-  // console.log(GalleryOpenData);
+  console.log(GalleryOpenData);
   const MapModeHandler = () => {
     setMapMode(true);
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openModal = (gallery: GalleryInfo) => {
+    setSelectedArtwork(gallery);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    setSelectedArtwork(null);
   };
 
   return (
@@ -82,9 +85,13 @@ export default function Gallery() {
               {GalleryOpenData.length > 0 &&
                 GalleryOpenData.map((list: GalleryInfo, index: number) => (
                   <div className="flex flex-col space-y-2" key={index}>
-                    <GalleryContainer onClick={openModal}>
+                    <GalleryContainer onClick={() => openModal(list)}>
                       <div className="w-36 h-36 my-2 bg-blue-200 rounded-2xl">
-                        이미지
+                        <img
+                          className="w-full h-full rounded-2xl"
+                          alt="gallery_mockup"
+                          src={loadImg.Gallery_MockUP}
+                        />
                       </div>
                       <div className="flex flex-col w-40 h-fit my-auto justify-center">
                         <div className=" w-fit h-[22px] bg-white font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap my-1">
@@ -95,11 +102,13 @@ export default function Gallery() {
                         <div className="text-right text-sm">00m</div>
                       </div>
                     </GalleryContainer>
-                    <Gallery_Modal
-                      isOpen={isModalOpen}
-                      closeModal={closeModal}
-                      galleryInfo={list}
-                    />
+                    {selectedArtwork && (
+                      <Gallery_Modal
+                        isOpen={true}
+                        closeModal={closeModal}
+                        galleryInfo={selectedArtwork}
+                      />
+                    )}
                   </div>
                 ))}
             </div>

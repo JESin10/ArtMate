@@ -30,4 +30,5 @@ export const loadImg = {
   Map_current2: "./icons/Outline/location_current2.svg",
 
   Like_Icon: "./icons/Outline/like.svg",
+  Gallery_MockUP: "./icons/Solid/Gallery_Basic_IMG.svg",
 };

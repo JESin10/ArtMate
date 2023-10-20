@@ -29,7 +29,10 @@ export interface ArtworkInfo {
 
 export default function Artwork() {
   const [artworkList, setArtWorkList] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedArtwork, setSelectedArtwork] = useState<ArtworkInfo | null>(
+    null
+  );
 
   const { data } = useQuery("DP_EX_NO", SeoulArtMuseum_ArtWork_OpenData, {
     onSuccess: (data) => {
@@ -37,12 +40,12 @@ export default function Artwork() {
     },
   });
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openModal = (artwork: ArtworkInfo) => {
+    setSelectedArtwork(artwork);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    setSelectedArtwork(null);
   };
 
   return (
@@ -73,9 +76,9 @@ export default function Artwork() {
                 artworkList.map((list: ArtworkInfo, index: number) => (
                   <div
                     key={index}
-                    className="flex flex-col w-fit justify-center mx-auto"
+                    className="flex flex-col w-fit h-full justify-center mx-auto"
                   >
-                    <GalleryContainer onClick={openModal}>
+                    <GalleryContainer onClick={() => openModal(list)}>
                       <div className="w-36 h-32 my-3">
                         <img
                           className="w-full h-full object-cover rounded-xl justify-center shadow-Ver1"
@@ -95,11 +98,13 @@ export default function Artwork() {
                         </div>
                       </div>
                     </GalleryContainer>
-                    <Artwork_Modal
-                      isOpen={isModalOpen}
-                      closeModal={closeModal}
-                      artworkInfo={list}
-                    />
+                    {selectedArtwork && (
+                      <Artwork_Modal
+                        isOpen={true}
+                        closeModal={closeModal}
+                        artworkInfo={selectedArtwork}
+                      />
+                    )}
                   </div>
                 ))}
             </div>
