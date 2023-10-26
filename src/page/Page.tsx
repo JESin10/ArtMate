@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import Menu_Bar from "../component/Menu_Bar";
 import Loading from "./exception/Loading";
 import Error from "./exception/Error";
-import { AuthProvider } from "../modules/UserAuth";
+import { AuthProvider, useAuth } from "../modules/UserAuth";
 
 function Page() {
   const Login = lazy(() => import("./Login"));
@@ -21,7 +21,7 @@ function Page() {
   return (
     <BasicDiv>
       <Menu_Bar />
-      <div className="pb-[80px]">
+      <div className="pb-[100px]">
         <AuthProvider>
           <Suspense fallback={<Loading />}>
             <Routes>
@@ -38,10 +38,10 @@ function Page() {
               <Route path="/artwork" element={<Artwork />} />
               <Route path="/loading" element={<Loading />} />
 
-              {/* <Route
+              <Route
                 path="/mypage"
                 element={<PrivateRoute element={<Mypage />} />}
-              /> */}
+              />
               {/* <PrivateRoute path="/mypage" element={<Mypage />} /> */}
 
               <Route path="/*" element={<Error />} />
