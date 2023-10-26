@@ -1,13 +1,42 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React from "react";
+import React, { useState } from "react";
 import Menu_Footer from "../component/Menu_Footer";
 import Carousel from "../modules/Carousel";
 import { loadImg } from "../assets/images";
 import RecommendSlider from "../modules/RecommendSlider";
 import Search_Bar from "../component/Search_Bar";
+import { useAuth } from "../modules/UserAuth";
+import { useQuery } from "react-query";
+import { MainPage } from "../api/Gallery_OpenApi";
 
 export default function Home() {
   const example: string[] = [loadImg.EX_image1, loadImg.EX_image2];
+  const [recentArray, setRecentArray] = useState([]);
+  const { currentUser } = useAuth();
+  const { data } = useQuery(
+    [
+      "DP_EX_NO",
+      {
+        START_INDEX: 1,
+        END_INDEX: 10,
+      },
+    ],
+    async () => {
+      const response = await MainPage(1, 30);
+      return response;
+    },
+    {
+      onSuccess: (data) => {
+        setRecentArray(data.ListExhibitionOfSeoulMOAInfo.row);
+        // recentArray.sort((a, b) => b - a);
+        console.log(recentArray);
+
+        // const linkArray = GalleryOpenData.map((item: any) => item.HOME_PAGE);
+        // setLinkList(linkArray);
+      },
+    }
+  );
+
   return (
     <div className="h-fit border-red-400 border-2">
       <Search_Bar />
@@ -16,7 +45,15 @@ export default function Home() {
       </div>
       {/* 취향저격 전시 */}
       <div className="border-blue-400 border-2">
-        <h1>ㅇㅇ님의 취향저격 전시 모음</h1>
+        {currentUser ? (
+          <h1 className="flex">
+            <p className="mx-2 font-extrabold">{currentUser.displayName}</p>님의
+            취향저격 전시 모음
+          </h1>
+        ) : (
+          <h1 className="flex">지금 떠오르는 전시는?</h1>
+        )}
+
         <Carousel>
           {example &&
             example.map((image: string, index: number) => (

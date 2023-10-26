@@ -26,7 +26,6 @@ export interface GalleryInfo {
 export default function Gallery() {
   const navigate = useNavigate();
   const [mapMode, setMapMode] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [GalleryOpenData, setGalleryOpenData] = useState([]);
   // const [linkList, setLinkList] = useState<string[]>([]);
   // const [linkPreviews, setLinkPreviews] = useState<React.ReactNode[]>([]);
@@ -34,7 +33,7 @@ export default function Gallery() {
     null
   );
 
-  const res = useQuery("NAME_ENG", Seoul_Museum_Gallery_OpenData, {
+  const { data } = useQuery("KOR_NAME", Seoul_Museum_Gallery_OpenData, {
     onSuccess: (data) => {
       setGalleryOpenData(data.SebcArtGalleryKor.row);
       // const linkArray = GalleryOpenData.map((item: any) => item.HOME_PAGE);
