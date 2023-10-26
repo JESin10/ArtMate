@@ -14,6 +14,8 @@ export default function Loading() {
     }, 3000); // 예시로 3초 후에 로딩을 종료하는 것으로 설정
   }, []);
 
+  console.log(loading);
+
   return (
     <LoadingContainer>
       <div className="flex flex-col justify-center items-center">

@@ -39,6 +39,7 @@ export default function Artwork() {
       setArtWorkList(data.ListExhibitionOfSeoulMOAInfo.row);
     },
   });
+  console.log(artworkList);
 
   const openModal = (artwork: ArtworkInfo) => {
     setSelectedArtwork(artwork);

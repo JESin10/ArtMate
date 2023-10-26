@@ -31,4 +31,8 @@ export const loadImg = {
 
   Like_Icon: "./icons/Outline/like.svg",
   Gallery_MockUP: "./icons/Solid/Gallery_Basic_IMG.svg",
+
+  Google_LoginBtn: "./icons/Solid/google_Btn.svg",
+  Kakao_LoginBtn: "./icons/Solid/kakao_Btn.png",
+  Naver_LoginBtn: "./icons/Solid/naver_Btn.png",
 };
