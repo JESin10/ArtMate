@@ -29,8 +29,8 @@ export default function Gallery_Modal({
         </div>
         <img
           alt="example"
-          className="w-full h-[350px] object-cover mt-12"
-          src={loadImg.EX_image3}
+          className="w-full h-[350px] object-contain mt-12 bg-black"
+          src={loadImg.Gallery_MockUP}
         />
         <div className="px-4">
           <h2 className="text-xl font-bold my-3">{galleryInfo.KOR_NAME}</h2>

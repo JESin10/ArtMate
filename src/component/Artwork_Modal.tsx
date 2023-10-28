@@ -63,7 +63,9 @@ export default function Artwork_Modal({
             </div>
             <div className="flex">
               <p className="text-sm flex w-20 font-bold">작가 </p>
-              <p className="text-sm flex ">{artworkInfo.DP_ARTIST}</p>
+              <p className="text-sm w-fit h-10 flex overflow-hidden text-ellipsis break-all line-clamp-3 flex-wrap">
+                {artworkInfo.DP_ARTIST}
+              </p>
             </div>
             <div className="flex">
               <p className="text-sm flex w-20 font-bold">HOME </p>
