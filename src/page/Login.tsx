@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
 import { ReactComponent as MainLogo } from "../assets/CustomSvg/main_text_logo.svg";
 import { ReactComponent as DescLogo } from "../assets/CustomSvg/main_logo_desc.svg";
+import Auth_Api from "../api/Auth_Api";
 
 export default function Login() {
   const { signup, signupWithGoogle, currentUser } = useAuth();
@@ -60,14 +61,15 @@ export default function Login() {
                 <p> 구글로 시작하기</p>
               </SocialAuthBtnContainer>
             </SocialAuthBtn>
-            <SocialAuthBtn className="bg-[#03C75A] ">
+            <SocialAuthBtn className="bg-[#03C75A]">
               <SocialAuthBtnContainer>
-                <img
+                {/* <img
                   alt="SocialAuth_Naver"
                   className="w-10"
                   src={loadImg.Naver_LoginBtn}
-                />
-                <p>네이버로 시작하기</p>
+                /> */}
+                <Auth_Api />
+                {/* <p>네이버로 시작하기</p> */}
               </SocialAuthBtnContainer>
             </SocialAuthBtn>
           </div>
