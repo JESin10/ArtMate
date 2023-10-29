@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Menu_Footer from "../component/Menu_Footer";
 import Carousel from "../modules/Carousel";
 import { loadImg } from "../assets/images";
@@ -9,10 +9,42 @@ import { useAuth } from "../modules/UserAuth";
 import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
 
+export interface UserInfo {
+  uid: string;
+  name: string;
+  profileURL: string;
+  email: string;
+}
+
 export default function Home() {
   const example: string[] = [loadImg.EX_image1, loadImg.EX_image2];
   const [recentArray, setRecentArray] = useState([]);
   const { currentUser } = useAuth();
+  const [getToken, setGetToken] = useState();
+  const [userInfo, setUserInfo] = useState<UserInfo>();
+
+  // console.log(currentUser);
+
+  useEffect(() => {
+    if (currentUser) {
+      setGetToken(currentUser.accessToken);
+      setUserInfo({
+        uid: currentUser.uid,
+        name: currentUser.reloadUserInfo.displayName,
+        profileURL: currentUser.reloadUserInfo.photoUrl,
+        email: currentUser.reloadUserInfo.email,
+      });
+    }
+  }, []);
+
+  // console.log(getToken, userInfo);
+
+  const currentURL = window.location.href;
+  const url = new URL(currentURL);
+  const token = url.hash.split("=")[1].split("&")[0];
+  // console.log, alert 창을 통해 어스코드가 잘 추출 되는지 확인하자!
+  console.log(token);
+
   const { data } = useQuery(
     [
       "DP_EX_NO",
@@ -29,7 +61,7 @@ export default function Home() {
       onSuccess: (data) => {
         setRecentArray(data.ListExhibitionOfSeoulMOAInfo.row);
         // recentArray.sort((a, b) => b - a);
-        console.log(recentArray);
+        // console.log(recentArray);
 
         // const linkArray = GalleryOpenData.map((item: any) => item.HOME_PAGE);
         // setLinkList(linkArray);
