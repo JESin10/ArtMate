@@ -25,25 +25,19 @@ export default function Home() {
 
   // console.log(currentUser);
 
-  useEffect(() => {
-    if (currentUser) {
-      setGetToken(currentUser.accessToken);
-      setUserInfo({
-        uid: currentUser.uid,
-        name: currentUser.reloadUserInfo.displayName,
-        profileURL: currentUser.reloadUserInfo.photoUrl,
-        email: currentUser.reloadUserInfo.email,
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     setGetToken(currentUser.accessToken);
+  //     setUserInfo({
+  //       uid: currentUser.uid,
+  //       name: currentUser.reloadUserInfo.displayName,
+  //       profileURL: currentUser.reloadUserInfo.photoUrl,
+  //       email: currentUser.reloadUserInfo.email,
+  //     });
+  //   }
+  // }, []);
 
   // console.log(getToken, userInfo);
-
-  const currentURL = window.location.href;
-  const url = new URL(currentURL);
-  const token = url.hash.split("=")[1].split("&")[0];
-  // console.log, alert 창을 통해 어스코드가 잘 추출 되는지 확인하자!
-  console.log(token);
 
   const { data } = useQuery(
     [
