@@ -26,7 +26,7 @@ export default function Search_Bar(): JSX.Element {
   const onSearchHandler = async () => {};
 
   return (
-    <div className="py-4 bg-red-100 flex-col mx-auto justify-center ">
+    <div className="py-4 flex-col mx-auto justify-center ">
       <div className="flex flex-col">
         {isInputVisible ? (
           <>
