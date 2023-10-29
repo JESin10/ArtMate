@@ -89,7 +89,7 @@ export default function Gallery() {
                         />
                       </div>
                       <div className="flex flex-col w-40 h-fit my-auto justify-center">
-                        <div className=" w-fit h-[22px] bg-white font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap my-1">
+                        <div className=" w-fit h-[22px] font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap my-1">
                           {list.KOR_NAME}
                         </div>
                         <div className="text-sm">{list.KOR_ADD}</div>
