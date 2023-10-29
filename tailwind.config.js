@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       boxShadow: {
         Ver1: "10px 10px 20px -10px #525252",
+        Ver2: "0px 0px 5px 2px rgba(141, 141, 141, 0.1)",
       },
       colors: {
         primary: {
