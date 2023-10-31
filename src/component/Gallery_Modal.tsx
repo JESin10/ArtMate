@@ -55,7 +55,7 @@ export default function Gallery_Modal({
             </div>
             <div className="flex">
               <GalleryModalLabel>홈페이지 </GalleryModalLabel>
-              {galleryInfo.HOME_PAGE && (
+              {galleryInfo.HOME_PAGE ? (
                 <p className="text-sm flex">
                   <a
                     href={galleryInfo.HOME_PAGE}
@@ -63,8 +63,16 @@ export default function Gallery_Modal({
                     rel="noreferrer"
                     aria-label="resume-link"
                   >
-                    <GalleryModalContent>홈페이지 방문</GalleryModalContent>
+                    <GalleryModalContent className="hover:text-primary-YellowGreen hover:font-extrabold">
+                      홈페이지 방문
+                    </GalleryModalContent>
                   </a>
+                </p>
+              ) : (
+                <p className="text-sm flex">
+                  <p className="cursor-not-allowed text-gray-400">
+                    홈페이지 방문
+                  </p>
                 </p>
               )}
             </div>
@@ -95,6 +103,4 @@ text-sm flex w-20 font-bold
 `;
 
 const GalleryModalContent = tw.p`
-text-sm flex
-hover:text-primary-YellowGreen hover:font-extrabold
-`;
+text-sm flex`;
