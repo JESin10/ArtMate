@@ -14,57 +14,61 @@ export interface UserInfo {
   name: string;
   profileURL: string;
   email: string;
+  access_token?: string;
+}
+
+export interface LatestArtworkInfo {
+  DP_END: Date;
+  DP_DATE: Date;
+  DP_MAIN_IMG: string;
+  DP_NAME: string;
+  DP_START: Date;
 }
 
 export default function Home() {
   const example: string[] = [loadImg.EX_image1, loadImg.EX_image2];
-  const [recentArray, setRecentArray] = useState([]);
+  const [baseArray, setBaseArray] = useState<LatestArtworkInfo[]>([]);
   const { currentUser } = useAuth();
   const [getToken, setGetToken] = useState();
   const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [lastestArtwork, setLatestArtWork] = useState<[]>([]);
+  const Today = new Date();
 
   // console.log(currentUser);
 
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     setGetToken(currentUser.accessToken);
-  //     setUserInfo({
-  //       uid: currentUser.uid,
-  //       name: currentUser.reloadUserInfo.displayName,
-  //       profileURL: currentUser.reloadUserInfo.photoUrl,
-  //       email: currentUser.reloadUserInfo.email,
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (currentUser) {
+      setGetToken(currentUser.accessToken);
+      setUserInfo({
+        uid: currentUser.uid,
+        name: currentUser.reloadUserInfo.displayName,
+        profileURL: currentUser.reloadUserInfo.photoUrl,
+        email: currentUser.reloadUserInfo.email,
+      });
+    }
+  }, []);
 
-  // console.log(getToken, userInfo);
+  // console.log(userInfo);
 
   const { data } = useQuery(
-    [
-      "DP_EX_NO",
-      {
-        START_INDEX: 1,
-        END_INDEX: 10,
-      },
-    ],
+    ["DP_EX_NO"],
     async () => {
-      const response = await MainPage(1, 30);
+      const response = await MainPage(1, 10);
+      console.log(response);
       return response;
     },
     {
       onSuccess: (data) => {
-        setRecentArray(data.ListExhibitionOfSeoulMOAInfo.row);
-        // recentArray.sort((a, b) => b - a);
-        // console.log(recentArray);
-
-        // const linkArray = GalleryOpenData.map((item: any) => item.HOME_PAGE);
-        // setLinkList(linkArray);
+        setBaseArray(data.ListExhibitionOfSeoulMOAInfo.row);
+        baseArray.reverse();
+        // console.log(baseArray[0].DP_END < baseArray[0].DP_DATE);
       },
     }
   );
+  console.log(baseArray);
 
   return (
-    <div className="h-fit border-red-400 border-2">
+    <div className="h-fit border-2">
       <Search_Bar />
       <div className="my-3">
         <img src={loadImg.EX_Event_Banner} />
@@ -92,21 +96,30 @@ export default function Home() {
       {/* 종료예정 전시 */}
       <div className="h-[386px] bg-yellow-100 flex flex-col ">
         <h1>종료예정 전시 모음</h1>
-        <div className="w-11/12 mx-auto">
-          <div className="flex py-2">
-            <img
-              className="w-[130px] h-[90px] object-cover"
-              src={loadImg.EX_image1}
-            />
-            <div className="flex flex-col mx-1 justify-center">
-              <p className="text-primary-Gray text-xs">
-                0월 한달간 진행하는 특별 전시!
-              </p>
-              <p className="text-black font-bold text-base my-2">
-                주말마다 찾아오는 특별한가격
-              </p>
-            </div>
-          </div>
+        <div className="overflow-scroll">
+          {baseArray &&
+            baseArray.map((list, index) =>
+              list.DP_END > list.DP_DATE ? (
+                <div className="w-11/12 mx-auto">
+                  <div className="flex py-2">
+                    <div className="w-[130px] h-[90px] bg-white">
+                      <img
+                        className="w-full h-full object-cover"
+                        src={list.DP_MAIN_IMG}
+                      />
+                    </div>
+                    <div className="flex flex-col mx-1 justify-center w-40">
+                      <p className="text-primary-Gray text-xs">
+                        0월 한달간 진행하는 특별 전시!
+                      </p>
+                      <p className="text-black font-bold text-base my-2 ">
+                        {list.DP_NAME}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : null
+            )}
         </div>
       </div>
       {/* 현재 전시중인 작가 */}

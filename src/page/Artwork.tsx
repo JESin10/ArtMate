@@ -39,7 +39,7 @@ export default function Artwork() {
       setArtWorkList(data.ListExhibitionOfSeoulMOAInfo.row);
     },
   });
-  console.log(artworkList);
+  // console.log(artworkList);
 
   const openModal = (artwork: ArtworkInfo) => {
     setSelectedArtwork(artwork);
@@ -53,12 +53,6 @@ export default function Artwork() {
     <>
       <Search_Bar />
       <div className="w-full h-screen flex flex-col items-center overflow-y-auto pb-[120px]">
-        {/* <div className="w-[350px] h-fit my-4 mx-auto">
-          <input
-            placeholder="장소, 주소를 검색해보세요"
-            className="w-full h-[35px] indent-4 text-sm border-black border-2 rounded-3xl"
-          />
-        </div> */}
         <div className="w-full h-fit">
           <div className="w-11/12 mx-auto ">
             <div className="flex justify-between">
