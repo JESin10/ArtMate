@@ -14,11 +14,11 @@ export default function Loading() {
     }, 3000); // 예시로 3초 후에 로딩을 종료하는 것으로 설정
   }, []);
 
-  console.log(loading);
+  // console.log(loading);
 
   return (
     <LoadingContainer>
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center items-center mt-[-60px]">
         <div style={{ display: loading ? "block" : "none" }}>
           {/* 로딩 스피너 */}
           <div className="w-fit h-fit mb-6">
@@ -41,7 +41,7 @@ h-screen w-full
 `;
 
 const LogoDiv = tw.div`
-flex h-fit w-auto justify-center 
+flex h-fit w-auto justify-center
 `;
 
 const LogoImg = tw.img`

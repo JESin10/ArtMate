@@ -1,5 +1,7 @@
 import React, { ReactHTML, useState } from "react";
 import { loadImg } from "../assets/images";
+import { ReactComponent as MainLogo } from "../assets/CustomSvg/main_text_logo.svg";
+import tw from "tailwind-styled-components";
 
 export default function Search_Bar(): JSX.Element {
   const svgStyle = {
@@ -24,24 +26,17 @@ export default function Search_Bar(): JSX.Element {
   const onSearchHandler = async () => {};
 
   return (
-    <div className="py-4 bg-red-100 flex-col mx-auto justify-center ">
+    <div className="py-4 flex-col mx-auto justify-center ">
       <div className="flex flex-col">
         {isInputVisible ? (
           <>
-            <div className="flex border-primary-YellowGreen border-b-2 py-2 w-4/5 justify-center mx-auto">
-              <img
-                className="w-30 h-fit mx-auto"
-                alt="main-logo"
-                style={svgStyle}
-                // style={{ filter: "brightness(0) invert(1) hue-rotate(120deg)" }}
-                src={loadImg.Main_TextLogo}
-              />
-            </div>
-            <div className="flex justify-between border-primary-YellowGreen border-2 bg-white w-4/5 rounded-2xl mt-4 mx-auto">
-              <input
+            <MainBarContainer>
+              <MainTextLogo />
+            </MainBarContainer>
+            <SearchContainer>
+              <SearchInput
                 type="text"
                 placeholder="전시, 작품, 작가를 검색해보세요."
-                className="w-full h-8 bg-transparent rounded-2xl indent-0 px-3"
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyUp={onKeyPressHandler}
               />
@@ -56,17 +51,13 @@ export default function Search_Bar(): JSX.Element {
                   style={{ fill: "#608D00" }}
                 />
               </button>
-            </div>
+            </SearchContainer>
           </>
         ) : (
-          <div className="flex border-primary-YellowGreen border-b-2 py-2 w-4/5 justify-center mx-auto">
-            <img
-              className="w-30 h-fit mx-auto pl-6"
-              alt="main-logo"
-              style={svgStyle}
-              // style={{ filter: "brightness(0) invert(1) hue-rotate(120deg)" }}
-              src={loadImg.Main_TextLogo}
-            />
+          <MainBarContainer>
+            <div className="ml-6 flex w-60">
+              <MainTextLogo />
+            </div>
             <button
               onClick={handleSearchClick}
               className="bg-transparent flex justify-end"
@@ -78,9 +69,31 @@ export default function Search_Bar(): JSX.Element {
                 style={{ fill: "#608D00" }}
               />
             </button>
-          </div>
+          </MainBarContainer>
         )}
       </div>
     </div>
   );
 }
+
+const MainTextLogo = tw(MainLogo)`
+fill-primary-YellowGreen
+w-30 h-fit mx-auto
+`;
+
+const MainBarContainer = tw.div`
+flex border-primary-YellowGreen border-b-2 py-2 w-4/5 justify-center mx-auto
+`;
+
+const SearchInput = tw.input`
+w-full h-8 
+rounded-2xl indent-0 px-3 
+bg-transparent outline-none
+`;
+
+const SearchContainer = tw.div`
+flex justify-between 
+border-black border-2 
+bg-white w-4/5 rounded-2xl 
+mt-4 mx-auto
+`;

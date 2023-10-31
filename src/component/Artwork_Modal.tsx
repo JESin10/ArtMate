@@ -2,6 +2,7 @@ import React from "react";
 import { loadImg } from "../assets/images";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { ArtworkInfo } from "../page/Artwork";
+import tw from "tailwind-styled-components";
 
 interface ModalProps {
   isOpen: boolean;
@@ -25,8 +26,8 @@ export default function Artwork_Modal({
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-30  ">
-      <div className="bg-blue-200 w-[370px] h-4/5 rounded-t-xl shadow-lg overflow-y-auto pb-[70px]">
+    <ArtworkModal>
+      <ArtworkModalContainer>
         <div className="fixed z-10">
           <button
             className="my-2 ml-80 justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"
@@ -45,40 +46,42 @@ export default function Artwork_Modal({
           {/* 상세정보 */}
           <div className="space-y-1">
             <div className="flex">
-              <p className="text-sm flex w-20 font-bold">전시장소 </p>
-              <p className="text-sm flex ">{artworkInfo.DP_PLACE}</p>
+              <ArtworkModalLabel>전시장소 </ArtworkModalLabel>
+              <ArtworkModalContent>{artworkInfo.DP_PLACE}</ArtworkModalContent>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20 font-bold">전시기간 </p>
-              <p className="text-sm flex ">
+              <ArtworkModalLabel>전시기간 </ArtworkModalLabel>
+              <ArtworkModalContent>
                 {artworkInfo.DP_START} ~ {artworkInfo.DP_END}
-              </p>
+              </ArtworkModalContent>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20 font-bold">운영시간</p>
-              <div className="">
-                <p className="text-sm flex">평일 10:00-20:00</p>
-                <p className="text-sm flex">주말 10:00-19:00</p>
+              <ArtworkModalLabel>운영시간</ArtworkModalLabel>
+              <div>
+                <ArtworkModalContent>평일 10:00-20:00</ArtworkModalContent>
+                <ArtworkModalContent>주말 10:00-19:00</ArtworkModalContent>
               </div>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20 font-bold">작가 </p>
+              <ArtworkModalLabel>작가 </ArtworkModalLabel>
               <p className="text-sm w-fit h-10 flex overflow-hidden text-ellipsis break-all line-clamp-3 flex-wrap">
                 {artworkInfo.DP_ARTIST}
               </p>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20 font-bold">HOME </p>
-              <p className="text-sm flex">
+              <ArtworkModalLabel>HOME </ArtworkModalLabel>
+              <ArtworkModalContent>
                 <a
                   href={artworkInfo.DP_LNK}
                   target="_blank"
                   rel="noreferrer"
                   aria-label="resume-link"
                 >
-                  {/* <img src='' alt="Resume" /> */} 홈페이지 방문
+                  <ArtworkModalContent className="hover:text-primary-YellowGreen hover:font-extrabold">
+                    홈페이지 방문
+                  </ArtworkModalContent>
                 </a>
-              </p>
+              </ArtworkModalContent>
             </div>
           </div>
           {/* 갤러리 상세설명 */}
@@ -86,7 +89,27 @@ export default function Artwork_Modal({
             {parseAndStyleInfo(artworkInfo.DP_INFO)}
           </p>
         </div>
-      </div>
-    </div>
+      </ArtworkModalContainer>
+    </ArtworkModal>
   );
 }
+
+const ArtworkModal = tw.div`
+fixed inset-0 flex items-center justify-center z-30 
+
+`;
+
+const ArtworkModalContainer = tw.div`
+w-[370px] h-4/5 pb-[70px]
+rounded-t-xl overflow-y-auto 
+bg-white
+shadow-Ver2 
+`;
+
+const ArtworkModalLabel = tw.p`
+text-sm flex w-20 font-bold
+`;
+
+const ArtworkModalContent = tw.p`
+text-sm flex
+`;

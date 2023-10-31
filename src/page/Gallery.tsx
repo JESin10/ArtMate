@@ -56,12 +56,9 @@ export default function Gallery() {
   return (
     <>
       <Search_Bar />
-      <div className="w-full h-screen flex flex-col items-center bg-black/30 overflow-y-auto pb-[120px]">
+      <GalleryPageContainer>
         <div className="w-[350px] h-fit my-4 mx-auto">
-          <input
-            placeholder="장소, 주소를 검색해보세요"
-            className="w-full h-[35px] indent-4 text-sm border-black border-2 rounded-3xl"
-          />
+          <LocationSearch placeholder="장소, 주소를 검색해보세요" />
         </div>
         <div className="w-full h-fit">
           {/* gallery zip */}
@@ -86,14 +83,13 @@ export default function Gallery() {
                   <div className="flex flex-col space-y-2" key={index}>
                     <GalleryContainer onClick={() => openModal(list)}>
                       <div className="w-36 h-36 my-2 bg-blue-200 rounded-2xl">
-                        <img
-                          className="w-full h-full rounded-2xl"
+                        <GalleryMockupIMG
                           alt="gallery_mockup"
                           src={loadImg.Gallery_MockUP}
                         />
                       </div>
                       <div className="flex flex-col w-40 h-fit my-auto justify-center">
-                        <div className=" w-fit h-[22px] bg-white font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap my-1">
+                        <div className=" w-fit h-[22px] font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap my-1">
                           {list.KOR_NAME}
                         </div>
                         <div className="text-sm">{list.KOR_ADD}</div>
@@ -113,14 +109,30 @@ export default function Gallery() {
             </div>
           )}
         </div>
-      </div>
+      </GalleryPageContainer>
     </>
   );
 }
+
+const GalleryPageContainer = tw.div`
+w-full h-screen pb-[120px]
+flex flex-col items-center overflow-y-auto 
+`;
 
 const GalleryContainer = tw.div`
 flex h-fit w-full justify-center
 cursor-pointer rounded-lg
 space-x-4
 hover:bg-primary-YellowGreen/10
+`;
+
+const LocationSearch = tw.input`
+w-full h-[35px] 
+indent-4 text-sm rounded-3xl outline-none
+border-black border-2 
+`;
+
+const GalleryMockupIMG = tw.img`
+w-full h-full rounded-2xl border-2
+shadow-md
 `;

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { loadImg } from "../assets/images";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { GalleryInfo } from "../page/Gallery";
+import tw from "tailwind-styled-components";
 
 interface ModalProps {
   isOpen: boolean;
@@ -17,8 +18,8 @@ export default function Gallery_Modal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-30  ">
-      <div className="bg-blue-200 w-[370px] h-4/5 rounded-t-xl shadow-lg overflow-y-auto pb-[70px]">
+    <GalleryModal>
+      <GalleryModalContainer>
         <div className="fixed z-10">
           <button
             className="my-2 ml-80 justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"
@@ -29,7 +30,7 @@ export default function Gallery_Modal({
         </div>
         <img
           alt="example"
-          className="w-full h-[350px] object-contain mt-12 bg-black"
+          className="w-full h-[350px] object-contain mt-12 bg-white"
           src={loadImg.Gallery_MockUP}
         />
         <div className="px-4">
@@ -37,24 +38,24 @@ export default function Gallery_Modal({
           {/* 상세정보 */}
           <div className="space-y-1">
             <div className="flex">
-              <p className="text-sm flex w-20 font-bold">주소 </p>
-              <p className="text-sm flex ">{galleryInfo.KOR_ADD}</p>
+              <GalleryModalLabel>주소 </GalleryModalLabel>
+              <GalleryModalContent>{galleryInfo.KOR_ADD}</GalleryModalContent>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20 font-bold">운영시간 </p>
-              <p className="text-sm flex ">10:00-20:00</p>
+              <GalleryModalLabel>운영시간 </GalleryModalLabel>
+              <GalleryModalContent>10:00-20:00</GalleryModalContent>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20 font-bold">휴관일 </p>
-              <p className="text-sm flex ">메주 월 휴무</p>
+              <GalleryModalLabel>휴관일 </GalleryModalLabel>
+              <GalleryModalContent>메주 월 휴무</GalleryModalContent>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20 font-bold">전화번호 </p>
-              <p className="text-sm flex ">02-1234-1234</p>
+              <GalleryModalLabel>전화번호 </GalleryModalLabel>
+              <GalleryModalContent>02-1234-1234</GalleryModalContent>
             </div>
             <div className="flex">
-              <p className="text-sm flex w-20 font-bold">홈페이지 </p>
-              {galleryInfo.HOME_PAGE && (
+              <GalleryModalLabel>홈페이지 </GalleryModalLabel>
+              {galleryInfo.HOME_PAGE ? (
                 <p className="text-sm flex">
                   <a
                     href={galleryInfo.HOME_PAGE}
@@ -62,9 +63,16 @@ export default function Gallery_Modal({
                     rel="noreferrer"
                     aria-label="resume-link"
                   >
-                    {/* <img src={loadImg.Main_Logo} alt="Resume" /> */}
-                    홈페이지 방문
+                    <GalleryModalContent className="hover:text-primary-YellowGreen hover:font-extrabold">
+                      홈페이지 방문
+                    </GalleryModalContent>
                   </a>
+                </p>
+              ) : (
+                <p className="text-sm flex">
+                  <p className="cursor-not-allowed text-gray-400">
+                    홈페이지 방문
+                  </p>
                 </p>
               )}
             </div>
@@ -75,7 +83,24 @@ export default function Gallery_Modal({
           </p> */}
           {/* 위치 map */}
         </div>
-      </div>
-    </div>
+      </GalleryModalContainer>
+    </GalleryModal>
   );
 }
+
+const GalleryModal = tw.div`
+fixed inset-0 flex items-center justify-center z-30
+`;
+
+const GalleryModalContainer = tw.div`
+w-[370px] h-4/5  pb-[70px]
+rounded-t-xl shadow-Ver2 overflow-y-auto
+bg-white
+`;
+
+const GalleryModalLabel = tw.p`
+text-sm flex w-20 font-bold
+`;
+
+const GalleryModalContent = tw.p`
+text-sm flex`;

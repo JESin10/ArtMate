@@ -39,7 +39,7 @@ export default function Artwork() {
       setArtWorkList(data.ListExhibitionOfSeoulMOAInfo.row);
     },
   });
-  console.log(artworkList);
+  // console.log(artworkList);
 
   const openModal = (artwork: ArtworkInfo) => {
     setSelectedArtwork(artwork);
@@ -52,13 +52,7 @@ export default function Artwork() {
   return (
     <>
       <Search_Bar />
-      <div className="w-full h-screen flex flex-col items-center bg-black/30 overflow-y-auto pb-[120px]">
-        {/* <div className="w-[350px] h-fit my-4 mx-auto">
-          <input
-            placeholder="장소, 주소를 검색해보세요"
-            className="w-full h-[35px] indent-4 text-sm border-black border-2 rounded-3xl"
-          />
-        </div> */}
+      <div className="w-full h-screen flex flex-col items-center overflow-y-auto pb-[120px]">
         <div className="w-full h-fit">
           <div className="w-11/12 mx-auto ">
             <div className="flex justify-between">
@@ -79,7 +73,7 @@ export default function Artwork() {
                     key={index}
                     className="flex flex-col w-fit h-full justify-center mx-auto"
                   >
-                    <GalleryContainer onClick={() => openModal(list)}>
+                    <ArtworkContainer onClick={() => openModal(list)}>
                       <div className="w-36 h-32 my-3">
                         <img
                           className="w-full h-full object-cover rounded-xl justify-center shadow-Ver1"
@@ -88,23 +82,21 @@ export default function Artwork() {
                         />
                       </div>
                       <div className="w-36 h-fit flex flex-col my-auto justify-center">
-                        <div className="h-[22px] my-2 bg-white font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap my-1">
+                        <div className="h-[22px] my-2 font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
                           {list.DP_NAME}
                         </div>
-                        <div className="text-xs overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
-                          {list.DP_ARTIST}
-                        </div>
-                        <div className="text-xs overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
-                          {list.DP_ART_PART}
-                        </div>
+                        <ArtworkDesc>{list.DP_ARTIST}</ArtworkDesc>
+                        <ArtworkDesc>{list.DP_ART_PART}</ArtworkDesc>
                       </div>
-                    </GalleryContainer>
+                    </ArtworkContainer>
                     {selectedArtwork && (
-                      <Artwork_Modal
-                        isOpen={true}
-                        closeModal={closeModal}
-                        artworkInfo={selectedArtwork}
-                      />
+                      <div className="overflow-inherit">
+                        <Artwork_Modal
+                          isOpen={true}
+                          closeModal={closeModal}
+                          artworkInfo={selectedArtwork}
+                        />
+                      </div>
                     )}
                   </div>
                 ))}
@@ -116,9 +108,14 @@ export default function Artwork() {
   );
 }
 
-const GalleryContainer = tw.div`
+const ArtworkContainer = tw.div`
   flex h-fit w-fit justify-between
   cursor-pointer rounded-lg
   space-y-1 flex-col
   hover:bg-primary-YellowGreen/10
-  `;
+`;
+
+const ArtworkDesc = tw.div`
+overflow-hidden flex-wrap
+text-xs text-ellipsis break-all line-clamp-1 
+`;

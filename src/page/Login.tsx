@@ -5,13 +5,16 @@ import { useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
 import { ReactComponent as MainLogo } from "../assets/CustomSvg/main_text_logo.svg";
 import { ReactComponent as DescLogo } from "../assets/CustomSvg/main_logo_desc.svg";
-import Auth_Api from "../api/Auth_Api";
+import { UserInfo } from "./Home";
+import NaverLogin from "../component/NaverLogin";
 
 export default function Login() {
   const { signup, signupWithGoogle, currentUser } = useAuth();
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [getToken, setGetToken] = useState();
+  const [userInfo, setUserInfo] = useState<UserInfo>();
 
   const SignupWithGoogleHandler = () => {
     setLoading(true);
@@ -19,6 +22,8 @@ export default function Login() {
     navigate("/");
     setLoading(false);
   };
+
+  // console.log(getToken, userInfo);
 
   return (
     <div className="w-full h-screen flex flex-col mt-20 justify-center items-center">
@@ -68,7 +73,10 @@ export default function Login() {
                   className="w-10"
                   src={loadImg.Naver_LoginBtn}
                 /> */}
-                <Auth_Api />
+                <NaverLogin
+                  setGetToken={setGetToken}
+                  setUserInfo={setUserInfo}
+                />
                 {/* <p>네이버로 시작하기</p> */}
               </SocialAuthBtnContainer>
             </SocialAuthBtn>
