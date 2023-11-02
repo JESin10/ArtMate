@@ -8,6 +8,7 @@ import Search_Bar from "../component/Search_Bar";
 import { useAuth } from "../modules/UserAuth";
 import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
+import Loading from "./exception/Loading";
 
 export interface UserInfo {
   uid: string;
@@ -50,7 +51,7 @@ export default function Home() {
     fetchData(); // 페이지 렌딩과 동시에 데이터 가져오기
   }, []);
 
-  const { data } = useQuery(["DP_EX_NO"], fetchData);
+  const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
 
   useEffect(() => {
     if (currentUser) {
@@ -66,7 +67,9 @@ export default function Home() {
 
   console.log(baseArray);
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <div className="h-fit border-2">
       <Search_Bar />
       <div className="my-3">

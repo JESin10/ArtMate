@@ -8,6 +8,7 @@ import tw from "tailwind-styled-components";
 import Gallery_Modal from "../component/Gallery_Modal";
 import { useQuery } from "react-query";
 import { Seoul_Museum_Gallery_OpenData } from "../api/Gallery_OpenApi";
+import Loading from "./exception/Loading";
 
 export interface GalleryInfo {
   CATEGORY: string;
@@ -42,7 +43,7 @@ export default function Gallery() {
     fetchData();
   }, []);
 
-  const { data } = useQuery(["DP_EX_NO"], fetchData);
+  const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
 
   //지도모드
   const MapModeHandler = () => {
@@ -58,7 +59,9 @@ export default function Gallery() {
     setSelectedArtwork(null);
   };
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <>
       <Search_Bar />
       <GalleryPageContainer>

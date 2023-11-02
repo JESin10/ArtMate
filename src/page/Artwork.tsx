@@ -5,6 +5,7 @@ import Search_Bar from "../component/Search_Bar";
 import tw from "tailwind-styled-components";
 import { loadImg } from "../assets/images";
 import Artwork_Modal from "../component/Artwork_Modal";
+import Loading from "./exception/Loading";
 
 export interface ArtworkInfo {
   DP_ARTIST: string;
@@ -43,7 +44,7 @@ export default function Artwork() {
     fetchData();
   }, []);
 
-  const { data } = useQuery(["DP_EX_NO"], fetchData);
+  const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
 
   //Modal
   const openModal = (artwork: ArtworkInfo) => {
@@ -54,7 +55,9 @@ export default function Artwork() {
     setSelectedArtwork(null);
   };
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <>
       <Search_Bar />
       <div className="w-full h-screen flex flex-col items-center overflow-y-auto pb-[120px]">

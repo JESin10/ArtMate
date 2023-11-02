@@ -11,10 +11,10 @@ export default function Loading() {
     // 페이지 로딩 시 로딩 상태를 변경
     setTimeout(() => {
       setLoading(false);
-    }, 3000); // 예시로 3초 후에 로딩을 종료하는 것으로 설정
+    }, 5000); // 예시로 5초 후에 로딩을 종료하는 것으로 설정
   }, []);
 
-  // console.log(loading);
+  console.log(loading);
 
   return (
     <LoadingContainer>
