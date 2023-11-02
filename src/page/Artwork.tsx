@@ -35,9 +35,8 @@ export default function Artwork() {
 
   // 페이지 렌딩과 동시에 데이터 가져오기
   const fetchData = async () => {
-    const response = await SeoulArtMuseum_ArtWork_OpenData(1, 10);
+    const response = await SeoulArtMuseum_ArtWork_OpenData(1, 30);
     setArtWorkList(response.ListExhibitionOfSeoulMOAInfo.row);
-
     return response;
   };
   useEffect(() => {

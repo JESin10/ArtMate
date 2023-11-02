@@ -56,15 +56,20 @@ export const MainPage = async (START_INDEX: number, END_INDEX: number) => {
   }
 };
 
-export const Seoul_Museum_Gallery_OpenData = async () => {
+export const Seoul_Museum_Gallery_OpenData = async (
+  START_INDEX: number,
+  END_INDEX: number
+) => {
   try {
-    const { data } = await axios.get(GalleyURL, {
-      // params: {
-      //   serviceKey: process.env.REACT_APP_OPENAPI_KEY,
-      //   numOfRows: 1,
-      //   pageNo: 10,
-      // },
-    });
+    const { data } = await axios.get(
+      `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/SebcArtGalleryKor/${START_INDEX}/${END_INDEX}/`,
+      {
+        params: {
+          START_INDEX: START_INDEX,
+          END_INDEX: END_INDEX,
+        },
+      }
+    );
     return data;
   } catch (err) {
     console.error(err);

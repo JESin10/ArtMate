@@ -21,7 +21,6 @@ export default function Artwork_Modal({
     const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
       return `<span style="font-weight: bold;">${content}</span>`;
     });
-
     return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
   }
 
@@ -83,9 +82,30 @@ export default function Artwork_Modal({
                   rel="noreferrer"
                   aria-label="resume-link"
                 >
-                  <ArtworkModalContent className="hover:text-primary-YellowGreen hover:font-extrabold">
+                  {/* <ArtworkModalContent className="hover:text-primary-YellowGreen hover:font-extrabold">
                     홈페이지 방문
-                  </ArtworkModalContent>
+                  </ArtworkModalContent> */}
+
+                  {artworkInfo.DP_LNK ? (
+                    <p className="text-sm flex">
+                      <a
+                        href={artworkInfo.DP_LNK}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="resume-link"
+                      >
+                        <ArtworkModalContent className="hover:text-primary-YellowGreen hover:font-extrabold">
+                          홈페이지 방문
+                        </ArtworkModalContent>
+                      </a>
+                    </p>
+                  ) : (
+                    <p className="text-sm flex">
+                      <p className="cursor-not-allowed text-gray-400">
+                        홈페이지 방문
+                      </p>
+                    </p>
+                  )}
                 </a>
               </ArtworkModalContent>
             </div>

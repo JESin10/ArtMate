@@ -27,24 +27,29 @@ export default function Gallery() {
   const navigate = useNavigate();
   const [mapMode, setMapMode] = useState<boolean>(false);
   const [GalleryOpenData, setGalleryOpenData] = useState([]);
-  // const [linkList, setLinkList] = useState<string[]>([]);
-  // const [linkPreviews, setLinkPreviews] = useState<React.ReactNode[]>([]);
   const [selectedArtwork, setSelectedArtwork] = useState<GalleryInfo | null>(
     null
   );
 
-  const { data } = useQuery("KOR_NAME", Seoul_Museum_Gallery_OpenData, {
-    onSuccess: (data) => {
-      setGalleryOpenData(data.SebcArtGalleryKor.row);
-      // const linkArray = GalleryOpenData.map((item: any) => item.HOME_PAGE);
-      // setLinkList(linkArray);
-    },
-  });
-  console.log(GalleryOpenData);
+  // 페이지 렌딩과 동시에 데이터 가져오기
+  const fetchData = async () => {
+    const response = await Seoul_Museum_Gallery_OpenData(1, 30);
+    setGalleryOpenData(response.SebcArtGalleryKor.row);
+    return response;
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const { data } = useQuery(["DP_EX_NO"], fetchData);
+
+  //지도모드
   const MapModeHandler = () => {
     setMapMode(true);
   };
 
+  //Modal
   const openModal = (gallery: GalleryInfo) => {
     setSelectedArtwork(gallery);
   };
@@ -68,13 +73,12 @@ export default function Gallery() {
             <div className="w-11/12 mx-auto ">
               <div className="flex justify-between">
                 <h1 className="text-3xl font-extrabold my-2">가까운 전시장</h1>
-
-                <div className="flex space-x-1">
+                <div className="flex space-x-2 mx-2">
                   <button>
-                    <img src={loadImg.Map_current1} />
+                    <img src={loadImg.Map_current1} alt="current-location" />
                   </button>
                   <button onClick={MapModeHandler}>
-                    <img src={loadImg.Map_all} />
+                    <img src={loadImg.Map_all} alt="map-mode" />
                   </button>
                 </div>
               </div>
