@@ -92,8 +92,8 @@ const CustomDots = styled.ul`
     color: transparent;
     cursor: pointer;
     display: block;
-    height: 15px;
-    width: 15px;
+    height: 10px;
+    width: 10px;
     border-radius: 100%;
     padding: 0;
     font-weight: bolder;
