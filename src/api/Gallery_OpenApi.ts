@@ -1,7 +1,6 @@
 import axios from "axios";
 
-//서울시립미술관 전시 정보
-const SeoulMuseum_artwork_URL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/ListExhibitionOfSeoulMOAInfo/1/30/`;
+// const SeoulMuseum_artwork_URL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/ListExhibitionOfSeoulMOAInfo/${START_INDEX}/${END_INDEX}`;
 // const SeoulMuseum_artwork_URL2 = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/ListExhibitionOfSeoulMOAInfo/${START_INDEX}/${END_INDEX}/`;
 // ${process.env.REACT_APP_OPENAPI_KEY}/json/ListExhibitionOfSeoulMOAInfo/1/30/
 
@@ -18,21 +17,28 @@ const VisitSeoulURL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_O
 //   },
 // });
 
-export const SeoulArtMuseum_ArtWork_OpenData = async () => {
+//서울시립미술관 전시 정보-ArtworkPage
+export const SeoulArtMuseum_ArtWork_OpenData = async (
+  START_INDEX: number,
+  END_INDEX: number
+) => {
   try {
-    const { data } = await axios.get(SeoulMuseum_artwork_URL, {
-      // params: {
-      //   serviceKey: process.env.REACT_APP_OPENAPI_KEY,
-      //   numOfRows: 1,
-      //   pageNo: 10,
-      // },
-    });
+    const { data } = await axios.get(
+      `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/ListExhibitionOfSeoulMOAInfo/${START_INDEX}/${END_INDEX}`,
+      {
+        params: {
+          START_INDEX: START_INDEX,
+          END_INDEX: END_INDEX,
+        },
+      }
+    );
     return data;
   } catch (err) {
     console.error(err);
   }
 };
 
+//서울시립미술관 전시 정보-MainPage
 export const MainPage = async (START_INDEX: number, END_INDEX: number) => {
   try {
     const { data } = await axios.get(
@@ -50,15 +56,20 @@ export const MainPage = async (START_INDEX: number, END_INDEX: number) => {
   }
 };
 
-export const Seoul_Museum_Gallery_OpenData = async () => {
+export const Seoul_Museum_Gallery_OpenData = async (
+  START_INDEX: number,
+  END_INDEX: number
+) => {
   try {
-    const { data } = await axios.get(GalleyURL, {
-      // params: {
-      //   serviceKey: process.env.REACT_APP_OPENAPI_KEY,
-      //   numOfRows: 1,
-      //   pageNo: 10,
-      // },
-    });
+    const { data } = await axios.get(
+      `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/SebcArtGalleryKor/${START_INDEX}/${END_INDEX}/`,
+      {
+        params: {
+          START_INDEX: START_INDEX,
+          END_INDEX: END_INDEX,
+        },
+      }
+    );
     return data;
   } catch (err) {
     console.error(err);

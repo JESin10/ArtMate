@@ -63,7 +63,7 @@ export default function RecommendSlider() {
         <ImageContainer>
           <div className="flex flex-col">
             {currentItems.map((data: any, index: number) => (
-              <div>
+              <div key={index}>
                 {index % 4 === 0 && (
                   <RecommendImg_ver1
                     alt={index.toString()}
@@ -81,7 +81,7 @@ export default function RecommendSlider() {
           </div>
           <div className="flex flex-col">
             {currentItems.map((data: any, index: number) => (
-              <div>
+              <div key={index}>
                 {index % 4 === 2 && (
                   <RecommendImg_ver2
                     alt={index.toString()}
