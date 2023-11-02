@@ -23,18 +23,35 @@ export interface LatestArtworkInfo {
   DP_MAIN_IMG: string;
   DP_NAME: string;
   DP_START: Date;
+  DP_ARTIST: string;
 }
 
 export default function Home() {
   const example: string[] = [loadImg.EX_image1, loadImg.EX_image2];
   const [baseArray, setBaseArray] = useState<LatestArtworkInfo[]>([]);
+  const [latestArray, setLatestArray] = useState<LatestArtworkInfo[]>([]);
+
   const { currentUser } = useAuth();
   const [getToken, setGetToken] = useState();
   const [userInfo, setUserInfo] = useState<UserInfo>();
-  const [lastestArtwork, setLatestArtWork] = useState<[]>([]);
   const Today = new Date();
 
   // console.log(currentUser);
+
+  const { data } = useQuery(
+    ["DP_EX_NO"],
+    async () => {
+      const response = await MainPage(1, 10);
+      // console.log(response);
+      return response;
+    },
+    {
+      onSuccess: (data) => {
+        setBaseArray(data.ListExhibitionOfSeoulMOAInfo.row);
+        setLatestArray([...baseArray].reverse());
+      },
+    }
+  );
 
   useEffect(() => {
     if (currentUser) {
@@ -50,22 +67,8 @@ export default function Home() {
 
   // console.log(userInfo);
 
-  const { data } = useQuery(
-    ["DP_EX_NO"],
-    async () => {
-      const response = await MainPage(1, 10);
-      console.log(response);
-      return response;
-    },
-    {
-      onSuccess: (data) => {
-        setBaseArray(data.ListExhibitionOfSeoulMOAInfo.row);
-        baseArray.reverse();
-        // console.log(baseArray[0].DP_END < baseArray[0].DP_DATE);
-      },
-    }
-  );
-  console.log(baseArray);
+  console.log("baseArray", baseArray);
+  // console.log("latestArray", latestArray);
 
   return (
     <div className="h-fit border-2">
@@ -94,61 +97,66 @@ export default function Home() {
       {/* 최신 전시 */}
       <RecommendSlider />
       {/* 종료예정 전시 */}
-      <div className="h-[386px] bg-yellow-100 flex flex-col ">
-        <h1>종료예정 전시 모음</h1>
-        <div className="overflow-scroll">
-          {baseArray &&
-            baseArray.map((list, index) =>
-              list.DP_END > list.DP_DATE ? (
-                <div className="w-11/12 mx-auto">
-                  <div className="flex py-2">
-                    <div className="w-[130px] h-[90px] bg-white">
-                      <img
-                        className="w-full h-full object-cover"
-                        src={list.DP_MAIN_IMG}
-                      />
-                    </div>
-                    <div className="flex flex-col mx-1 justify-center w-40">
-                      <p className="text-primary-Gray text-xs">
-                        0월 한달간 진행하는 특별 전시!
-                      </p>
-                      <p className="text-black font-bold text-base my-2 ">
-                        {list.DP_NAME}
-                      </p>
+      <div className="h-[370px] flex flex-col my-4">
+        <div className="w-11/12 mx-auto overflow-hidden line-clamp-1">
+          <h1 className="w-fit font-extrabold text-2xl px-4 my-2">
+            종료예정 전시 모음
+          </h1>
+          <div className="overflow-scroll w-full">
+            {latestArray &&
+              latestArray.map((list, index) =>
+                list.DP_END > list.DP_DATE ? (
+                  <div className="w-11/12 mx-auto" key={index}>
+                    <div className="flex py-2">
+                      <div className="w-[130px] h-[90px] bg-white">
+                        <img
+                          className="w-full h-full mr-2 object-cover"
+                          src={list.DP_MAIN_IMG}
+                        />
+                      </div>
+                      <div className="flex flex-col mx-2 justify-start w-40">
+                        <p className="text-primary-Gray text-xs">
+                          0월 한달간 진행하는 특별 전시!
+                        </p>
+                        <p className="text-black font-bold text-base my-2">
+                          {list.DP_NAME}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ) : null
-            )}
+                ) : null
+              )}
+          </div>
         </div>
       </div>
       {/* 현재 전시중인 작가 */}
-      <div className="h-[174px] bg-blue-100">
-        <h1>현재 전시중인 작가</h1>
-        <div className="w-fit flex space-x-3 justify-center mx-auto my-4">
-          <div className="w-fit flex flex-col justify-center text-center bg-black/30">
-            <div className="w-[72px] h-[72px] rounded-full bg-white border-black border-2">
-              <img className="w-[70px] h-[70px]" src={loadImg.Menu_User} />
-            </div>
-            <p className="text-sm w-[72px] text-center">AAA</p>
-          </div>
-          <div className="w-fit flex flex-col justify-center text-center bg-black/30">
-            <div className="w-[72px] h-[72px] rounded-full bg-white border-black border-2">
-              <img className="w-[70px] h-[70px]" src={loadImg.Menu_User} />
-            </div>
-            <p className="text-sm w-[72px] text-center">BBB</p>
-          </div>
-          <div className="w-fit flex flex-col justify-center text-center bg-black/30">
-            <div className="w-[72px] h-[72px] rounded-full bg-white border-black border-2">
-              <img className="w-[70px] h-[70px]" src={loadImg.Menu_User} />
-            </div>
-            <p className="text-sm w-[72px] text-center">CCC</p>
-          </div>
-          <div className="w-fit flex flex-col justify-center text-center bg-black/30">
-            <div className="w-[72px] h-[72px] rounded-full bg-white border-black border-2">
-              <img className="w-[70px] h-[70px]" src={loadImg.Menu_User} />
-            </div>
-            <p className="text-sm w-[72px] text-center">DDD</p>
+      <div className="h-[190px] bg-[#D9D9D9] my-4">
+        <div className="w-11/12 mx-auto">
+          <h1 className="w-fit font-extrabold text-2xl px-4 py-2">
+            현재 전시중인 작가
+          </h1>
+          <div className="w-full flex overflow-x-scroll space-x-3 mx-auto my-4 px-2">
+            {baseArray &&
+              baseArray.map((list, index) => (
+                <>
+                  {list.DP_ARTIST === "" ? null : (
+                    <div
+                      key={index}
+                      className="w-fit flex flex-col justify-center text-center"
+                    >
+                      <div className="w-[72px] h-[72px] rounded-full bg-white border-black border-2 shadow-md">
+                        <img
+                          className="w-[70px] h-[70px]"
+                          src={loadImg.Menu_User}
+                        />
+                      </div>
+                      <p className="text-sm w-[50px] mx-auto my-2 text-center overflow-hidden line-clamp-1">
+                        {list.DP_ARTIST}
+                      </p>
+                    </div>
+                  )}
+                </>
+              ))}
           </div>
         </div>
       </div>
