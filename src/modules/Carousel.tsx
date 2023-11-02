@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import tw from "tailwind-styled-components";
 import Slider, { CustomArrowProps } from "react-slick";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
+import styled from "styled-components";
 
 const NextArrow = ({
   currentSlide,
@@ -44,48 +45,82 @@ const Carousel = ({ children }: CarouselProps) => {
     autoplay: true, // 자동 재생 여부
     autoplaySpeed: 5000, // 자동 재생 속도 (ms)
     pauseOnHover: true, // 마우스 호버 시 재생 일시 정지 여부
-    arrows: true, // 이전/다음 화살표 표시 여부
+    arrows: false, // 이전/다음 화살표 표시 여부
     prevArrow: <PrevArrow />, // 이전 화살표 커스텀 컴포넌트
     nextArrow: <NextArrow />, // 다음 화살표 커스텀 컴포넌트
-    responsive: [
-      // 반응형 설정
-      // {
-      //   breakpoint: 768, // 화면 너비가 768px 이하일 때 적용
-      //   settings: {
-      //     slidesToShow: 2, // 한 번에 보여질 슬라이드 수
-      //     slidesToScroll: 1, // 스크롤 시 이동할 슬라이드 수
-      //   },
-      // },
-      // {
-      //   breakpoint: 480, // 화면 너비가 480px 이하일 때 적용
-      //   settings: {
-      //     slidesToShow: 1, // 한 번에 보여질 슬라이드 수
-      //     slidesToScroll: 1, // 스크롤 시 이동할 슬라이드 수
-      //   },
-      // },
-    ],
+    responsive: [],
+    draggable: true,
+    dotsClass: "dots_custom",
+
+    appendDots: (dots: any) => (
+      <CustomDots className="dots_custom">{dots}</CustomDots>
+    ),
   };
 
   return (
-    <SliderWrapper>
-      <StyledSlider {...settings}>{children}</StyledSlider>
-    </SliderWrapper>
+    // <SliderWrapper>
+    <StyledSlider {...settings}>
+      {/* <div className=" border-primary-YellowGreen border-4 rounded-xl"> */}
+      {children}
+      {/* </div> */}
+    </StyledSlider>
+    // </SliderWrapper>
   );
 };
 
 export default Carousel;
 
 const SliderWrapper = tw.div`
-w-full p-4
+w-full p-4 h-[500px]
 
-bg-black/50
+bg-red-200
 `;
 
 const StyledSlider = tw(Slider)`
-mx-auto mb-5 
-w-11/12 h-auto
-items-center 
+mx-auto mb-5 h-full
+items-center object-cover object-center
 
-border-primary-YellowGreen border-4 rounded-xl
 
+
+`;
+
+const CustomDotsContainer = tw.div`
+w-fit bg-black my-2
+`;
+
+const CustomDots = styled.ul`
+  width: 80%;
+  height: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between; // 요소 사이의 간격 조절
+  align-items: center; // 수직 가운데 정렬
+
+  li {
+    list-style: none;
+    cursor: pointer;
+    display: inline-block;
+    margin: auto;
+    padding: 0;
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  button {
+    border: solid;
+    background-color: #d9d9d9;
+    color: transparent;
+    cursor: pointer;
+    display: block;
+    height: 15px;
+    width: 15px;
+    border-radius: 100%;
+    padding: 0;
+    font-weight: bolder;
+    margin: 0 5px;
+  }
+
+  .slick-active button {
+    background-color: #608d00;
+  }
 `;

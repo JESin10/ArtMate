@@ -24,6 +24,7 @@ export interface LatestArtworkInfo {
   DP_NAME: string;
   DP_START: Date;
   DP_ARTIST: string;
+  DP_EX_NO: number;
 }
 
 export default function Home() {
@@ -37,21 +38,19 @@ export default function Home() {
   const Today = new Date();
 
   // console.log(currentUser);
+  // 데이터 가져오는 함수
+  const fetchData = async () => {
+    const response = await MainPage(1, 10);
+    setBaseArray(response.ListExhibitionOfSeoulMOAInfo.row);
+    setLatestArray([...response.ListExhibitionOfSeoulMOAInfo.row].reverse());
+    return response;
+  };
 
-  const { data } = useQuery(
-    ["DP_EX_NO"],
-    async () => {
-      const response = await MainPage(1, 10);
-      // console.log(response);
-      return response;
-    },
-    {
-      onSuccess: (data) => {
-        setBaseArray(data.ListExhibitionOfSeoulMOAInfo.row);
-        setLatestArray([...baseArray].reverse());
-      },
-    }
-  );
+  useEffect(() => {
+    fetchData(); // 페이지 렌딩과 동시에 데이터 가져오기
+  }, []);
+
+  const { data } = useQuery(["DP_EX_NO"], fetchData);
 
   useEffect(() => {
     if (currentUser) {
@@ -65,10 +64,7 @@ export default function Home() {
     }
   }, []);
 
-  // console.log(userInfo);
-
-  console.log("baseArray", baseArray);
-  // console.log("latestArray", latestArray);
+  console.log(baseArray);
 
   return (
     <div className="h-fit border-2">
@@ -77,20 +73,30 @@ export default function Home() {
         <img src={loadImg.EX_Event_Banner} />
       </div>
       {/* 취향저격 전시 */}
-      <div className="border-blue-400 border-2">
+      <div className="w-11/12 mx-auto">
         {currentUser ? (
-          <h1 className="flex">
-            <p className="mx-2 font-extrabold">{currentUser.displayName}</p>님의
-            취향저격 전시 모음
+          <h1 className="w-fit text-lg px-4 my-2 flex">
+            <p className="mr-2 font-extrabold">{currentUser.displayName}</p>
+            님께 추천하는 전시 모음
           </h1>
         ) : (
-          <h1 className="flex">지금 떠오르는 전시는?</h1>
+          <h1 className="w-fit font-extrabold text-2xl px-4 my-4">
+            지금 떠오르는 전시는?
+          </h1>
         )}
-
         <Carousel>
-          {example &&
-            example.map((image: string, index: number) => (
-              <img key={index} src={image} alt={`image-${index}`} />
+          {baseArray &&
+            baseArray.map((list) => (
+              <div
+                key={list.DP_EX_NO}
+                className="h-[500px] bg-black object-cover border-primary-YellowGreen border-4 rounded-xl"
+              >
+                <img
+                  className="rounded-lg h-full object-none object-center "
+                  src={list.DP_MAIN_IMG}
+                  alt={`list-${list.DP_EX_NO}`}
+                />
+              </div>
             ))}
         </Carousel>
       </div>
@@ -104,9 +110,9 @@ export default function Home() {
           </h1>
           <div className="overflow-scroll w-full">
             {latestArray &&
-              latestArray.map((list, index) =>
+              latestArray.map((list) =>
                 list.DP_END > list.DP_DATE ? (
-                  <div className="w-11/12 mx-auto" key={index}>
+                  <div className="w-11/12 mx-auto" key={list.DP_EX_NO}>
                     <div className="flex py-2">
                       <div className="w-[130px] h-[90px] bg-white">
                         <img
@@ -137,13 +143,10 @@ export default function Home() {
           </h1>
           <div className="w-full flex overflow-x-scroll space-x-3 mx-auto my-4 px-2">
             {baseArray &&
-              baseArray.map((list, index) => (
-                <>
+              baseArray.map((list) => (
+                <div key={list.DP_EX_NO}>
                   {list.DP_ARTIST === "" ? null : (
-                    <div
-                      key={index}
-                      className="w-fit flex flex-col justify-center text-center"
-                    >
+                    <div className="w-fit flex flex-col justify-center text-center">
                       <div className="w-[72px] h-[72px] rounded-full bg-white border-black border-2 shadow-md">
                         <img
                           className="w-[70px] h-[70px]"
@@ -155,7 +158,7 @@ export default function Home() {
                       </p>
                     </div>
                   )}
-                </>
+                </div>
               ))}
           </div>
         </div>
