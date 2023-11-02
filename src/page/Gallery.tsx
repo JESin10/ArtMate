@@ -70,7 +70,7 @@ export default function Gallery() {
           {mapMode ? (
             <KaKaoMap mapMode={mapMode} setMapMode={setMapMode} />
           ) : (
-            <div className="w-11/12 mx-auto ">
+            <div className="w-11/12 mx-auto">
               <div className="flex justify-between">
                 <h1 className="text-3xl font-extrabold my-2">가까운 전시장</h1>
                 <div className="flex space-x-2 mx-2">
