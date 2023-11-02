@@ -57,41 +57,20 @@ const Carousel = ({ children }: CarouselProps) => {
     ),
   };
 
-  return (
-    // <SliderWrapper>
-    <StyledSlider {...settings}>
-      {/* <div className=" border-primary-YellowGreen border-4 rounded-xl"> */}
-      {children}
-      {/* </div> */}
-    </StyledSlider>
-    // </SliderWrapper>
-  );
+  return <StyledSlider {...settings}>{children}</StyledSlider>;
 };
 
 export default Carousel;
 
-const SliderWrapper = tw.div`
-w-full p-4 h-[500px]
-
-bg-red-200
-`;
-
 const StyledSlider = tw(Slider)`
-mx-auto mb-5 h-full
-items-center object-cover object-center
-
-
-
-`;
-
-const CustomDotsContainer = tw.div`
-w-fit bg-black my-2
+  mx-auto mb-10 h-full w-11/12
+  items-center object-cover object-center
 `;
 
 const CustomDots = styled.ul`
   width: 80%;
   height: 100%;
-  margin: auto;
+  margin: 20px auto;
   display: flex;
   justify-content: space-between; // 요소 사이의 간격 조절
   align-items: center; // 수직 가운데 정렬
@@ -107,8 +86,9 @@ const CustomDots = styled.ul`
   }
 
   button {
-    border: solid;
-    background-color: #d9d9d9;
+    border: 1px solid;
+    border-color: #608d00;
+    background-color: white;
     color: transparent;
     cursor: pointer;
     display: block;

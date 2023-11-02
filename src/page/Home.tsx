@@ -89,10 +89,10 @@ export default function Home() {
             baseArray.map((list) => (
               <div
                 key={list.DP_EX_NO}
-                className="h-[500px] bg-black object-cover border-primary-YellowGreen border-4 rounded-xl"
+                className="h-[500px] object-cover px-2 rounded-xl bg-transparent"
               >
                 <img
-                  className="rounded-lg h-full object-none object-center "
+                  className="rounded-lg h-full object-none shadow-md object-center border-primary-YellowGreen border-4"
                   src={list.DP_MAIN_IMG}
                   alt={`list-${list.DP_EX_NO}`}
                 />
