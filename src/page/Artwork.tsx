@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { SeoulArtMuseum_ArtWork_OpenData } from "../api/Gallery_OpenApi";
 import Search_Bar from "../component/Search_Bar";
@@ -29,18 +29,24 @@ export interface ArtworkInfo {
 
 export default function Artwork() {
   const [artworkList, setArtWorkList] = useState([]);
-  // const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkInfo | null>(
     null
   );
 
-  const { data } = useQuery("DP_EX_NO", SeoulArtMuseum_ArtWork_OpenData, {
-    onSuccess: (data) => {
-      setArtWorkList(data.ListExhibitionOfSeoulMOAInfo.row);
-    },
-  });
-  // console.log(artworkList);
+  // 페이지 렌딩과 동시에 데이터 가져오기
+  const fetchData = async () => {
+    const response = await SeoulArtMuseum_ArtWork_OpenData(1, 10);
+    setArtWorkList(response.ListExhibitionOfSeoulMOAInfo.row);
 
+    return response;
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const { data } = useQuery(["DP_EX_NO"], fetchData);
+
+  //Modal
   const openModal = (artwork: ArtworkInfo) => {
     setSelectedArtwork(artwork);
   };
@@ -57,12 +63,15 @@ export default function Artwork() {
           <div className="w-11/12 mx-auto ">
             <div className="flex justify-between">
               <h1 className="text-3xl font-extrabold my-2">작품 정보</h1>
-              <div className="flex space-x-1">
-                <button>
-                  <img src={"./icons/Outline/filter.svg"} />
+              <div className="flex mx-2 space-x-2">
+                <button className="cursor-pointer">
+                  <img src={"./icons/Outline/filter.svg"} alt="filter" />
                 </button>
-                <button>
-                  <img src={"./icons/Outline/reload.svg"} />
+                <button
+                  onClick={() => window.location.reload()}
+                  className="cursor-pointer"
+                >
+                  <img src={"./icons/Outline/reload.svg"} alt="refresh" />
                 </button>
               </div>
             </div>
@@ -85,8 +94,20 @@ export default function Artwork() {
                         <div className="h-[22px] my-2 font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
                           {list.DP_NAME}
                         </div>
-                        <ArtworkDesc>{list.DP_ARTIST}</ArtworkDesc>
-                        <ArtworkDesc>{list.DP_ART_PART}</ArtworkDesc>
+                        {list.DP_ARTIST === "" ? (
+                          <ArtworkDesc className="text-primary-Gray">
+                            unknown
+                          </ArtworkDesc>
+                        ) : (
+                          <ArtworkDesc>{list.DP_ARTIST}</ArtworkDesc>
+                        )}
+                        {list.DP_ART_PART === "" ? (
+                          <ArtworkDesc className="text-primary-Gray">
+                            etc
+                          </ArtworkDesc>
+                        ) : (
+                          <ArtworkDesc>{list.DP_ART_PART}</ArtworkDesc>
+                        )}{" "}
                       </div>
                     </ArtworkContainer>
                     {selectedArtwork && (

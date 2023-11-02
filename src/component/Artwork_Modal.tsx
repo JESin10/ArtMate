@@ -57,16 +57,22 @@ export default function Artwork_Modal({
             </div>
             <div className="flex">
               <ArtworkModalLabel>운영시간</ArtworkModalLabel>
-              <div>
+              <div className="w-full">
                 <ArtworkModalContent>평일 10:00-20:00</ArtworkModalContent>
                 <ArtworkModalContent>주말 10:00-19:00</ArtworkModalContent>
               </div>
             </div>
             <div className="flex">
               <ArtworkModalLabel>작가 </ArtworkModalLabel>
-              <p className="text-sm w-fit h-10 flex overflow-hidden text-ellipsis break-all line-clamp-3 flex-wrap">
-                {artworkInfo.DP_ARTIST}
-              </p>
+              {artworkInfo.DP_ARTIST === "" ? (
+                <p className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
+                  unknown
+                </p>
+              ) : (
+                <p className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
+                  {artworkInfo.DP_ARTIST}
+                </p>
+              )}
             </div>
             <div className="flex">
               <ArtworkModalLabel>HOME </ArtworkModalLabel>
@@ -107,9 +113,9 @@ shadow-Ver2
 `;
 
 const ArtworkModalLabel = tw.p`
-text-sm flex w-20 font-bold
+text-sm flex w-24 font-bold
 `;
 
 const ArtworkModalContent = tw.p`
-text-sm flex
+text-sm flex w-full
 `;
