@@ -9,6 +9,9 @@ import { useAuth } from "../modules/UserAuth";
 import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
 import Loading from "./exception/Loading";
+import tw from "tailwind-styled-components";
+import { ArtworkInfo } from "./Artwork";
+import Artwork_Modal from "../component/Artwork_Modal";
 
 export interface UserInfo {
   uid: string;
@@ -26,17 +29,22 @@ export interface LatestArtworkInfo {
   DP_START: Date;
   DP_ARTIST: string;
   DP_EX_NO: number;
+  DP_ART_PART: string;
 }
 
 export default function Home() {
-  const example: string[] = [loadImg.EX_image1, loadImg.EX_image2];
+  // const example: string[] = [loadImg.EX_image1, loadImg.EX_image2];
   const [baseArray, setBaseArray] = useState<LatestArtworkInfo[]>([]);
-  const [latestArray, setLatestArray] = useState<LatestArtworkInfo[]>([]);
+  const [latestArray, setLatestArray] = useState<ArtworkInfo[]>([]);
+  // const [tag, setTag] = useState<string[]>([]);
+  const [selectedArtwork, setSelectedArtwork] = useState<ArtworkInfo | null>(
+    null
+  );
 
   const { currentUser } = useAuth();
   const [getToken, setGetToken] = useState();
   const [userInfo, setUserInfo] = useState<UserInfo>();
-  const Today = new Date();
+  // const Today = new Date();
 
   // console.log(currentUser);
   // 데이터 가져오는 함수
@@ -65,7 +73,24 @@ export default function Home() {
     }
   }, []);
 
-  console.log(baseArray);
+  // console.log(baseArray);
+  // console.log(tag);
+
+  //Modal
+  const openModal = (artwork: ArtworkInfo) => {
+    setSelectedArtwork(artwork);
+  };
+
+  const closeModal = () => {
+    setSelectedArtwork(null);
+  };
+
+  function parseAndStyleInfo(info: string) {
+    const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
+      return `<span style="font-weight: bold;">${content}</span>`;
+    });
+    return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
+  }
 
   return isLoading ? (
     <Loading />
@@ -94,11 +119,32 @@ export default function Home() {
                 key={list.DP_EX_NO}
                 className="h-[500px] object-cover px-2 rounded-xl bg-transparent"
               >
-                <img
-                  className="rounded-lg h-full object-none shadow-md object-center border-primary-YellowGreen border-4"
-                  src={list.DP_MAIN_IMG}
-                  alt={`list-${list.DP_EX_NO}`}
-                />
+                <div className="w-full h-full rounded-xl border-primary-YellowGreen border-4">
+                  <img
+                    className="rounded-t-lg h-[75%] w-full object-cover shadow-md object-center"
+                    src={list.DP_MAIN_IMG}
+                    alt={`list-${list.DP_EX_NO}`}
+                  />
+                  <div className="w-full h-[25%] rounded-b-lg bg-white border-primary-YellowGreen border-t-4 flex flex-col">
+                    <div className="h-fit flex flex-wrap">
+                      {list.DP_ART_PART === "" ? (
+                        <>
+                          <Tag>#최신전시</Tag>
+                          <Tag>#NEW</Tag>
+                        </>
+                      ) : (
+                        <>
+                          {list.DP_ART_PART.split(",").map((tag) => (
+                            <Tag key={tag}>#{tag}</Tag>
+                          ))}
+                        </>
+                      )}
+                    </div>
+                    <div className="p-2 text-xl font-extrabold my-auto flex items-center overflow-hidden">
+                      {list.DP_NAME}
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
         </Carousel>
@@ -113,10 +159,13 @@ export default function Home() {
           </h1>
           <div className="overflow-scroll w-full">
             {latestArray &&
-              latestArray.map((list) =>
+              latestArray.map((list: ArtworkInfo) =>
                 list.DP_END > list.DP_DATE ? (
                   <div className="w-11/12 mx-auto" key={list.DP_EX_NO}>
-                    <div className="flex py-2">
+                    <div
+                      onClick={() => openModal(list)}
+                      className="flex py-2 hover:cursor-pointer"
+                    >
                       <div className="w-[130px] h-[90px] bg-white">
                         <img
                           className="w-full h-full mr-2 object-cover"
@@ -125,10 +174,14 @@ export default function Home() {
                       </div>
                       <div className="flex flex-col mx-2 justify-start w-40">
                         <p className="text-primary-Gray text-xs">
-                          0월 한달간 진행하는 특별 전시!
+                          {list.DP_ART_PART.split(",", 1)} 작품을 만나볼 시간
                         </p>
-                        <p className="text-black font-bold text-base my-2">
+                        <p className="text-black font-bold text-base my-4 hover:text-primary-YellowGreen">
                           {list.DP_NAME}
+                        </p>
+
+                        <p className="text-primary-Gray text-xs text-end">
+                          {list.DP_END.toString()}까지
                         </p>
                       </div>
                     </div>
@@ -144,12 +197,12 @@ export default function Home() {
           <h1 className="w-fit font-extrabold text-2xl px-4 py-2">
             현재 전시중인 작가
           </h1>
-          <div className="w-full flex overflow-x-scroll space-x-3 mx-auto my-4 px-2">
+          <div className="w-full flex overflow-x-scroll mx-auto my-4 px-2">
             {baseArray &&
               baseArray.map((list) => (
                 <div key={list.DP_EX_NO}>
                   {list.DP_ARTIST === "" ? null : (
-                    <div className="w-fit flex flex-col justify-center text-center">
+                    <div className="w-fit flex flex-col justify-center text-center mr-2">
                       <div className="w-[72px] h-[72px] rounded-full bg-white border-black border-2 shadow-md">
                         <img
                           className="w-[70px] h-[70px]"
@@ -165,8 +218,23 @@ export default function Home() {
               ))}
           </div>
         </div>
+        {selectedArtwork && (
+          <div className="overflow-inherit">
+            <Artwork_Modal
+              isOpen={true}
+              closeModal={closeModal}
+              artworkInfo={selectedArtwork}
+            />
+          </div>
+        )}
       </div>
       <Menu_Footer />
     </div>
   );
 }
+
+const Tag = tw.p`
+text-sm text-white font-semibold
+bg-primary-YellowGreen rounded-2xl
+w-fit h-fit py-1 px-3 m-1
+`;

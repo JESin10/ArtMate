@@ -5,7 +5,7 @@ import axios from "axios";
 // ${process.env.REACT_APP_OPENAPI_KEY}/json/ListExhibitionOfSeoulMOAInfo/1/30/
 
 //서울시 문화시설현황
-const GalleyURL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/SebcArtGalleryKor/1/30/`;
+// const GalleyURL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/SebcArtGalleryKor/1/30/`;
 //서울시 관광명소 - Eng
 const VisitSeoulURL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/TbVwAttractions/1/30/`;
 
@@ -56,6 +56,7 @@ export const MainPage = async (START_INDEX: number, END_INDEX: number) => {
   }
 };
 
+//서울시 문화시설현황-Gallery
 export const Seoul_Museum_Gallery_OpenData = async (
   START_INDEX: number,
   END_INDEX: number
@@ -85,6 +86,7 @@ export const Visit_Seoul_OpenData = async () => {
       //   pageNo: 10,
       // },
     });
+    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
