@@ -2,38 +2,53 @@ import React, { useState } from "react";
 import { Map } from "react-kakao-maps-sdk";
 import tw from "tailwind-styled-components";
 import { loadImg } from "../assets/images";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { UserLocation } from "./UserLocation";
 
 export interface MapModeProps {
   mapMode: boolean;
   setMapMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-// declare global {
-//   interface Window {
-//     kakao: any;
-//   }
-// }
-
 export default function KaKaoMap({ mapMode, setMapMode }: MapModeProps) {
   const MapModeHandler = (mapMode: boolean) => {
     setMapMode(false);
   };
 
+  const geolocationOptions = {
+    enableHighAccuracy: true,
+    timeout: 1000 * 10,
+    maximumAge: 1000 * 3600 * 24,
+  };
+
+  // const currentLocationHandler = () => {
+  //   //   const geolocationOptions = {
+  //   //     enableHighAccuracy: true,
+  //   //     timeout: 1000 * 10,
+  //   //     maximumAge: 1000 * 3600 * 24,
+  //   //   };
+
+  //   const { location, error } = UserLocation();
+  //   console.log(location?.latitude, location?.longitude);
+  //   //   console.error(error);
+
+  //   return { location, error };
+  // };
+
   return (
     <div className="w-full h-screen justify-center">
       {/* button */}
+      <UserLocation />
       <div className="flex justify-between">
         <h1 className="text-3xl font-extrabold my-2 text-transparent">
-          내 주변 갤러리
+          내 주변 갤러리_공백
         </h1>
-
         <div className="flex space-x-2 mr-3">
           <button>
-            <img src={loadImg.Map_current1} />
+            <img alt="current-location" src={loadImg.Map_current1} />
           </button>
           <button onClick={() => MapModeHandler(false)}>
-            <img src={loadImg.Menu_List} />
+            <img alt="gallery-list" src={loadImg.Menu_List} />
           </button>
         </div>
       </div>
