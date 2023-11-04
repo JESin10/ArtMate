@@ -29,7 +29,7 @@ export default function Mypage() {
 
   return (
     <div className="w-full h-screen">
-      <div className="flex justify-end w-full space-x-2 pt-5">
+      <div className="flex w-full justify-end px-4 space-x-2 pt-5 cursor-pointer">
         <button>
           <img alt="notify_icon" src={"./icons/Outline/notification.svg"} />
         </button>
@@ -132,21 +132,3 @@ grid grid-cols-3 w-[330px] mx-auto
 const ReviewImg = tw.img`
 w-[100px] h-[120px] rounded-2xl bg-white my-1 border-2
 `;
-
-// const BookMark_Icon = tw(BookMarkIcon)`
-// w-[40px] h-[40px] mx-auto
-// fill-white
-// hover:fill-primary-YellowGreen
-// `;
-
-// const Review_Icon = tw(ReviewIcon)`
-// w-[40px] h-[40px] mx-auto
-// fill-white
-// hover:fill-primary-YellowGreen
-// `;
-
-// const Like_Icon = tw(LikeIcon)`
-// w-[40px] h-[40px] mx-auto
-// fill-white
-// hover:fill-primary-YellowGreen
-// `;

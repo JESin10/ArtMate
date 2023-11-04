@@ -51,7 +51,8 @@ export default function Artwork_Modal({
             <div className="flex">
               <ArtworkModalLabel>전시기간 </ArtworkModalLabel>
               <ArtworkModalContent>
-                {artworkInfo.DP_START} ~ {artworkInfo.DP_END}
+                {artworkInfo.DP_START.toString()} ~{" "}
+                {artworkInfo.DP_END.toString()}
               </ArtworkModalContent>
             </div>
             <div className="flex">
@@ -82,10 +83,6 @@ export default function Artwork_Modal({
                   rel="noreferrer"
                   aria-label="resume-link"
                 >
-                  {/* <ArtworkModalContent className="hover:text-primary-YellowGreen hover:font-extrabold">
-                    홈페이지 방문
-                  </ArtworkModalContent> */}
-
                   {artworkInfo.DP_LNK ? (
                     <p className="text-sm flex">
                       <a
@@ -121,21 +118,20 @@ export default function Artwork_Modal({
 }
 
 const ArtworkModal = tw.div`
-fixed inset-0 flex items-center justify-center z-30 
-
+  fixed inset-0 flex items-center justify-center z-30 
 `;
 
 const ArtworkModalContainer = tw.div`
-w-[370px] h-4/5 pb-[70px]
-rounded-t-xl overflow-y-auto 
-bg-white
-shadow-Ver2 
+  w-[370px] h-4/5 pb-[70px]
+  rounded-t-xl overflow-y-auto 
+  bg-white
+  shadow-Ver2 
 `;
 
 const ArtworkModalLabel = tw.p`
-text-sm flex w-24 font-bold
+  text-sm flex w-24 font-bold
 `;
 
 const ArtworkModalContent = tw.p`
-text-sm flex w-full
+  text-sm flex w-full
 `;

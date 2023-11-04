@@ -8,22 +8,22 @@ import Artwork_Modal from "../component/Artwork_Modal";
 import Loading from "./exception/Loading";
 
 export interface ArtworkInfo {
-  DP_ARTIST: string;
-  DP_ART_CNT: number;
+  DP_ARTIST?: string;
+  DP_ART_CNT?: number;
   DP_ART_PART: string;
-  DP_DATE?: string;
-  DP_END?: string;
+  DP_START: Date;
+  DP_END: Date;
+  DP_DATE: Date;
   DP_EVENT?: string | null;
-  DP_EX_NO: number;
+  DP_EX_NO?: number;
   DP_HOMEPAGE?: string | null;
   DP_INFO: string;
-  DP_LNK: string;
-  DP_MAIN_IMG: string;
-  DP_NAME: string;
-  DP_PLACE: string;
+  DP_LNK?: string;
+  DP_MAIN_IMG?: string;
+  DP_NAME?: string;
+  DP_PLACE?: string;
   DP_SEQ?: number;
-  DP_SPONSOR: string;
-  DP_START?: string;
+  DP_SPONSOR?: string;
   DP_SUBNAME?: string | null;
   DP_VIEWPOINT?: string | null;
 }
