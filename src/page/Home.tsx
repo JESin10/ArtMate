@@ -33,21 +33,15 @@ export interface LatestArtworkInfo {
 }
 
 export default function Home() {
-  // const example: string[] = [loadImg.EX_image1, loadImg.EX_image2];
   const [baseArray, setBaseArray] = useState<LatestArtworkInfo[]>([]);
   const [latestArray, setLatestArray] = useState<ArtworkInfo[]>([]);
-  // const [tag, setTag] = useState<string[]>([]);
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkInfo | null>(
     null
   );
-
   const { currentUser } = useAuth();
   const [getToken, setGetToken] = useState();
   const [userInfo, setUserInfo] = useState<UserInfo>();
-  // const Today = new Date();
 
-  // console.log(currentUser);
-  // 데이터 가져오는 함수
   const fetchData = async () => {
     const response = await MainPage(1, 10);
     setBaseArray(response.ListExhibitionOfSeoulMOAInfo.row);
@@ -73,9 +67,6 @@ export default function Home() {
     }
   }, []);
 
-  // console.log(baseArray);
-  // console.log(tag);
-
   //Modal
   const openModal = (artwork: ArtworkInfo) => {
     setSelectedArtwork(artwork);
@@ -95,7 +86,7 @@ export default function Home() {
   return isLoading ? (
     <Loading />
   ) : (
-    <div className="h-fit border-2">
+    <div className="h-fit border-2 ">
       <Search_Bar />
       <div className="my-3">
         <img src={loadImg.EX_Event_Banner} />
@@ -125,7 +116,7 @@ export default function Home() {
                     src={list.DP_MAIN_IMG}
                     alt={`list-${list.DP_EX_NO}`}
                   />
-                  <div className="w-full h-[25%] rounded-b-lg bg-white border-primary-YellowGreen border-t-4 flex flex-col">
+                  <div className="w-full h-[25%] rounded-b-lg bg-primary-YellowGreen  border-primary-YellowGreen border-t-4 flex flex-col">
                     <div className="h-fit flex flex-wrap">
                       {list.DP_ART_PART === "" ? (
                         <>
@@ -140,7 +131,7 @@ export default function Home() {
                         </>
                       )}
                     </div>
-                    <div className="p-2 text-xl font-extrabold my-auto flex items-center overflow-hidden">
+                    <div className="p-2 text-xl font-extrabold text-white my-auto flex items-center overflow-hidden">
                       {list.DP_NAME}
                     </div>
                   </div>
@@ -202,15 +193,15 @@ export default function Home() {
               baseArray.map((list) => (
                 <div key={list.DP_EX_NO}>
                   {list.DP_ARTIST === "" ? null : (
-                    <div className="w-fit flex flex-col justify-center text-center mr-2">
+                    <div className="w-fit flex flex-col justify-center text-center mr-4">
                       <div className="w-[72px] h-[72px] rounded-full bg-white border-black border-2 shadow-md">
                         <img
                           className="w-[70px] h-[70px]"
                           src={loadImg.Menu_User}
                         />
                       </div>
-                      <p className="text-sm w-[50px] mx-auto my-2 text-center overflow-hidden line-clamp-1">
-                        {list.DP_ARTIST}
+                      <p className="text-sm w-[50px] mx-auto my-2 text-center">
+                        {list.DP_ARTIST.split(",", 1)}
                       </p>
                     </div>
                   )}
@@ -234,7 +225,7 @@ export default function Home() {
 }
 
 const Tag = tw.p`
-text-sm text-white font-semibold
-bg-primary-YellowGreen rounded-2xl
+text-sm text-primary-YellowGreen font-semibold
+border-primary-YellowGreen border-2 bg-white rounded-2xl
 w-fit h-fit py-1 px-3 m-1
 `;
