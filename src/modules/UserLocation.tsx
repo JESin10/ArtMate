@@ -1,41 +1,41 @@
 import React, { useEffect, useState } from "react";
+import { UserLocationProps } from "./KaKaoMap";
+// import { UserLocation } from "./KaKaoMap";
 
-export interface UserLocation {
-  latitude: number;
-  longitude: number;
-}
-
-export const UserLocation = (option = {}) => {
-  const [location, setLocation] = useState<UserLocation>();
-
-  const [error, setError] = useState("");
+export const UserLocation = ({
+  latitude,
+  longitude,
+  option,
+}: UserLocationProps) => {
+  const [locate, setLocate] = useState<UserLocationProps>();
 
   const handleSuccess = (pos: GeolocationPosition) => {
-    const { latitude, longitude } = pos.coords;
-
-    setLocation({ latitude, longitude });
-    console.log(location);
+    setLocate({ latitude, longitude, option });
   };
 
+  console.log("Test", latitude, longitude);
+
   const handleError = (err: GeolocationPositionError) => {
-    setError(err.message);
+    // setError(err.message);
+    // console.error(error);
   };
 
   useEffect(() => {
     const { geolocation } = navigator;
 
     if (!geolocation) {
-      setError("Geolocation is not supported.");
+      // setError("Geolocation is not supported.");
       return;
     }
 
     geolocation.getCurrentPosition(handleSuccess, handleError, option);
+    console.log(locate?.latitude, locate?.longitude);
   }, [option]);
 
   return (
-    <div className="flex w-full space-x-3">
-      <div className="flex text-xs">lat : {location?.latitude}</div>
-      <div className="flex text-xs">lng : {location?.longitude}</div>
+    <div className="hidden">
+      <p>lat : {locate?.latitude}</p>
+      <p>lng : {locate?.longitude}</p>
     </div>
   );
 };
