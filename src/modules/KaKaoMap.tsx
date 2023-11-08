@@ -29,13 +29,33 @@ export default function KaKaoMap({ mapMode, setMapMode }: MapModeProps) {
       maximumAge: 1000 * 3600 * 24,
     },
   });
+  const [marker, setMarker] = useState<any>(null);
+  const [error, setError] = useState<string>("");
 
   const handleSuccess = (pos: GeolocationPosition) => {
     const { latitude, longitude } = pos.coords;
     setLocation({ latitude, longitude, option: location.option });
-  };
 
-  const [error, setError] = useState<string>("");
+    // 마커생성, 위치설정
+    // if (!marker) {
+    //   const newMarker = new (window as any).kakao.maps.Marker({
+    //     position: new (window as any).kakao.maps.LatLng(
+    //       location.latitude,
+    //       location.longitude
+    //     ),
+    //   });
+
+    //   newMarker.setMap(MyMap);
+    //   setMarker(newMarker);
+    // } else {
+    //   marker.setPosition(
+    //     new (window as any).kakao.maps.LatLng(
+    //       location.latitude,
+    //       location.longitude
+    //     )
+    //   );
+    // }
+  };
 
   useEffect(() => {
     const { geolocation } = navigator;
@@ -46,7 +66,7 @@ export default function KaKaoMap({ mapMode, setMapMode }: MapModeProps) {
     }
 
     geolocation.getCurrentPosition(handleSuccess);
-    console.log("KAKAO", location.latitude, location.longitude);
+    // console.log("KAKAO", location.latitude, location.longitude);
   }, [location.option]);
 
   return (
@@ -63,7 +83,7 @@ export default function KaKaoMap({ mapMode, setMapMode }: MapModeProps) {
           내 주변 갤러리_공백
         </h1>
         <div className="flex space-x-2 mr-3">
-          <button>
+          <button onClick={() => handleSuccess}>
             <img alt="current-location" src={loadImg.Map_current1} />
           </button>
           <button onClick={() => MapModeHandler(false)}>

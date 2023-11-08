@@ -8,7 +8,7 @@ export const UserLocation = ({
   option,
 }: UserLocationProps) => {
   const [locate, setLocate] = useState<UserLocationProps>();
-
+  const [error, setError] = useState<any>();
   const handleSuccess = (pos: GeolocationPosition) => {
     setLocate({ latitude, longitude, option });
   };
@@ -16,8 +16,8 @@ export const UserLocation = ({
   console.log("Test", latitude, longitude);
 
   const handleError = (err: GeolocationPositionError) => {
-    // setError(err.message);
-    // console.error(error);
+    setError(err.message);
+    console.error(error);
   };
 
   useEffect(() => {
