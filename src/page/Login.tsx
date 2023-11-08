@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { loadImg } from "../assets/images";
-import { useAuth } from "../modules/UserAuth";
+import { useAuth } from "../modules/UserAuth_Google";
 import { useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
 import { ReactComponent as MainLogo } from "../assets/CustomSvg/main_text_logo.svg";
 import { ReactComponent as DescLogo } from "../assets/CustomSvg/main_logo_desc.svg";
 import { UserInfo } from "./Home";
-import NaverLogin from "../component/NaverLogin";
+import UserAuth_Naver from "../modules/UserAuth_Naver";
 
 export default function Login() {
   const { signup, signupWithGoogle, currentUser } = useAuth();
-  const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [getToken, setGetToken] = useState();
@@ -23,7 +22,17 @@ export default function Login() {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (userInfo) {
+      localStorage.setItem("user_name", userInfo.name);
+      localStorage.setItem("user_email", userInfo.email);
+      localStorage.setItem("user_profile", userInfo.profileURL);
+      localStorage.setItem("user_uid", userInfo.uid);
+    }
+  }, [userInfo?.uid]);
+
   // console.log(getToken, userInfo);
+  console.log(userInfo);
 
   return (
     <div className="w-full h-screen flex flex-col mt-20 justify-center items-center">
@@ -73,9 +82,9 @@ export default function Login() {
                   className="w-10"
                   src={loadImg.Naver_LoginBtn}
                 /> */}
-                <NaverLogin
+                <UserAuth_Naver
                   setGetToken={setGetToken}
-                  setUserInfo={setUserInfo}
+                  setNaverUserInfo={setUserInfo}
                 />
                 {/* <p>네이버로 시작하기</p> */}
               </SocialAuthBtnContainer>
