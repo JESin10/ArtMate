@@ -1,26 +1,38 @@
 /* eslint-disable react/jsx-pascal-case */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { loadImg } from "../assets/images";
-import { useAuth } from "../modules/UserAuth";
+import { useAuth } from "../modules/UserAuth_Google";
 import { useNavigate } from "react-router-dom";
 // import { ReactComponent as BookMarkIcon } from "../assets/CustomSvg/bookmark.svg";
 // import { ReactComponent as LikeIcon } from "../assets/CustomSvg/like.svg";
-// import { ReactComponent as ReviewIcon } from "../assets/CustomSvg/receipt.svg";
 import tw from "tailwind-styled-components";
+import { UserInfo } from "./Home";
 
 export default function Mypage() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState<UserInfo>();
 
   useEffect(() => {
-    if (!currentUser) {
+    if (!userInfo) {
       return navigate("/login");
+    } else {
+      setUserInfo({
+        uid: localStorage.getItem("user_uid") || "",
+        name: localStorage.getItem("user_name") || "",
+        profileURL: localStorage.getItem("user_profile") || "",
+        email: localStorage.getItem("user_email") || "",
+        access_token: localStorage.getItem("access_token") || "",
+      });
     }
-  });
+  }, []);
+
+  console.log("userInfo: ", userInfo);
 
   const googleLogoutHandler = async () => {
     try {
       await logout();
+      localStorage.clear();
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -43,17 +55,17 @@ export default function Mypage() {
       <div className="w-fit mx-auto my-5">
         <div className="bg-primary-YellowGreen w-[350px] h-[250px] rounded-xl shadow-md py-4">
           <div className="flex p-4 h-fit  my-auto">
-            {currentUser && currentUser.photoURL ? (
+            {userInfo && userInfo.profileURL ? (
               <img
                 alt="user_img"
-                src={currentUser.photoURL}
+                src={userInfo.profileURL}
                 className="w-[80px] h-[80px] mx-3 bg-white shadow-lg rounded-full"
               />
             ) : null}
             <div className="text-white flex flex-col justify-center ml-4 ">
-              {currentUser && currentUser.displayName ? (
+              {userInfo && userInfo.name ? (
                 <div className="text-xl flex space-x-3">
-                  <p>{currentUser.displayName}</p>
+                  <p>{userInfo.name}</p>
                   <button
                     onClick={googleLogoutHandler}
                     className="bg-white border-2 border-solid rounded-md text-sm px-2 text-black"

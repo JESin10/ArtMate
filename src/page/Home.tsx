@@ -5,7 +5,7 @@ import Carousel from "../modules/Carousel";
 import { loadImg } from "../assets/images";
 import RecommendSlider from "../modules/RecommendSlider";
 import Search_Bar from "../component/Search_Bar";
-import { useAuth } from "../modules/UserAuth";
+import { useAuth } from "../modules/UserAuth_Google";
 import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
 import Loading from "./exception/Loading";
@@ -167,7 +167,7 @@ export default function Home() {
                         <p className="text-primary-Gray text-xs">
                           {list.DP_ART_PART.split(",", 1)} 작품을 만나볼 시간
                         </p>
-                        <p className="text-black font-bold text-base my-4 hover:text-primary-YellowGreen">
+                        <p className="text-black font-bold text-base my-4 hover:text-primary-YellowGreen overflow-hidden line-clamp-1 flex-wrap">
                           {list.DP_NAME}
                         </p>
 
@@ -225,7 +225,7 @@ export default function Home() {
 }
 
 const Tag = tw.p`
-text-sm text-primary-YellowGreen font-semibold
+text-xs text-primary-YellowGreen font-semibold
 border-primary-YellowGreen border-2 bg-white rounded-2xl
 w-fit h-fit py-1 px-3 m-1
 `;
