@@ -16,10 +16,12 @@ interface AuthContextProps {
   logout: () => Promise<void>;
 }
 
-const UserAuth = React.createContext<AuthContextProps | undefined>(undefined);
+const UserAuth_Google = React.createContext<AuthContextProps | undefined>(
+  undefined
+);
 
 export function useAuth() {
-  const context = useContext(UserAuth);
+  const context = useContext(UserAuth_Google);
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
@@ -50,6 +52,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
       setLoading(false);
+
+      if (currentUser) {
+        // setUserInfo(currentUser);
+        localStorage.setItem("user_name", currentUser.displayName);
+        localStorage.setItem("user_email", currentUser.email);
+        localStorage.setItem("user_profile", currentUser.photoURL);
+        localStorage.setItem("user_uid", currentUser.uid);
+        localStorage.setItem("access_token", currentUser.accessToken);
+      }
     });
 
     return unsubscribe;
@@ -64,6 +75,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <UserAuth.Provider value={value}>{!loading && children}</UserAuth.Provider>
+    <UserAuth_Google.Provider value={value}>
+      {!loading && children}
+    </UserAuth_Google.Provider>
   );
 }
