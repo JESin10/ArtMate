@@ -14,7 +14,7 @@ export default function Mypage() {
   const [userInfo, setUserInfo] = useState<UserInfo>();
 
   useEffect(() => {
-    if (!userInfo) {
+    if (!localStorage.getItem("access_token")) {
       return navigate("/login");
     } else {
       setUserInfo({
