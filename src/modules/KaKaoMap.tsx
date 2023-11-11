@@ -29,33 +29,25 @@ export default function KaKaoMap({ mapMode, setMapMode }: MapModeProps) {
       maximumAge: 1000 * 3600 * 24,
     },
   });
+
+  // var mapContainer: any = document.getElementById("map"), // 지도를 표시할 div
+  //   mapOption = {
+  //     center: new kakao.maps.LatLng(location.latitude, location.longitude), // 지도의 중심좌표
+  //     level: 3, // 지도의 확대 레벨
+  //   };
+  // var map = new kakao.maps.Map(mapContainer, mapOption);
+
   const [marker, setMarker] = useState<any>(null);
   const [error, setError] = useState<string>("");
 
-  const handleSuccess = (pos: GeolocationPosition) => {
-    const { latitude, longitude } = pos.coords;
-    setLocation({ latitude, longitude, option: location.option });
-
-    // 마커생성, 위치설정
-    // if (!marker) {
-    //   const newMarker = new (window as any).kakao.maps.Marker({
-    //     position: new (window as any).kakao.maps.LatLng(
-    //       location.latitude,
-    //       location.longitude
-    //     ),
-    //   });
-
-    //   newMarker.setMap(MyMap);
-    //   setMarker(newMarker);
-    // } else {
-    //   marker.setPosition(
-    //     new (window as any).kakao.maps.LatLng(
-    //       location.latitude,
-    //       location.longitude
-    //     )
-    //   );
-    // }
+  var mapOption = {
+    center: new (window as any).kakao.maps.LatLng(
+      location.latitude,
+      location.longitude
+    ),
+    level: 3,
   };
+  var map: any;
 
   useEffect(() => {
     const { geolocation } = navigator;
@@ -69,15 +61,49 @@ export default function KaKaoMap({ mapMode, setMapMode }: MapModeProps) {
     // console.log("KAKAO", location.latitude, location.longitude);
   }, [location.option]);
 
+  const handleSuccess = (pos: GeolocationPosition) => {
+    const { latitude, longitude } = pos.coords;
+    setLocation({ latitude, longitude, option: location.option });
+    // console.log(location.latitude, location.longitude, "zzz");
+    // if (!map) {
+    //   map = new (window as any).kakao.maps.Map(
+    //     document.getElementById("map"),
+    //     mapOption
+    //   );
+    // }
+    // // 마커생성, 위치설정
+    // if (!marker) {
+    //   const newMarker = new (window as any).kakao.maps.Marker({
+    //     position: new (window as any).kakao.maps.LatLng(
+    //       location.latitude,
+    //       location.longitude
+    //     ),
+    //     mapOption,
+    //   });
+    //   // console.log(1);
+    //   newMarker.setMap(map);
+    //   setMarker(newMarker);
+    //   // console.log(newMarker);
+    // } else {
+    //   marker.setPosition(
+    //     new (window as any).kakao.maps.LatLng(
+    //       location.latitude,
+    //       location.longitude
+    //     )
+    //   );
+    //   // console.log(2);
+    // }
+  };
+
   return (
     <div className="w-full h-screen justify-center">
       {/* button */}
-      <UserLocation
+      {/* <UserLocation
         latitude={location.latitude}
         longitude={location.longitude}
         option={location.option}
         // option={geolocationOptions}
-      />
+      /> */}
       <div className="flex justify-between">
         <h1 className="text-3xl font-extrabold my-2 text-transparent">
           내 주변 갤러리_공백
@@ -93,11 +119,20 @@ export default function KaKaoMap({ mapMode, setMapMode }: MapModeProps) {
       </div>
       {/* map */}
       <div className=" border-red-400 border-4 w-full h-[70%]">
-        <MyMap
+        {/* <MyMap
+          id="map"
           center={{ lat: location.latitude, lng: location.longitude }} // 지도의 중심 좌표
-          level={4} // 지도 확대 레벨
+          level={2} // 지도 확대 레벨
           // style={{ width: "100px", height: "100px" }}
-        ></MyMap>
+        ></MyMap> */}
+        <UserLocation
+          latitude={location.latitude}
+          longitude={location.longitude}
+          option={location.option}
+        />
+        {/* <div id="map" style={{ width: "100%", height: "400px" }}>
+          dddas
+        </div> */}
       </div>
     </div>
   );
