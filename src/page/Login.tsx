@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { loadImg } from "../assets/images";
 import { useAuth } from "../modules/UserAuth_Google";
 import { useNavigate } from "react-router-dom";
@@ -7,13 +7,19 @@ import { ReactComponent as MainLogo } from "../assets/CustomSvg/main_text_logo.s
 import { ReactComponent as DescLogo } from "../assets/CustomSvg/main_logo_desc.svg";
 import { UserInfo } from "./Home";
 import UserAuth_Naver from "../modules/UserAuth_Naver";
+import { v4 as uidv } from "uuid";
 
 export default function Login() {
-  const { signup, signupWithGoogle, currentUser } = useAuth();
+  const { login, signup, signupWithGoogle, currentUser } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [getToken, setGetToken] = useState();
   const [userInfo, setUserInfo] = useState<UserInfo>();
+
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+  const [error, setError] = useState<string>("");
+  const LoginUid = uidv();
 
   const SignupWithGoogleHandler = () => {
     setLoading(true);
@@ -31,6 +37,26 @@ export default function Login() {
     }
   }, [userInfo?.uid]);
 
+  // basic singup form
+  const BasicLoginHandler = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setError("");
+      setLoading(true);
+      if (emailRef.current && passwordRef.current) {
+        await (emailRef.current.value, passwordRef.current.value);
+        localStorage.setItem("user_name", emailRef.current.value);
+        localStorage.setItem("user_email", emailRef.current.value);
+        localStorage.setItem("user_profile", "./favicon.ico");
+        localStorage.setItem("user_uid", LoginUid);
+      }
+      window.location.replace("/");
+    } catch (err) {
+      setError("Fail to sign up");
+    }
+    setLoading(false);
+  };
+
   // console.log(getToken, userInfo);
   console.log(userInfo);
 
@@ -41,9 +67,12 @@ export default function Login() {
         <DescTextLogo />
       </div>
       <div className="flex-col flex justify-center w-fit">
-        <div className="w-fit my-5 flex flex-col space-y-4">
-          <AuthInput type="text" placeholder="아이디" />
-          <AuthInput type="text" placeholder="비밀번호" />
+        <form
+          className="w-fit my-5 flex flex-col space-y-4"
+          onSubmit={BasicLoginHandler}
+        >
+          <AuthInput type="text" placeholder="아이디" ref={emailRef} />
+          <AuthInput type="text" placeholder="비밀번호" ref={passwordRef} />
           <div className="flex space-x-2 items-center w-fit mx-2">
             <input type="checkbox" className="w-4 h-4" />
             <p className="w-fit ">자동로그인</p>
@@ -51,7 +80,7 @@ export default function Login() {
           <button className="bg-primary-YellowGreen rounded-3xl text-white w-[320px] h-[42px]">
             로그인
           </button>
-        </div>
+        </form>
         <div className="flex justify-center w-fit mx-auto text-xs mb-4">
           <button className="mx-4">아이디 찾기</button>
           <button className="mx-4">비밀번호 찾기</button>

@@ -33,7 +33,7 @@ export default function UserAuth_Naver({
         const user_name = naverLogin.user.getName();
 
         // console.log(user_name, user_email);
-        // setNaverUserInfo({ ...naverLogin.user });
+        setNaverUserInfo({ ...naverLogin.user });
         setUserInfo({
           uid: naverLogin.user.id,
           name: naverLogin.user.nickname,
@@ -48,10 +48,7 @@ export default function UserAuth_Naver({
     window.location.href.includes("access_token") && getToken();
   };
 
-  const [user, setUser] = useState(null);
-
   const getToken = () => {
-    // const token = window.location.href.split("=")[1].split("&")[0];
     const currentURL = window.location.href;
     const url = new URL(currentURL);
     const token = url.hash.split("=")[1];
@@ -64,7 +61,7 @@ export default function UserAuth_Naver({
   useEffect(() => {
     initializeNaver();
     userAccessToken();
-    // getToken();
+    getToken();
 
     if (userInfo) {
       localStorage.setItem("user_name", userInfo.name);
