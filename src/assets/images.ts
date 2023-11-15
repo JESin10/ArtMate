@@ -1,3 +1,7 @@
+import { ReactComponent as DescLogo } from "./customSvg/Menubar_gallery.svg";
+
+export { DescLogo };
+
 export const loadImg = {
   Main_Logo: "./icons/Outline/main_logo.svg",
   Main_TextLogo: "./icons/Outline/main_text_logo.svg",
@@ -35,4 +39,6 @@ export const loadImg = {
   Google_LoginBtn: "./icons/Solid/google_Btn.svg",
   Kakao_LoginBtn: "./icons/Solid/kakao_Btn.png",
   Naver_LoginBtn: "./icons/Solid/naver_Btn.png",
+
+  User_LogOut: "./icons/Outline/user_logout.svg",
 };

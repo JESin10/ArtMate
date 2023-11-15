@@ -27,8 +27,6 @@ export default function Mypage() {
     }
   }, []);
 
-  console.log("userInfo: ", userInfo);
-
   const googleLogoutHandler = async () => {
     try {
       await logout();
@@ -38,6 +36,8 @@ export default function Mypage() {
       console.error(err);
     }
   };
+
+  console.log(userInfo);
 
   return (
     <div className="w-full h-screen">
@@ -64,22 +64,34 @@ export default function Mypage() {
             ) : null}
             <div className="text-white flex flex-col justify-center ml-4 ">
               {userInfo && userInfo.name ? (
-                <div className="text-xl flex space-x-3">
+                <div className="text-2xl font-extrabold flex space-x-3">
                   <p>{userInfo.name}</p>
-                  <button
-                    onClick={googleLogoutHandler}
-                    className="bg-white border-2 border-solid rounded-md text-sm px-2 text-black"
-                  >
-                    Logout
-                  </button>
+                  <div className="flex space-x-2 justify-center px-2">
+                    {/* <button
+                    className="bg-transparent outline-none rounded-md text-sm px-2"
+                  > */}
+                    <img
+                      className="cursor-pointer"
+                      src={"./icons/Outline/user_edit.svg"}
+                      alt="user-edit"
+                    />
+                    <img
+                      className="cursor-pointer "
+                      // style={{ filter: "brightness(0) invert(1)" }}
+                      src={loadImg.User_LogOut}
+                      alt="user-logout"
+                      onClick={googleLogoutHandler}
+                    />
+                    {/* </button> */}
+                  </div>
                 </div>
               ) : null}
-              <div className="flex">
-                <div className="flex mr-2">
+              <div className="flex text-xs">
+                <div className="flex mr-2 mt-2 space-x-1">
                   <p>팔로워</p>
                   <p>00</p>
                 </div>
-                <div className="flex mx-2">
+                <div className="flex mx-2 mt-2 space-x-1">
                   <p>팔로잉</p>
                   <p>00</p>
                 </div>
