@@ -17,7 +17,7 @@ export default function Menu_Bar() {
             hoveredImage === "home" ? loadImg.Fill_Menu_Home : loadImg.Menu_Home
           }
           onMouseEnter={() => setHoveredImage("home")}
-          onMouseLeave={() => setHoveredImage("")}
+          // onMouseLeave={() => setHoveredImage("")}
           onClick={() => navigate("/")}
         />
         <img
@@ -29,7 +29,7 @@ export default function Menu_Bar() {
               : loadImg.Menu_Image
           }
           onMouseEnter={() => setHoveredImage("image")}
-          onMouseLeave={() => setHoveredImage("")}
+          // onMouseLeave={() => setHoveredImage("")}
           onClick={() => navigate("/artwork")}
         />
         <img
@@ -41,7 +41,7 @@ export default function Menu_Bar() {
               : loadImg.Menu_Gallery
           }
           onMouseEnter={() => setHoveredImage("gallery")}
-          onMouseLeave={() => setHoveredImage("")}
+          // onMouseLeave={() => setHoveredImage("")}
           onClick={() => navigate("/gallery")}
         />
         <img
@@ -53,7 +53,7 @@ export default function Menu_Bar() {
               : loadImg.Menu_Bookmark
           }
           onMouseEnter={() => setHoveredImage("bookmark")}
-          onMouseLeave={() => setHoveredImage("")}
+          // onMouseLeave={() => setHoveredImage("")}
           onClick={() => navigate("/review")}
         />
         <img
@@ -63,9 +63,10 @@ export default function Menu_Bar() {
             hoveredImage === "user" ? loadImg.Fill_Menu_User : loadImg.Menu_User
           }
           onMouseEnter={() => setHoveredImage("user")}
-          onMouseLeave={() => setHoveredImage("")}
+          // onMouseLeave={() => setHoveredImage("")}
           onClick={() => navigate("/mypage")}
         />
+        {/* <Mypage_MenuIcon /> */}
       </div>
     </MenubarContainer>
   );
