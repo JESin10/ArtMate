@@ -3,8 +3,8 @@ import { loadImg } from "../assets/images";
 import { useAuth } from "../modules/UserAuth_Google";
 import { useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
-import { ReactComponent as MainLogo } from "../assets/CustomSvg/main_text_logo.svg";
-import { ReactComponent as DescLogo } from "../assets/CustomSvg/main_logo_desc.svg";
+import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
+import { ReactComponent as DescLogo } from "../assets/customSvg/main_logo_desc.svg";
 import { UserInfo } from "./Home";
 import UserAuth_Naver from "../modules/UserAuth_Naver";
 import { v4 as uidv } from "uuid";
@@ -26,11 +26,21 @@ export default function Login() {
     signupWithGoogle();
     navigate("/");
     setLoading(false);
+    if (emailRef.current && passwordRef.current) {
+      // await (emailRef.current.value, passwordRef.current.value);
+      localStorage.setItem(
+        "user_name",
+        emailRef.current.value.split("@", 1)[0]
+      );
+      localStorage.setItem("user_email", emailRef.current.value);
+      localStorage.setItem("user_profile", "./favicon.ico");
+      localStorage.setItem("user_uid", LoginUid);
+    }
   };
 
   useEffect(() => {
     if (userInfo) {
-      localStorage.setItem("user_name", userInfo.name);
+      localStorage.setItem("user_name", userInfo?.name.split("@", 1)[0]);
       localStorage.setItem("user_email", userInfo.email);
       localStorage.setItem("user_profile", userInfo.profileURL);
       localStorage.setItem("user_uid", userInfo.uid);
@@ -45,7 +55,10 @@ export default function Login() {
       setLoading(true);
       if (emailRef.current && passwordRef.current) {
         await (emailRef.current.value, passwordRef.current.value);
-        localStorage.setItem("user_name", emailRef.current.value);
+        localStorage.setItem(
+          "user_name",
+          emailRef.current.value.split("@", 1)[0]
+        );
         localStorage.setItem("user_email", emailRef.current.value);
         localStorage.setItem("user_profile", "./favicon.ico");
         localStorage.setItem("user_uid", LoginUid);

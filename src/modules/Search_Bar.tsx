@@ -1,13 +1,8 @@
 import React, { ReactHTML, useState } from "react";
-import { loadImg } from "../assets/images";
-import { ReactComponent as MainLogo } from "../assets/CustomSvg/main_text_logo.svg";
+import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
 import tw from "tailwind-styled-components";
 
 export default function Search_Bar(): JSX.Element {
-  const svgStyle = {
-    fill: "#608D00",
-  };
-
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState("");
 

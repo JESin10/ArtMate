@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from "react";
 import Menu_Footer from "../component/Menu_Footer";
 import Carousel from "../modules/Carousel";
-import { loadImg } from "../assets/images";
-import RecommendSlider from "../modules/RecommendSlider";
-import Search_Bar from "../component/Search_Bar";
+import { DescLogo, loadImg } from "../assets/images";
+import RecommendSlider from "../component/RecommendSlider";
+import Search_Bar from "../modules/Search_Bar";
 import { useAuth } from "../modules/UserAuth_Google";
 import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
-import Loading from "./exception/Loading";
+import Loading from "./Loading";
 import tw from "tailwind-styled-components";
 import { ArtworkInfo } from "./Artwork";
 import Artwork_Modal from "../component/Artwork_Modal";
@@ -23,7 +23,6 @@ export interface UserInfo {
 
 export interface LatestArtworkInfo {
   DP_END: Date;
-  DP_DATE: Date;
   DP_MAIN_IMG: string;
   DP_NAME: string;
   DP_START: Date;
@@ -49,23 +48,35 @@ export default function Home() {
     return response;
   };
 
-  useEffect(() => {
-    fetchData(); // 페이지 렌딩과 동시에 데이터 가져오기
-  }, []);
+  // useEffect(() => {
+  //   // 페이지 렌딩과 동시에 데이터 가져오기
+  // }, []);
 
   const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
 
   useEffect(() => {
+    fetchData();
+
     if (currentUser) {
       setGetToken(currentUser.accessToken);
-      setUserInfo({
-        uid: currentUser.uid,
-        name: currentUser.reloadUserInfo.displayName,
-        profileURL: currentUser.reloadUserInfo.photoUrl,
-        email: currentUser.reloadUserInfo.email,
-      });
+      // setUserInfo({
+      //   uid: currentUser.uid,
+      //   name: currentUser.reloadUserInfo.displayName,
+      //   profileURL: currentUser.reloadUserInfo.photoUrl,
+      //   email: currentUser.reloadUserInfo.email,
+      // });
+    } else if (localStorage.getItem("user_name") !== undefined) {
+      // setUserInfo({
+      //   uid: localStorage.getItem("user_uid") || "",
+      //   name: localStorage.getItem("user_name") || "",
+      //   profileURL: localStorage.getItem("user_profile") || "",
+      //   email: localStorage.getItem("user_email") || "",
+      //   access_token: localStorage.getItem("access_token") || "",
+      // });
     }
-  }, []);
+  }, [currentUser || userInfo?.name]);
+
+  // console.log(userInfo);
 
   //Modal
   const openModal = (artwork: ArtworkInfo) => {
@@ -83,9 +94,7 @@ export default function Home() {
     return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
   }
 
-  return isLoading ? (
-    <Loading />
-  ) : (
+  return (
     <div className="h-fit border-2 ">
       <Search_Bar />
       <div className="my-3">
@@ -93,9 +102,9 @@ export default function Home() {
       </div>
       {/* 취향저격 전시 */}
       <div className="w-11/12 mx-auto">
-        {currentUser ? (
+        {userInfo?.name ? (
           <h1 className="w-fit text-lg px-4 my-2 flex">
-            <p className="mr-2 font-extrabold">{currentUser.displayName}</p>
+            <p className="mr-2 font-extrabold">{userInfo?.name}</p>
             님께 추천하는 전시 모음
           </h1>
         ) : (
@@ -225,7 +234,7 @@ export default function Home() {
 }
 
 const Tag = tw.p`
-text-xs text-primary-YellowGreen font-semibold
-border-primary-YellowGreen border-2 bg-white rounded-2xl
-w-fit h-fit py-1 px-3 m-1
+  text-xs text-primary-YellowGreen font-semibold
+  border-primary-YellowGreen border-2 bg-white rounded-2xl
+  w-fit h-fit py-1 px-3 m-1
 `;

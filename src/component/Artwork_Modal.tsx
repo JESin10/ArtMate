@@ -7,7 +7,7 @@ import tw from "tailwind-styled-components";
 interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  artworkInfo: ArtworkInfo;
+  artworkInfo: ArtworkInfo | null;
 }
 
 export default function Artwork_Modal({
@@ -26,93 +26,97 @@ export default function Artwork_Modal({
 
   return (
     <ArtworkModal>
-      <ArtworkModalContainer>
-        <div className="fixed z-10">
-          <button
-            className="my-2 ml-80 justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"
-            onClick={closeModal}
-          >
-            <IoIosCloseCircleOutline size="100%" />
-          </button>
-        </div>
-        <img
-          alt="example"
-          className="w-full h-[350px] object-cover mt-12"
-          src={artworkInfo.DP_MAIN_IMG}
-        />
-        <div className="px-4">
-          <h2 className="text-xl font-bold my-3">{artworkInfo.DP_NAME}</h2>
-          {/* 상세정보 */}
-          <div className="space-y-1">
-            <div className="flex">
-              <ArtworkModalLabel>전시장소 </ArtworkModalLabel>
-              <ArtworkModalContent>{artworkInfo.DP_PLACE}</ArtworkModalContent>
-            </div>
-            <div className="flex">
-              <ArtworkModalLabel>전시기간 </ArtworkModalLabel>
-              <ArtworkModalContent>
-                {artworkInfo.DP_START.toString()} ~{" "}
-                {artworkInfo.DP_END.toString()}
-              </ArtworkModalContent>
-            </div>
-            <div className="flex">
-              <ArtworkModalLabel>운영시간</ArtworkModalLabel>
-              <div className="w-full">
-                <ArtworkModalContent>평일 10:00-20:00</ArtworkModalContent>
-                <ArtworkModalContent>주말 10:00-19:00</ArtworkModalContent>
+      {artworkInfo && (
+        <ArtworkModalContainer>
+          <div className="fixed z-10">
+            <button
+              className="my-2 ml-80 justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"
+              onClick={closeModal}
+            >
+              <IoIosCloseCircleOutline size="100%" />
+            </button>
+          </div>
+          <img
+            alt="example"
+            className="w-full h-[350px] object-cover mt-12"
+            src={artworkInfo.DP_MAIN_IMG}
+          />
+          <div className="px-4">
+            <h2 className="text-xl font-bold my-3">{artworkInfo.DP_NAME}</h2>
+            {/* 상세정보 */}
+            <div className="space-y-1">
+              <div className="flex">
+                <ArtworkModalLabel>전시장소 </ArtworkModalLabel>
+                <ArtworkModalContent>
+                  {artworkInfo.DP_PLACE}
+                </ArtworkModalContent>
+              </div>
+              <div className="flex">
+                <ArtworkModalLabel>전시기간 </ArtworkModalLabel>
+                <ArtworkModalContent>
+                  {artworkInfo.DP_START.toString()} ~{" "}
+                  {artworkInfo.DP_END.toString()}
+                </ArtworkModalContent>
+              </div>
+              <div className="flex">
+                <ArtworkModalLabel>운영시간</ArtworkModalLabel>
+                <div className="w-full">
+                  <ArtworkModalContent>평일 10:00-20:00</ArtworkModalContent>
+                  <ArtworkModalContent>주말 10:00-19:00</ArtworkModalContent>
+                </div>
+              </div>
+              <div className="flex">
+                <ArtworkModalLabel>작가 </ArtworkModalLabel>
+                {artworkInfo.DP_ARTIST === "" ? (
+                  <p className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
+                    unknown
+                  </p>
+                ) : (
+                  <p className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
+                    {artworkInfo.DP_ARTIST}
+                  </p>
+                )}
+              </div>
+              <div className="flex">
+                <ArtworkModalLabel>HOME </ArtworkModalLabel>
+                <div className="flex w-full">
+                  <a
+                    href={artworkInfo.DP_LNK}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="resume-link"
+                  >
+                    {artworkInfo.DP_LNK ? (
+                      <p className="text-sm flex">
+                        <a
+                          href={artworkInfo.DP_LNK}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label="resume-link"
+                        >
+                          <ArtworkModalContent className="hover:text-primary-YellowGreen hover:font-extrabold">
+                            홈페이지 방문
+                          </ArtworkModalContent>
+                        </a>
+                      </p>
+                    ) : (
+                      <div className="text-sm flex">
+                        <p className="cursor-not-allowed text-gray-400">
+                          홈페이지 방문
+                        </p>
+                      </div>
+                    )}
+                  </a>
+                </div>
               </div>
             </div>
-            <div className="flex">
-              <ArtworkModalLabel>작가 </ArtworkModalLabel>
-              {artworkInfo.DP_ARTIST === "" ? (
-                <p className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
-                  unknown
-                </p>
-              ) : (
-                <p className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
-                  {artworkInfo.DP_ARTIST}
-                </p>
-              )}
-            </div>
-            <div className="flex">
-              <ArtworkModalLabel>HOME </ArtworkModalLabel>
-              <ArtworkModalContent>
-                <a
-                  href={artworkInfo.DP_LNK}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="resume-link"
-                >
-                  {artworkInfo.DP_LNK ? (
-                    <p className="text-sm flex">
-                      <a
-                        href={artworkInfo.DP_LNK}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label="resume-link"
-                      >
-                        <ArtworkModalContent className="hover:text-primary-YellowGreen hover:font-extrabold">
-                          홈페이지 방문
-                        </ArtworkModalContent>
-                      </a>
-                    </p>
-                  ) : (
-                    <p className="text-sm flex">
-                      <p className="cursor-not-allowed text-gray-400">
-                        홈페이지 방문
-                      </p>
-                    </p>
-                  )}
-                </a>
-              </ArtworkModalContent>
-            </div>
+            {/* 갤러리 상세설명 */}
+            <p className="text-xs text-primary-Gray my-4 flex">
+              {parseAndStyleInfo(artworkInfo.DP_INFO)}
+            </p>
           </div>
-          {/* 갤러리 상세설명 */}
-          <p className="text-xs text-primary-Gray my-4 flex">
-            {parseAndStyleInfo(artworkInfo.DP_INFO)}
-          </p>
-        </div>
-      </ArtworkModalContainer>
+        </ArtworkModalContainer>
+      )}
     </ArtworkModal>
   );
 }
@@ -125,7 +129,7 @@ const ArtworkModalContainer = tw.div`
   w-[370px] h-4/5 pb-[70px]
   rounded-t-xl overflow-y-auto 
   bg-white
-  shadow-Ver2 
+  shadow-Ver2
 `;
 
 const ArtworkModalLabel = tw.p`

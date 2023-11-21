@@ -4,8 +4,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithRedirect,
-} from "firebase/auth";
-
+} from "@firebase/auth";
+import { UserInfo } from "../page/Home";
 import { initializeApp } from "@firebase/app"; // Firebase 초기화를 위해 추가
 
 interface AuthContextProps {
@@ -48,6 +48,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return auth.signOut();
   };
 
+  const [userInfo, setUserInfo] = useState<UserInfo>();
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
@@ -60,6 +62,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("user_profile", currentUser.photoURL);
         localStorage.setItem("user_uid", currentUser.uid);
         localStorage.setItem("access_token", currentUser.accessToken);
+      }
+
+      if (localStorage.getItem("user_email") !== undefined || currentUser) {
+        setUserInfo({
+          uid: localStorage.getItem("user_uid") || "",
+          name: localStorage.getItem("user_name") || "",
+          profileURL: localStorage.getItem("user_profile") || "",
+          email: localStorage.getItem("user_email") || "",
+          access_token: localStorage.getItem("access_token") || "",
+        });
       }
     });
 

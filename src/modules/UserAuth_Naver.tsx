@@ -52,9 +52,10 @@ export default function UserAuth_Naver({
     const currentURL = window.location.href;
     const url = new URL(currentURL);
     const token = url.hash.split("=")[1];
-
+    if (token) {
+      localStorage.setItem("access_token", token);
+    }
     // console.log(token);
-    localStorage.setItem("access_token", token);
   };
 
   // 화면 첫 렌더링이후 바로 실행하기 위해 useEffect 를 사용하였다.

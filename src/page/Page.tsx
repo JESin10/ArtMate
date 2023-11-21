@@ -2,9 +2,10 @@ import React, { Suspense, lazy, useState } from "react";
 import tw from "tailwind-styled-components";
 import { Route, Routes } from "react-router-dom";
 import Menu_Bar from "../component/Menu_Bar";
-import Loading from "./exception/Loading";
-import Error from "./exception/Error";
+import Loading from "./Loading";
+import Error from "./Error";
 import { AuthProvider, useAuth } from "../modules/UserAuth_Google";
+import PrivateRoute from "./context/PrivateRoute";
 
 function Page() {
   const Login = lazy(() => import("./Login"));
@@ -14,7 +15,7 @@ function Page() {
   const Gallery = lazy(() => import("./Gallery"));
   const Artwork = lazy(() => import("./Artwork"));
   const KaKaoMap = lazy(() => import("../modules/KaKaoMap"));
-  const PrivateRoute = lazy(() => import("../modules/PrivateRoute"));
+  // const PrivateRoute = lazy(() => import("./PrivateRoute"));
 
   const [mapMode, setMapMode] = useState(false);
 

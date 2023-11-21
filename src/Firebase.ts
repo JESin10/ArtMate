@@ -1,4 +1,4 @@
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "@firebase/auth";
 import { initializeApp } from "@firebase/app";
 import { getFirestore } from "@firebase/firestore";
 

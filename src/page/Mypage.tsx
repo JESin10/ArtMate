@@ -13,10 +13,10 @@ export default function Mypage() {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState<UserInfo>();
 
+  console.log(currentUser);
+
   useEffect(() => {
-    if (!localStorage.getItem("access_token")) {
-      return navigate("/login");
-    } else {
+    if (localStorage.getItem("user_email") !== null || currentUser) {
       setUserInfo({
         uid: localStorage.getItem("user_uid") || "",
         name: localStorage.getItem("user_name") || "",
@@ -24,6 +24,8 @@ export default function Mypage() {
         email: localStorage.getItem("user_email") || "",
         access_token: localStorage.getItem("access_token") || "",
       });
+    } else {
+      return navigate("/login");
     }
   }, []);
 
@@ -37,7 +39,7 @@ export default function Mypage() {
     }
   };
 
-  console.log(userInfo);
+  console.log(userInfo?.name);
 
   return (
     <div className="w-full h-screen">

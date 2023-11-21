@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import KaKaoMap from "../modules/KaKaoMap";
 import { loadImg } from "../assets/images";
 import { useNavigate } from "react-router-dom";
-import Search_Bar from "../component/Search_Bar";
+import Search_Bar from "../modules/Search_Bar";
 import tw from "tailwind-styled-components";
 import Gallery_Modal from "../component/Gallery_Modal";
 import { useQuery } from "react-query";
@@ -11,7 +11,7 @@ import {
   Seoul_Museum_Gallery_OpenData,
   Visit_Seoul_OpenData,
 } from "../api/Gallery_OpenApi";
-import Loading from "./exception/Loading";
+import Loading from "./Loading";
 
 export interface GalleryInfo {
   CATEGORY: string;
@@ -62,9 +62,7 @@ export default function Gallery() {
     setSelectedArtwork(null);
   };
 
-  return isLoading ? (
-    <Loading />
-  ) : (
+  return (
     <>
       <Search_Bar />
       <GalleryPageContainer>

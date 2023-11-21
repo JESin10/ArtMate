@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
-import { loadImg } from "../../assets/images";
+import { loadImg } from "../assets/images";
 import { Oval } from "react-loader-spinner";
 
 export default function Loading() {
