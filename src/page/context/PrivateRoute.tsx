@@ -1,36 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { Route, Navigate } from "react-router-dom";
-import { useAuth } from "../../modules/UserAuth_Google";
+import React, { useContext } from "react";
+import { Route, Navigate, Routes, Outlet } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import Login from "../Login";
+import Mypage from "../Mypage";
 
 interface PrivateRouteProps {
   path?: string;
-  element: React.ReactNode;
+  element?: React.ReactNode;
 }
-
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ element, ...rest }) => {
-  // const [IsUserLogin, setIsUserLogin] = xuseState<boolean>(false);
+//{ element, ...rest }
+const PrivateRoute = (): React.ReactElement => {
   const { currentUser } = useAuth();
+  console.log(currentUser);
 
-  // const UserCheckHandler = () => {
-  //   if (currentUser || localStorage.getItem("user_name") !== undefined) {
-  //     setIsUserLogin(true);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   UserCheckHandler();
-  // }, []);
-
-  // console.log(currentUser);
-
-  // console.log(IsUserLogin);
-
-  return (
-    <Route
-      {...rest}
-      element={currentUser ? element : <Navigate to={"/login"} />}
-    />
-  );
+  return currentUser ? <Outlet /> : <Navigate to="login" />;
+  // <Route
+  //   // {...rest}
+  //   element={currentUser ? <Mypage /> : <Navigate to="login" />}
+  // />
 };
 
 export default PrivateRoute;

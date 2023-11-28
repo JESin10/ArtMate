@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { loadImg } from "../assets/images";
-import { useAuth } from "../modules/UserAuth_Google";
+import { useAuth } from "../page/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
 import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";

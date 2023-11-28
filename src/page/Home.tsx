@@ -5,13 +5,13 @@ import Carousel from "../modules/Carousel";
 import { DescLogo, loadImg } from "../assets/images";
 import RecommendSlider from "../component/RecommendSlider";
 import Search_Bar from "../modules/Search_Bar";
-import { useAuth } from "../modules/UserAuth_Google";
 import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
 import Loading from "./Loading";
 import tw from "tailwind-styled-components";
 import { ArtworkInfo } from "./Artwork";
 import Artwork_Modal from "../component/Artwork_Modal";
+import { useAuth } from "./context/AuthContext";
 
 export interface UserInfo {
   uid: string;

@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-pascal-case */
 import React, { useEffect, useState } from "react";
 import { loadImg } from "../assets/images";
-import { useAuth } from "../modules/UserAuth_Google";
 import { useNavigate } from "react-router-dom";
 // import { ReactComponent as BookMarkIcon } from "../assets/CustomSvg/bookmark.svg";
 // import { ReactComponent as LikeIcon } from "../assets/CustomSvg/like.svg";
 import tw from "tailwind-styled-components";
 import { UserInfo } from "./Home";
+import { useAuth } from "./context/AuthContext";
 
 export default function Mypage() {
   const { currentUser, logout } = useAuth();
@@ -25,7 +25,7 @@ export default function Mypage() {
         access_token: localStorage.getItem("access_token") || "",
       });
     } else {
-      return navigate("/login");
+      // return navigate("/login");
     }
   }, []);
 
@@ -39,7 +39,7 @@ export default function Mypage() {
     }
   };
 
-  console.log(userInfo?.name);
+  console.log(userInfo);
 
   return (
     <div className="w-full h-screen">

@@ -4,8 +4,8 @@ import { Route, Routes } from "react-router-dom";
 import Menu_Bar from "../component/Menu_Bar";
 import Loading from "./Loading";
 import Error from "./Error";
-import { AuthProvider, useAuth } from "../modules/UserAuth_Google";
 import PrivateRoute from "./context/PrivateRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 function Page() {
   const Login = lazy(() => import("./Login"));
@@ -15,7 +15,7 @@ function Page() {
   const Gallery = lazy(() => import("./Gallery"));
   const Artwork = lazy(() => import("./Artwork"));
   const KaKaoMap = lazy(() => import("../modules/KaKaoMap"));
-  // const PrivateRoute = lazy(() => import("./PrivateRoute"));
+  // const PrivateRoute = lazy(() => import("./context/PrivateRoute"));
 
   const [mapMode, setMapMode] = useState(false);
 
@@ -28,23 +28,24 @@ function Page() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/mypage" element={<Mypage />} />
+              {/* <Route path="/my-page/*" element={<Mypage />} /> */}
+
+              {/* <Route
+                path="/my-page"
+                element={<PrivateRoute element={<Mypage />} />}
+              /> */}
+
+              <Route element={<PrivateRoute />}>
+                <Route path="/my-page" element={<Mypage />} />
+              </Route>
               <Route path="/review" element={<Review />} />
               <Route path="/gallery" element={<Gallery />} />
-
               <Route
                 path="/map"
                 element={<KaKaoMap setMapMode={setMapMode} mapMode={mapMode} />}
               />
               <Route path="/artwork" element={<Artwork />} />
-              <Route path="/loading" element={<Loading />} />
-
-              <Route
-                path="/mypage"
-                element={<PrivateRoute element={<Mypage />} />}
-              />
-              {/* <PrivateRoute path="/mypage" element={<Mypage />} /> */}
-
+              {/* <Route path="/loading" element={<Loading />} /> */}
               <Route path="/*" element={<Error />} />
             </Routes>
           </Suspense>

@@ -64,7 +64,7 @@ export default function Menu_Bar() {
           }
           onMouseEnter={() => setHoveredImage("user")}
           // onMouseLeave={() => setHoveredImage("")}
-          onClick={() => navigate("/mypage")}
+          onClick={() => navigate("/my-page")}
         />
         {/* <Mypage_MenuIcon /> */}
       </div>
