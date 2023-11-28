@@ -6,11 +6,10 @@ import tw from "tailwind-styled-components";
 import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
 import { ReactComponent as DescLogo } from "../assets/customSvg/main_logo_desc.svg";
 import { UserInfo } from "./Home";
-import UserAuth_Naver from "../modules/UserAuth_Naver";
 import { v4 as uidv } from "uuid";
 
-export default function Login() {
-  const { login, signupWithGoogle, currentUser } = useAuth();
+export default function Signup() {
+  const { signup, signupWithGoogle, currentUser } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [getToken, setGetToken] = useState();
@@ -35,14 +34,14 @@ export default function Login() {
       setError("");
       setLoading(true);
       if (emailRef.current && passwordRef.current) {
-        await login(emailRef.current.value, passwordRef.current.value);
+        await signup(emailRef.current.value, passwordRef.current.value);
       }
       navigate("/");
     } catch (err) {
-      setError("Fail to sign up");
-      console.error(err);
+      setError("Failed to create an account");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -56,21 +55,52 @@ export default function Login() {
           className="w-fit my-5 flex flex-col space-y-4"
           onSubmit={BasicLoginHandler}
         >
-          <AuthInput type="text" placeholder="이메일" ref={emailRef} />
-          <AuthInput type="text" placeholder="비밀번호" ref={passwordRef} />
-          <div className="flex space-x-2 items-center w-fit mx-2">
-            <input type="checkbox" className="w-4 h-4" />
-            <p className="w-fit ">자동로그인</p>
-          </div>
+          <AuthInput>
+            <input
+              className="w-full"
+              type="text"
+              placeholder="이메일"
+              ref={emailRef}
+            />
+            <p className="text-xs text-primary-Gray">이메일을 입력해주세요.</p>
+          </AuthInput>
+          <AuthInput>
+            <input
+              className="w-full"
+              type="text"
+              placeholder="닉네임"
+              // ref={passwordRef}
+            />
+            <p className="text-xs text-primary-Gray">2-10자로 구성해주세요.</p>
+          </AuthInput>
+
+          <AuthInput>
+            <input
+              className="w-full"
+              type="text"
+              placeholder="비밀번호"
+              ref={passwordRef}
+            />
+            <p className="text-xs text-primary-Gray">
+              비밀번호는 8-20자 사이여야 합니다.
+            </p>
+          </AuthInput>
+          {/* <div>
+            <AuthInput
+              type="text"
+              placeholder="비밀번호 확인"
+              ref={passwordRef}
+            />
+            <p className="text-xs indent-2 text-primary-Gray">
+              비밀번호가 일치하지않습니다.
+            </p>
+          </div> */}
+
           <button className="bg-primary-YellowGreen rounded-3xl text-white w-[320px] h-[42px]">
             로그인
           </button>
         </form>
-        <div className="flex justify-center w-fit mx-auto text-xs mb-4">
-          <button className="mx-4">이메일 찾기</button>
-          <button className="mx-4">비밀번호 찾기</button>
-          <button className="mx-4">회원가입</button>
-        </div>
+        <div className="flex justify-center w-fit mx-auto text-xs mb-4"></div>
         <div className="my-10 flex flex-col justify-center items-center border-t-2 border-primary-Gray/60">
           <p className="w-fit my-4 text-sm ">소셜로 시작하기</p>
           <div className="flex flex-col space-y-4 font-semibold">
@@ -120,11 +150,10 @@ fill-primary-Gray
 h-[34px] w-[200px] mx-auto
 `;
 
-const AuthInput = tw.input`
-w-[320px] h-[42px] 
+const AuthInput = tw.div`
+w-[320px] h-[52px]
 border-primary-YellowGreen border-2 
-rounded-3xl px-2 text-center
-
+rounded-3xl  py-2 px-6
 `;
 
 const SocialAuthBtn = tw.button`

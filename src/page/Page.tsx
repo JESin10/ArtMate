@@ -9,6 +9,8 @@ import { AuthProvider } from "./context/AuthContext";
 
 function Page() {
   const Login = lazy(() => import("./Login"));
+  const Signup = lazy(() => import("./Signup"));
+
   const Home = lazy(() => import("./Home"));
   const Mypage = lazy(() => import("./Mypage"));
   const Review = lazy(() => import("./Review"));
@@ -27,25 +29,19 @@ function Page() {
           <Suspense fallback={<Loading />}>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              {/* <Route path="/my-page/*" element={<Mypage />} /> */}
-
-              {/* <Route
-                path="/my-page"
-                element={<PrivateRoute element={<Mypage />} />}
-              /> */}
-
-              <Route element={<PrivateRoute />}>
-                <Route path="/my-page" element={<Mypage />} />
-              </Route>
-              <Route path="/review" element={<Review />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route
                 path="/map"
                 element={<KaKaoMap setMapMode={setMapMode} mapMode={mapMode} />}
               />
               <Route path="/artwork" element={<Artwork />} />
-              {/* <Route path="/loading" element={<Loading />} /> */}
+              <Route path="/review" element={<Review />} />
+              <Route element={<PrivateRoute />}>
+                <Route path="/my-page" element={<Mypage />} />
+              </Route>
+              <Route path="/sign-up" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
+
               <Route path="/*" element={<Error />} />
             </Routes>
           </Suspense>

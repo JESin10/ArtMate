@@ -15,19 +15,17 @@ export default function Mypage() {
 
   console.log(currentUser);
 
-  useEffect(() => {
-    if (localStorage.getItem("user_email") !== null || currentUser) {
-      setUserInfo({
-        uid: localStorage.getItem("user_uid") || "",
-        name: localStorage.getItem("user_name") || "",
-        profileURL: localStorage.getItem("user_profile") || "",
-        email: localStorage.getItem("user_email") || "",
-        access_token: localStorage.getItem("access_token") || "",
-      });
-    } else {
-      // return navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (localStorage.getItem("user_email") !== null || currentUser) {
+  //     setUserInfo({
+  //       uid: localStorage.getItem("user_uid") || "",
+  //       name: localStorage.getItem("user_name") || "",
+  //       profileURL: localStorage.getItem("user_profile") || "",
+  //       email: localStorage.getItem("user_email") || "",
+  //       access_token: localStorage.getItem("access_token") || "",
+  //     });
+  //   }
+  // }, []);
 
   const googleLogoutHandler = async () => {
     try {
@@ -39,7 +37,7 @@ export default function Mypage() {
     }
   };
 
-  console.log(userInfo);
+  // console.log(userInfo);
 
   return (
     <div className="w-full h-screen">
@@ -57,37 +55,51 @@ export default function Mypage() {
       <div className="w-fit mx-auto my-5">
         <div className="bg-primary-YellowGreen w-[350px] h-[250px] rounded-xl shadow-md py-4">
           <div className="flex p-4 h-fit  my-auto">
-            {userInfo && userInfo.profileURL ? (
+            {currentUser && currentUser.profileURL ? (
               <img
                 alt="user_img"
-                src={userInfo.profileURL}
+                src={currentUser.profileURL}
                 className="w-[80px] h-[80px] mx-3 bg-white shadow-lg rounded-full"
               />
-            ) : null}
+            ) : (
+              <img
+                alt="user_img"
+                src={"./favicon.ico"}
+                className="w-[80px] h-[80px] mx-3 bg-white shadow-lg rounded-full"
+              />
+            )}
             <div className="text-white flex flex-col justify-center ml-4 ">
-              {userInfo && userInfo.name ? (
-                <div className="text-2xl font-extrabold flex space-x-3">
-                  <p>{userInfo.name}</p>
-                  <div className="flex space-x-2 justify-center px-2">
-                    {/* <button
+              <div className=" font-extrabold flex space-x-3 text-center items-center justify-center my-auto">
+                {currentUser && currentUser.displayName ? (
+                  <p className="text-xl h-fit overflow-hidden text-center items-center">
+                    {currentUser.displayName}
+                  </p>
+                ) : (
+                  <p className="text-xl h-fit overflow-hidden text-center items-center">
+                    {currentUser.email.split("@", 1)[0]}
+                  </p>
+                )}
+
+                {/* <p>{currentUser.displayName}</p> */}
+                <div className="flex space-x-2 justify-center px-2">
+                  {/* <button
                     className="bg-transparent outline-none rounded-md text-sm px-2"
                   > */}
-                    <img
-                      className="cursor-pointer"
-                      src={"./icons/Outline/user_edit.svg"}
-                      alt="user-edit"
-                    />
-                    <img
-                      className="cursor-pointer "
-                      // style={{ filter: "brightness(0) invert(1)" }}
-                      src={loadImg.User_LogOut}
-                      alt="user-logout"
-                      onClick={googleLogoutHandler}
-                    />
-                    {/* </button> */}
-                  </div>
+                  <img
+                    className="cursor-pointer"
+                    src={"./icons/Outline/user_edit.svg"}
+                    alt="user-edit"
+                  />
+                  <img
+                    className="cursor-pointer "
+                    src={loadImg.User_LogOut}
+                    alt="user-logout"
+                    onClick={googleLogoutHandler}
+                  />
+                  {/* </button> */}
                 </div>
-              ) : null}
+              </div>
+
               <div className="flex text-xs">
                 <div className="flex mr-2 mt-2 space-x-1">
                   <p>팔로워</p>
