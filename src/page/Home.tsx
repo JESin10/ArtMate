@@ -56,25 +56,18 @@ export default function Home() {
 
   useEffect(() => {
     fetchData();
-
-    if (currentUser) {
-      setGetToken(currentUser.accessToken);
-      // setUserInfo({
-      //   uid: currentUser.uid,
-      //   name: currentUser.reloadUserInfo.displayName,
-      //   profileURL: currentUser.reloadUserInfo.photoUrl,
-      //   email: currentUser.reloadUserInfo.email,
-      // });
-    } else if (localStorage.getItem("user_name") !== undefined) {
-      // setUserInfo({
-      //   uid: localStorage.getItem("user_uid") || "",
-      //   name: localStorage.getItem("user_name") || "",
-      //   profileURL: localStorage.getItem("user_profile") || "",
-      //   email: localStorage.getItem("user_email") || "",
-      //   access_token: localStorage.getItem("access_token") || "",
-      // });
-    }
-  }, [currentUser || userInfo?.name]);
+    // if (currentUser) {
+    //   setGetToken(currentUser.accessToken);
+    // } else if (localStorage.getItem("user_name") !== undefined) {
+    //   // setUserInfo({
+    //   //   uid: localStorage.getItem("user_uid") || "",
+    //   //   name: localStorage.getItem("user_name") || "",
+    //   //   profileURL: localStorage.getItem("user_profile") || "",
+    //   //   email: localStorage.getItem("user_email") || "",
+    //   //   access_token: localStorage.getItem("access_token") || "",
+    //   // });
+    // }
+  }, []);
 
   // console.log(userInfo);
 
@@ -102,16 +95,30 @@ export default function Home() {
       </div>
       {/* 취향저격 전시 */}
       <div className="w-11/12 mx-auto">
-        {userInfo?.name ? (
+        {currentUser && currentUser.displayName && currentUser?.email ? (
           <h1 className="w-fit text-lg px-4 my-2 flex">
-            <p className="mr-2 font-extrabold">{userInfo?.name}</p>
+            <p className="mr-2 font-extrabold">{currentUser.displayName}</p>
             님께 추천하는 전시 모음
           </h1>
         ) : (
-          <h1 className="w-fit font-extrabold text-2xl px-4 my-4">
-            지금 떠오르는 전시는?
-          </h1>
+          <>
+            {currentUser &&
+            currentUser.displayName === null &&
+            currentUser.email ? (
+              <h1 className="w-fit text-lg px-4 my-2 flex">
+                <p className="mr-2 font-extrabold">
+                  {currentUser.email.split("@", 1)[0]}
+                </p>
+                님께 추천하는 전시 모음
+              </h1>
+            ) : (
+              <h1 className="w-fit font-extrabold text-2xl px-4 my-4">
+                지금 떠오르는 전시는?
+              </h1>
+            )}
+          </>
         )}
+
         <Carousel>
           {baseArray &&
             baseArray.map((list) => (

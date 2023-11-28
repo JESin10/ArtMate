@@ -15,17 +15,11 @@ export default function Mypage() {
 
   console.log(currentUser);
 
-  // useEffect(() => {
-  //   if (localStorage.getItem("user_email") !== null || currentUser) {
-  //     setUserInfo({
-  //       uid: localStorage.getItem("user_uid") || "",
-  //       name: localStorage.getItem("user_name") || "",
-  //       profileURL: localStorage.getItem("user_profile") || "",
-  //       email: localStorage.getItem("user_email") || "",
-  //       access_token: localStorage.getItem("access_token") || "",
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/login");
+    }
+  }, []);
 
   const googleLogoutHandler = async () => {
     try {
