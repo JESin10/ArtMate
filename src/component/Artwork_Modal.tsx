@@ -147,6 +147,8 @@ const ArtworkModalContent = tw.p`
 `;
 
 const Saving = tw(SaveIcon)`
-fill-black bg-yellow-300
-cursor-pointer hover:fill-red-300
+mx-2 w-8 h-8
+cursor-pointer 
+hover:fill-primary-YellowGreen
+active:fill-primary-YellowGreen
 `;
