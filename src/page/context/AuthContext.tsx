@@ -10,7 +10,11 @@ import { UserInfo } from "../Home";
 interface AuthContextProps {
   currentUser: any;
   login: (email: string, password: string) => Promise<any>;
-  signup: (email: string, password: string) => Promise<any>;
+  signup: (
+    email: string,
+    password: string,
+    displayName: string
+  ) => Promise<any>;
   signupWithGoogle: () => void;
   logout: () => Promise<void>;
 }
@@ -31,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  const signup = (email: string, password: string) => {
+  const signup = (email: string, password: string, displayName: string) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
@@ -47,31 +51,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return auth.signOut();
   };
 
-  const [userInfo, setUserInfo] = useState<UserInfo>();
+  // const [userInfo, setUserInfo] = useState<UserInfo>();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
       setLoading(false);
 
-      if (currentUser) {
-        // setUserInfo(currentUser);
-        localStorage.setItem("user_name", currentUser.displayName);
-        localStorage.setItem("user_email", currentUser.email);
-        localStorage.setItem("user_profile", currentUser.photoURL);
-        localStorage.setItem("user_uid", currentUser.uid);
-        localStorage.setItem("access_token", currentUser.accessToken);
-      }
+      // if (currentUser) {
+      //   // setUserInfo(currentUser);
+      //   localStorage.setItem("user_name", currentUser.displayName);
+      //   localStorage.setItem("user_email", currentUser.email);
+      //   localStorage.setItem("user_profile", currentUser.photoURL);
+      //   localStorage.setItem("user_uid", currentUser.uid);
+      //   localStorage.setItem("access_token", currentUser.accessToken);
+      // }
 
-      if (localStorage.getItem("user_email") !== undefined || currentUser) {
-        setUserInfo({
-          uid: localStorage.getItem("user_uid") || "",
-          name: localStorage.getItem("user_name") || "",
-          profileURL: localStorage.getItem("user_profile") || "",
-          email: localStorage.getItem("user_email") || "",
-          access_token: localStorage.getItem("access_token") || "",
-        });
-      }
+      // if (localStorage.getItem("user_email") !== undefined || currentUser) {
+      //   setUserInfo({
+      //     uid: localStorage.getItem("user_uid") || "",
+      //     name: localStorage.getItem("user_name") || "",
+      //     profileURL: localStorage.getItem("user_profile") || "",
+      //     email: localStorage.getItem("user_email") || "",
+      //     access_token: localStorage.getItem("access_token") || "",
+      //   });
+      // }
     });
 
     return unsubscribe;

@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-pascal-case */
 import React, { useEffect, useState } from "react";
 import { loadImg } from "../assets/images";
 import { useNavigate } from "react-router-dom";
@@ -7,17 +6,37 @@ import { useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
 import { UserInfo } from "./Home";
 import { useAuth } from "./context/AuthContext";
+// import { useCollectionData } from "react-firebase-hooks/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import "firebase/compat/firestore";
+import { db } from "../Firebase";
+import { v4 as uidv } from "uuid";
 
 export default function Mypage() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  // const UserUid = uidv();
   const [userInfo, setUserInfo] = useState<UserInfo>();
+  const listRef = collection(db, `user/${currentUser?.uid}/list`);
+  // const [list] = useCollectionData<any>(listRef);
+  const LoginUserUid = uidv();
 
+  // console.log(db);
   console.log(currentUser);
 
   useEffect(() => {
     if (!currentUser) {
       navigate("/login");
+    } else {
+      setUserInfo({
+        userId: LoginUserUid,
+        uid: currentUser.uid,
+        name: currentUser.displayName,
+        profileURL: currentUser.photoURL,
+        email: currentUser.email,
+        // access_token?: string;
+      });
+      // UserSaving();
     }
   }, []);
 
@@ -31,7 +50,25 @@ export default function Mypage() {
     }
   };
 
-  // console.log(userInfo);
+  // console.log(currentUser);
+
+  // const UserSaving = async () => {
+  //   const docRef = await setDoc(
+  //     doc(db, `userList/${currentUser.uid}/userInfo`, LoginUserUid),
+  //     {
+  //       id: currentUser?.uid,
+  //       Email: userInfo?.email,
+  //       NickName: userInfo?.name,
+  //       ProfileURL: userInfo?.profileURL,
+  //       FollowerCount: 0,
+  //       FollowingCount: 0,
+  //       ReviewList: [],
+  //       LikePostList: [],
+  //       SavePostList: [],
+  //     }
+  //   );
+  //   console.log(docRef);
+  // };
 
   return (
     <div className="w-full h-screen">
@@ -49,10 +86,10 @@ export default function Mypage() {
       <div className="w-fit mx-auto my-5">
         <div className="bg-primary-YellowGreen w-[350px] h-[250px] rounded-xl shadow-md py-4">
           <div className="flex p-4 h-fit  my-auto">
-            {currentUser && currentUser.profileURL ? (
+            {currentUser && currentUser.photoURL ? (
               <img
                 alt="user_img"
-                src={currentUser.profileURL}
+                src={currentUser.photoURL}
                 className="w-[80px] h-[80px] mx-3 bg-white shadow-lg rounded-full"
               />
             ) : (
@@ -90,7 +127,6 @@ export default function Mypage() {
                     alt="user-logout"
                     onClick={googleLogoutHandler}
                   />
-                  {/* </button> */}
                 </div>
               </div>
 
@@ -107,24 +143,24 @@ export default function Mypage() {
             </div>
           </div>
           <div className="flex space-x-6 w-fit justify-center mx-auto my-4">
-            <MyPage_Btn>
+            <MyPageBtn>
               {/* <Review_Icon /> */}
-              <MyPage_BtnImg alt="review" src={"./icons/Outline/receipt.svg"} />
-              <MyPage_BtnLabel>관람 내역</MyPage_BtnLabel>
-            </MyPage_Btn>
-            <MyPage_Btn>
+              <MyPageBtnImg alt="review" src={"./icons/Outline/receipt.svg"} />
+              <MyPageBtnLabel>관람 내역</MyPageBtnLabel>
+            </MyPageBtn>
+            <MyPageBtn>
               {/* <BookMark_Icon /> */}
-              <MyPage_BtnImg
+              <MyPageBtnImg
                 alt="bookmark"
                 src={"./icons/Outline/bookmark.svg"}
               />
-              <MyPage_BtnLabel>스크랩북</MyPage_BtnLabel>
-            </MyPage_Btn>
-            <MyPage_Btn>
+              <MyPageBtnLabel>스크랩북</MyPageBtnLabel>
+            </MyPageBtn>
+            <MyPageBtn>
               {/* <Like_Icon /> */}
-              <MyPage_BtnImg alt="like" src={"./icons/Outline/like.svg"} />
-              <MyPage_BtnLabel>좋아요</MyPage_BtnLabel>
-            </MyPage_Btn>
+              <MyPageBtnImg alt="like" src={"./icons/Outline/like.svg"} />
+              <MyPageBtnLabel>좋아요</MyPageBtnLabel>
+            </MyPageBtn>
           </div>
         </div>
         <div>
@@ -143,17 +179,17 @@ export default function Mypage() {
   );
 }
 
-const MyPage_Btn = tw.button`
+const MyPageBtn = tw.button`
 cursor-pointer mx-auto 
 w-[80px] h-[80px] px-2
 hover:font-semibold hover:bg-white/10 hover:rounded-full
 `;
 
-const MyPage_BtnImg = tw.img`
+const MyPageBtnImg = tw.img`
 w-[40px] h-[40px] mx-auto
 `;
 
-const MyPage_BtnLabel = tw.p`
+const MyPageBtnLabel = tw.p`
 w-fit text-white mx-auto
 `;
 

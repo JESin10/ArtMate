@@ -3,9 +3,9 @@ import { useQuery } from "react-query";
 import { SeoulArtMuseum_ArtWork_OpenData } from "../api/Gallery_OpenApi";
 import Search_Bar from "../modules/Search_Bar";
 import tw from "tailwind-styled-components";
-import { loadImg } from "../assets/images";
+// import { loadImg } from "../assets/images";
 import Artwork_Modal from "../component/Artwork_Modal";
-import Loading from "./Loading";
+// import Loading from "./Loading";
 
 export interface ArtworkInfo {
   DP_ARTIST?: string;

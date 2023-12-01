@@ -7,13 +7,16 @@ import RecommendSlider from "../component/RecommendSlider";
 import Search_Bar from "../modules/Search_Bar";
 import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
-import Loading from "./Loading";
 import tw from "tailwind-styled-components";
 import { ArtworkInfo } from "./Artwork";
 import Artwork_Modal from "../component/Artwork_Modal";
 import { useAuth } from "./context/AuthContext";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../Firebase";
+import { v4 as uidv } from "uuid";
 
 export interface UserInfo {
+  userId: string;
   uid: string;
   name: string;
   profileURL: string;
@@ -38,8 +41,9 @@ export default function Home() {
     null
   );
   const { currentUser } = useAuth();
-  const [getToken, setGetToken] = useState();
+  // const [getToken, setGetToken] = useState();
   const [userInfo, setUserInfo] = useState<UserInfo>();
+  const LoginUserUid = uidv();
 
   const fetchData = async () => {
     const response = await MainPage(1, 10);
@@ -48,28 +52,39 @@ export default function Home() {
     return response;
   };
 
-  // useEffect(() => {
-  //   // 페이지 렌딩과 동시에 데이터 가져오기
-  // }, []);
+  const UserSaving = async () => {
+    if (currentUser && userInfo) {
+      const docRef = await setDoc(doc(db, `userInfo`, LoginUserUid), {
+        // Uid: currentUser?.uid,
+        userId: LoginUserUid,
+        Email: userInfo.email,
+        NickName: userInfo.name,
+        ProfileURL: userInfo.profileURL,
+        FollowerCnt: 0,
+        FollowingCnt: 0,
+        ReviewList: [],
+        LikePostList: [],
+        SavePostList: [],
+      });
+    }
+  };
 
   const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
 
   useEffect(() => {
     fetchData();
-    // if (currentUser) {
-    //   setGetToken(currentUser.accessToken);
-    // } else if (localStorage.getItem("user_name") !== undefined) {
-    //   // setUserInfo({
-    //   //   uid: localStorage.getItem("user_uid") || "",
-    //   //   name: localStorage.getItem("user_name") || "",
-    //   //   profileURL: localStorage.getItem("user_profile") || "",
-    //   //   email: localStorage.getItem("user_email") || "",
-    //   //   access_token: localStorage.getItem("access_token") || "",
-    //   // });
-    // }
+    if (currentUser) {
+      setUserInfo({
+        userId: LoginUserUid,
+        uid: currentUser.uid,
+        name: currentUser.displayName,
+        profileURL: currentUser.photoURL,
+        email: currentUser.email,
+        // access_token?: string
+      });
+    }
+    UserSaving();
   }, []);
-
-  // console.log(userInfo);
 
   //Modal
   const openModal = (artwork: ArtworkInfo) => {

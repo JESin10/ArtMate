@@ -1,8 +1,9 @@
-import React from "react";
-import { loadImg } from "../assets/images";
+// import React from "react";
+// import { loadImg } from "../assets/images";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { ArtworkInfo } from "../page/Artwork";
 import tw from "tailwind-styled-components";
+import { ReactComponent as SaveIcon } from "../assets/customSvg/bookmark.svg";
 
 interface ModalProps {
   isOpen: boolean;
@@ -42,7 +43,12 @@ export default function Artwork_Modal({
             src={artworkInfo.DP_MAIN_IMG}
           />
           <div className="px-4">
-            <h2 className="text-xl font-bold my-3">{artworkInfo.DP_NAME}</h2>
+            <div className="flex justify-between">
+              <h2 className="text-xl font-bold my-3">{artworkInfo.DP_NAME}</h2>
+              <button className=" h-fit my-auto">
+                <Saving />
+              </button>
+            </div>
             {/* 상세정보 */}
             <div className="space-y-1">
               <div className="flex">
@@ -138,4 +144,9 @@ const ArtworkModalLabel = tw.p`
 
 const ArtworkModalContent = tw.p`
   text-sm flex w-full
+`;
+
+const Saving = tw(SaveIcon)`
+fill-black bg-yellow-300
+cursor-pointer hover:fill-red-300
 `;

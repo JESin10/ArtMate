@@ -5,21 +5,19 @@ import { useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
 import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
 import { ReactComponent as DescLogo } from "../assets/customSvg/main_logo_desc.svg";
-import { UserInfo } from "./Home";
-import UserAuth_Naver from "../modules/UserAuth_Naver";
-import { v4 as uidv } from "uuid";
+// import { UserInfo } from "./Home";
+// import Signup from "./Signup";
 
 export default function Login() {
   const { login, signupWithGoogle, currentUser } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const [getToken, setGetToken] = useState();
-  const [userInfo, setUserInfo] = useState<UserInfo>();
+  // const [getToken, setGetToken] = useState();
+  // const [userInfo, setUserInfo] = useState<UserInfo>();
 
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
-  const [error, setError] = useState<string>("");
-  const LoginUid = uidv();
+  // const [error, setError] = useState<string>("");
 
   const SignupWithGoogleHandler = () => {
     setLoading(true);
@@ -28,19 +26,19 @@ export default function Login() {
     setLoading(false);
   };
 
-  // basic singup form
+  // basic login form
   const BasicLoginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      setError("");
       setLoading(true);
       if (emailRef.current && passwordRef.current) {
         await login(emailRef.current.value, passwordRef.current.value);
       }
       navigate("/");
     } catch (err) {
-      setError("Fail to sign up");
       console.error(err);
+      // window.alert("Fail Log-in User");
+      window.alert("Login Error");
     }
     setLoading(false);
   };
@@ -68,8 +66,12 @@ export default function Login() {
         </form>
         <div className="flex justify-center w-fit mx-auto text-xs mb-4">
           <button className="mx-4">이메일 찾기</button>
-          <button className="mx-4">비밀번호 찾기</button>
-          <button className="mx-4">회원가입</button>
+          <button className="mx-4 text-primary-Gray cursor-not-allowed">
+            비밀번호 찾기
+          </button>
+          <button className="mx-4" onClick={() => navigate("/sign-up")}>
+            회원가입
+          </button>
         </div>
         <div className="my-10 flex flex-col justify-center items-center border-t-2 border-primary-Gray/60">
           <p className="w-fit my-4 text-sm ">소셜로 시작하기</p>

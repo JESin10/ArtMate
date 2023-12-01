@@ -7,6 +7,8 @@ import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.s
 import { ReactComponent as DescLogo } from "../assets/customSvg/main_logo_desc.svg";
 import { UserInfo } from "./Home";
 import { v4 as uidv } from "uuid";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../Firebase";
 
 export default function Signup() {
   const { signup, signupWithGoogle, currentUser } = useAuth();
@@ -17,8 +19,9 @@ export default function Signup() {
 
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
+  const nicknameRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState<string>("");
-  const LoginUid = uidv();
+  const LoginUserUid = uidv();
 
   const SignupWithGoogleHandler = () => {
     setLoading(true);
@@ -27,15 +30,33 @@ export default function Signup() {
     setLoading(false);
   };
 
+  // console.log(nicknameRef);
+
   // basic singup form
   const BasicLoginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setError("");
       setLoading(true);
-      if (emailRef.current && passwordRef.current) {
-        await signup(emailRef.current.value, passwordRef.current.value);
+      if (
+        emailRef.current &&
+        passwordRef.current &&
+        nicknameRef.current?.value
+      ) {
+        await signup(
+          emailRef.current.value,
+          passwordRef.current.value,
+          nicknameRef.current?.value
+        );
       }
+      setUserInfo({
+        userId: LoginUserUid,
+        uid: currentUser.uid,
+        name: currentUser.displayName,
+        profileURL: currentUser.photoURL,
+        email: currentUser.email,
+        // access_token?: string;
+      });
       navigate("/");
     } catch (err) {
       setError("Failed to create an account");
@@ -43,6 +64,35 @@ export default function Signup() {
       setLoading(false);
     }
   };
+
+  // const UserSaving = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (userInfo) {
+  //     const docRef = await setDoc(
+  //       doc(db, `userList/${currentUser.uid}/userInfo`, LoginUserUid),
+  //       {
+  //         // Uid: currentUser?.uid,
+  //         userId: LoginUserUid,
+  //         Email: userInfo?.email,
+  //         NickName: userInfo?.name,
+  //         ProfileURL: userInfo?.profileURL,
+  //         FollowerCount: 0,
+  //         FollowingCount: 0,
+  //         ReviewList: [],
+  //         LikePostList: [],
+  //         SavePostList: [],
+  //       }
+  //     );
+  //   }
+  // };
+
+  // console.log(currentUser);
+
+  // useEffect(() => {
+  //   if (userInfo?.email !== undefined) {
+  //     UserSaving();
+  //   }
+  // }, [currentUser.email]);
 
   return (
     <div className="w-full h-screen flex flex-col mt-20 justify-center items-center">
@@ -69,7 +119,7 @@ export default function Signup() {
               className="w-full"
               type="text"
               placeholder="닉네임"
-              // ref={passwordRef}
+              ref={nicknameRef}
             />
             <p className="text-xs text-primary-Gray">2-10자로 구성해주세요.</p>
           </AuthInput>
@@ -96,8 +146,11 @@ export default function Signup() {
             </p>
           </div> */}
 
-          <button className="bg-primary-YellowGreen rounded-3xl text-white w-[320px] h-[42px]">
-            로그인
+          <button
+            // onClick={UserSaving}
+            className="bg-primary-YellowGreen rounded-3xl text-white w-[320px] h-[42px]"
+          >
+            회원가입
           </button>
         </form>
         <div className="flex justify-center w-fit mx-auto text-xs mb-4"></div>
