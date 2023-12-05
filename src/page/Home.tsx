@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from "react";
 import Menu_Footer from "../component/Menu_Footer";
 import Carousel from "../modules/Carousel";
-import { DescLogo, loadImg } from "../assets/images";
+import { loadImg } from "../assets/images";
 import RecommendSlider from "../component/RecommendSlider";
 import Search_Bar from "../modules/Search_Bar";
-import { useQuery } from "react-query";
+// import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
 import tw from "tailwind-styled-components";
 import { ArtworkInfo } from "./Artwork";
@@ -54,8 +54,8 @@ export default function Home() {
 
   const UserSaving = async () => {
     if (currentUser && userInfo) {
-      const docRef = await setDoc(doc(db, `userInfo`, LoginUserUid), {
-        // Uid: currentUser?.uid,
+      const docRef = await setDoc(doc(db, `userInfo`, currentUser?.uid), {
+        Uid: currentUser?.uid,
         userId: LoginUserUid,
         Email: userInfo.email,
         NickName: userInfo.name,
@@ -66,10 +66,11 @@ export default function Home() {
         LikePostList: [],
         SavePostList: [],
       });
+      return docRef;
     }
   };
 
-  const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
+  // const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
 
   useEffect(() => {
     fetchData();
@@ -84,7 +85,8 @@ export default function Home() {
       });
     }
     UserSaving();
-  }, []);
+    // console.log(1);
+  }, [currentUser.uid]);
 
   //Modal
   const openModal = (artwork: ArtworkInfo) => {
@@ -95,12 +97,12 @@ export default function Home() {
     setSelectedArtwork(null);
   };
 
-  function parseAndStyleInfo(info: string) {
-    const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
-      return `<span style="font-weight: bold;">${content}</span>`;
-    });
-    return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
-  }
+  // function parseAndStyleInfo(info: string) {
+  //   const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
+  //     return `<span style="font-weight: bold;">${content}</span>`;
+  //   });
+  //   return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
+  // }
 
   return (
     <div className="h-fit border-2 ">
