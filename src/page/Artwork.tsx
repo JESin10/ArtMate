@@ -5,6 +5,7 @@ import Search_Bar from "../modules/Search_Bar";
 import tw from "tailwind-styled-components";
 // import { loadImg } from "../assets/images";
 import Artwork_Modal from "../component/Artwork_Modal";
+import { useAuth } from "./context/AuthContext";
 // import Loading from "./Loading";
 
 export interface ArtworkInfo {
@@ -33,6 +34,7 @@ export default function Artwork() {
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkInfo | null>(
     null
   );
+  const { currentUser } = useAuth();
 
   // 페이지 렌딩과 동시에 데이터 가져오기
   const fetchData = async () => {
@@ -116,6 +118,7 @@ export default function Artwork() {
                           isOpen={true}
                           closeModal={closeModal}
                           artworkInfo={selectedArtwork}
+                          currentUser={currentUser}
                         />
                       </div>
                     )}

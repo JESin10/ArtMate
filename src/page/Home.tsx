@@ -53,21 +53,46 @@ export default function Home() {
   };
 
   const UserSaving = async () => {
-    if (currentUser && userInfo) {
-      const docRef = await setDoc(doc(db, `userInfo`, currentUser?.uid), {
-        Uid: currentUser?.uid,
-        userId: LoginUserUid,
-        Email: userInfo.email,
-        NickName: userInfo.name,
-        ProfileURL: userInfo.profileURL,
-        FollowerCnt: 0,
-        FollowingCnt: 0,
-        ReviewList: [],
-        LikePostList: [],
-        SavePostList: [],
-      });
-      return docRef;
+    try {
+      if (currentUser && userInfo) {
+        const docRef = await setDoc(
+          doc(db, `userInfo/${currentUser?.uid}/UserInfo`, currentUser?.email),
+          {
+            Uid: currentUser?.uid,
+            userId: LoginUserUid,
+            Email: userInfo.email,
+            NickName: userInfo.name,
+            ProfileURL: userInfo.profileURL,
+            FollowerCnt: 0,
+            FollowingCnt: 0,
+            ReviewList: [],
+            LikePostList: [],
+            SavePostList: [],
+          }
+        );
+        return docRef;
+      }
+    } catch (err) {
+      console.error(err);
     }
+    // if (currentUser && userInfo) {
+    //   const docRef = await setDoc(
+    //     doc(db, `userInfo/${currentUser?.uid}/UserInfo`, currentUser?.email),
+    //     {
+    //       Uid: currentUser?.uid,
+    //       userId: LoginUserUid,
+    //       Email: userInfo.email,
+    //       NickName: userInfo.name,
+    //       ProfileURL: userInfo.profileURL,
+    //       FollowerCnt: 0,
+    //       FollowingCnt: 0,
+    //       ReviewList: [],
+    //       LikePostList: [],
+    //       SavePostList: [],
+    //     }
+    //   );
+    //   return docRef;
+    // }
   };
 
   // const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
@@ -85,8 +110,8 @@ export default function Home() {
       });
     }
     UserSaving();
-    // console.log(1);
-  }, [currentUser.uid]);
+    console.log(1);
+  }, []);
 
   //Modal
   const openModal = (artwork: ArtworkInfo) => {
@@ -248,6 +273,7 @@ export default function Home() {
               isOpen={true}
               closeModal={closeModal}
               artworkInfo={selectedArtwork}
+              currentUser={currentUser}
             />
           </div>
         )}
