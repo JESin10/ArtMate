@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+// import React, { useEffect } from "react";
 import { loadImg } from "../assets/images";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { GalleryInfo } from "../page/Gallery";
@@ -22,7 +22,7 @@ export default function Gallery_Modal({
       <GalleryModalContainer>
         <div className="fixed z-10">
           <button
-            className="my-2 ml-80 justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"
+            className="bg-white my-2 ml-80 justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"
             onClick={closeModal}
           >
             <IoIosCloseCircleOutline size="100%" />
@@ -47,11 +47,11 @@ export default function Gallery_Modal({
             </div>
             <div className="flex">
               <GalleryModalLabel>휴관일 </GalleryModalLabel>
-              <GalleryModalContent>메주 월 휴무</GalleryModalContent>
+              <GalleryModalContent>매주 월 휴무</GalleryModalContent>
             </div>
             <div className="flex">
               <GalleryModalLabel>전화번호 </GalleryModalLabel>
-              <GalleryModalContent>02-1234-1234</GalleryModalContent>
+              <GalleryModalContent>02-0000-0000</GalleryModalContent>
             </div>
             <div className="flex">
               <GalleryModalLabel>홈페이지 </GalleryModalLabel>
@@ -69,10 +69,8 @@ export default function Gallery_Modal({
                   </a>
                 </p>
               ) : (
-                <p className="text-sm flex">
-                  <p className="cursor-not-allowed text-gray-400">
-                    홈페이지 방문
-                  </p>
+                <p className="text-sm flex cursor-not-allowed text-gray-400">
+                  홈페이지 방문
                 </p>
               )}
             </div>

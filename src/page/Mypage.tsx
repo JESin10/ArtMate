@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { loadImg } from "../assets/images";
 import { useNavigate } from "react-router-dom";
 // import { ReactComponent as BookMarkIcon } from "../assets/CustomSvg/bookmark.svg";
@@ -7,9 +7,9 @@ import tw from "tailwind-styled-components";
 import { UserInfo } from "./Home";
 import { useAuth } from "./context/AuthContext";
 // import { useCollectionData } from "react-firebase-hooks/firestore";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
-import "firebase/compat/firestore";
-import { db } from "../Firebase";
+// import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+// import "firebase/compat/firestore";
+// import { db } from "../Firebase";
 import { v4 as uidv } from "uuid";
 
 export default function Mypage() {
@@ -17,12 +17,12 @@ export default function Mypage() {
   const navigate = useNavigate();
   // const UserUid = uidv();
   const [userInfo, setUserInfo] = useState<UserInfo>();
-  const listRef = collection(db, `user/${currentUser?.uid}/list`);
+  // const listRef = collection(db, `user/${currentUser?.uid}/list`);
   // const [list] = useCollectionData<any>(listRef);
   const LoginUserUid = uidv();
 
   // console.log(db);
-  console.log(currentUser);
+  // console.log(currentUser);
 
   useEffect(() => {
     if (!currentUser) {

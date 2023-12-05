@@ -1,27 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { loadImg } from "../assets/images";
 import { useAuth } from "../page/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
 import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
 import { ReactComponent as DescLogo } from "../assets/customSvg/main_logo_desc.svg";
-import { UserInfo } from "./Home";
-import { v4 as uidv } from "uuid";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../Firebase";
+// import { UserInfo } from "./Home";
+// import { v4 as uidv } from "uuid";
+// import { doc, setDoc } from "firebase/firestore";
+// import { db } from "../Firebase";
 
 export default function Signup() {
-  const { signup, signupWithGoogle, currentUser } = useAuth();
+  const { signup, signupWithGoogle } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const [getToken, setGetToken] = useState();
-  const [userInfo, setUserInfo] = useState<UserInfo>();
+  // const [getToken, setGetToken] = useState();
 
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const nicknameRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState<string>("");
-  const LoginUserUid = uidv();
+  // const LoginUserUid = uidv();
 
   const SignupWithGoogleHandler = () => {
     setLoading(true);
@@ -49,50 +48,24 @@ export default function Signup() {
           nicknameRef.current?.value
         );
       }
-      setUserInfo({
-        userId: LoginUserUid,
-        uid: currentUser.uid,
-        name: currentUser.displayName,
-        profileURL: currentUser.photoURL,
-        email: currentUser.email,
-        // access_token?: string;
-      });
+      // setUserInfo({
+      //   userId: LoginUserUid,
+      //   uid: currentUser.uid,
+      //   name: currentUser.displayName,
+      //   profileURL: currentUser.photoURL,
+      //   email: currentUser.email,
+      // access_token?: string;
+      // });
+      window.alert("Welcome!");
       navigate("/");
     } catch (err) {
       setError("Failed to create an account");
+      return error;
     } finally {
       setLoading(false);
+      return loading;
     }
   };
-
-  // const UserSaving = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (userInfo) {
-  //     const docRef = await setDoc(
-  //       doc(db, `userList/${currentUser.uid}/userInfo`, LoginUserUid),
-  //       {
-  //         // Uid: currentUser?.uid,
-  //         userId: LoginUserUid,
-  //         Email: userInfo?.email,
-  //         NickName: userInfo?.name,
-  //         ProfileURL: userInfo?.profileURL,
-  //         FollowerCount: 0,
-  //         FollowingCount: 0,
-  //         ReviewList: [],
-  //         LikePostList: [],
-  //         SavePostList: [],
-  //       }
-  //     );
-  //   }
-  // };
-
-  // console.log(currentUser);
-
-  // useEffect(() => {
-  //   if (userInfo?.email !== undefined) {
-  //     UserSaving();
-  //   }
-  // }, [currentUser.email]);
 
   return (
     <div className="w-full h-screen flex flex-col mt-20 justify-center items-center">

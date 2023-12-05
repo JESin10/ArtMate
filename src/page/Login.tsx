@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { loadImg } from "../assets/images";
 import { useAuth } from "../page/context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -7,13 +7,18 @@ import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.s
 import { ReactComponent as DescLogo } from "../assets/customSvg/main_logo_desc.svg";
 // import { UserInfo } from "./Home";
 // import Signup from "./Signup";
+// import { v4 as uidv } from "uuid";
+// import { doc, setDoc } from "firebase/firestore";
+// import { db } from "../Firebase";
+// import { UserInfo } from "./Home";
 
 export default function Login() {
-  const { login, signupWithGoogle, currentUser } = useAuth();
+  const { login, signupWithGoogle } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   // const [getToken, setGetToken] = useState();
   // const [userInfo, setUserInfo] = useState<UserInfo>();
+  // const LoginUserUid = uidv();
 
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
@@ -26,6 +31,23 @@ export default function Login() {
     setLoading(false);
   };
 
+  // const UserSaving = async () => {
+  //   if (currentUser && userInfo) {
+  //     const docRef = await setDoc(doc(db, `userInfo`, userInfo?.uid), {
+  //       Uid: userInfo?.uid,
+  //       userId: LoginUserUid,
+  //       Email: userInfo.email,
+  //       NickName: userInfo.name,
+  //       ProfileURL: userInfo.profileURL,
+  //       FollowerCnt: 0,
+  //       FollowingCnt: 0,
+  //       ReviewList: [],
+  //       LikePostList: [],
+  //       SavePostList: [],
+  //     });
+  //   }
+  // };
+
   // basic login form
   const BasicLoginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +56,7 @@ export default function Login() {
       if (emailRef.current && passwordRef.current) {
         await login(emailRef.current.value, passwordRef.current.value);
       }
+      // UserSaving();
       navigate("/");
     } catch (err) {
       console.error(err);

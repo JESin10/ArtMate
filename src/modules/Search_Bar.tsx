@@ -1,4 +1,4 @@
-import React, { ReactHTML, useState } from "react";
+import React, { useState } from "react";
 import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
 import tw from "tailwind-styled-components";
 
@@ -12,8 +12,8 @@ export default function Search_Bar(): JSX.Element {
 
   const onKeyPressHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      // onSearchHandler();
-      window.alert("검색완료");
+      onSearchHandler();
+      console.log("검색완료");
     }
     setSearchInput("");
   };

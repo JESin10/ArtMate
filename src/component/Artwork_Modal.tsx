@@ -31,7 +31,7 @@ export default function Artwork_Modal({
         <ArtworkModalContainer>
           <div className="fixed z-10">
             <button
-              className="my-2 ml-80 justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"
+              className="my-2 ml-80 bg-white justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"
               onClick={closeModal}
             >
               <IoIosCloseCircleOutline size="100%" />
@@ -74,45 +74,35 @@ export default function Artwork_Modal({
               <div className="flex">
                 <ArtworkModalLabel>작가 </ArtworkModalLabel>
                 {artworkInfo.DP_ARTIST === "" ? (
-                  <p className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
+                  <div className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
                     unknown
-                  </p>
+                  </div>
                 ) : (
-                  <p className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
+                  <div className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
                     {artworkInfo.DP_ARTIST}
-                  </p>
+                  </div>
                 )}
               </div>
               <div className="flex">
                 <ArtworkModalLabel>HOME </ArtworkModalLabel>
                 <div className="flex w-full">
-                  <a
-                    href={artworkInfo.DP_LNK}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="resume-link"
-                  >
-                    {artworkInfo.DP_LNK ? (
-                      <p className="text-sm flex">
-                        <a
-                          href={artworkInfo.DP_LNK}
-                          target="_blank"
-                          rel="noreferrer"
-                          aria-label="resume-link"
-                        >
-                          <ArtworkModalContent className="hover:text-primary-YellowGreen hover:font-extrabold">
-                            홈페이지 방문
-                          </ArtworkModalContent>
-                        </a>
-                      </p>
-                    ) : (
-                      <div className="text-sm flex">
-                        <p className="cursor-not-allowed text-gray-400">
-                          홈페이지 방문
-                        </p>
-                      </div>
-                    )}
-                  </a>
+                  {artworkInfo.DP_LNK ? (
+                    <a
+                      className="text-sm flex"
+                      href={artworkInfo.DP_LNK}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="resume-link"
+                    >
+                      <ArtworkModalContent className="hover:text-primary-YellowGreen hover:font-extrabold">
+                        홈페이지 방문
+                      </ArtworkModalContent>
+                    </a>
+                  ) : (
+                    <p className="text-sm flex cursor-not-allowed text-gray-400">
+                      홈페이지 방문
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
