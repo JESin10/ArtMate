@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-pascal-case */
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { SeoulArtMuseum_ArtWork_OpenData } from "../api/Gallery_OpenApi";
@@ -6,6 +7,10 @@ import tw from "tailwind-styled-components";
 // import { loadImg } from "../assets/images";
 import Artwork_Modal from "../component/Artwork_Modal";
 import { useAuth } from "./context/AuthContext";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { collection, doc } from "firebase/firestore";
+import { db } from "../Firebase";
+
 // import Loading from "./Loading";
 
 export interface ArtworkInfo {
@@ -30,11 +35,18 @@ export interface ArtworkInfo {
 }
 
 export default function Artwork() {
-  const [artworkList, setArtWorkList] = useState([]);
+  const [artworkList, setArtWorkList] = useState<Array<ArtworkInfo>>([]);
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkInfo | null>(
     null
   );
   const { currentUser } = useAuth();
+  const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
+  // const docRef = doc(listRef, selectedArtwork?.DP_NAME);
+  const [MyArtworkInfo] = useCollectionData(listRef);
+
+  console.log(MyArtworkInfo);
+
+  // console.log(artworkList);
 
   // 페이지 렌딩과 동시에 데이터 가져오기
   const fetchData = async () => {
@@ -109,19 +121,33 @@ export default function Artwork() {
                           </ArtworkDesc>
                         ) : (
                           <ArtworkDesc>{list.DP_ART_PART}</ArtworkDesc>
-                        )}{" "}
+                        )}
                       </div>
                     </ArtworkContainer>
-                    {selectedArtwork && (
-                      <div className="overflow-inherit">
-                        <Artwork_Modal
-                          isOpen={true}
-                          closeModal={closeModal}
-                          artworkInfo={selectedArtwork}
-                          currentUser={currentUser}
-                        />
-                      </div>
-                    )}
+
+                    {MyArtworkInfo &&
+                      selectedArtwork &&
+                      MyArtworkInfo?.map((list: any, index: number) => (
+                        <div className="overflow-inherit">
+                          {list.DP_NAME === selectedArtwork.DP_NAME ? (
+                            <Artwork_Modal
+                              isOpen={true}
+                              closeModal={closeModal}
+                              artworkInfo={selectedArtwork}
+                              currentUser={currentUser}
+                              CloudInfo={MyArtworkInfo}
+                            />
+                          ) : (
+                            <Artwork_Modal
+                              isOpen={true}
+                              closeModal={closeModal}
+                              artworkInfo={selectedArtwork}
+                              currentUser={currentUser}
+                              // CloudInfo={MyArtworkInfo}
+                            />
+                          )}
+                        </div>
+                      ))}
                   </div>
                 ))}
             </div>
@@ -143,3 +169,17 @@ const ArtworkDesc = tw.div`
 overflow-hidden flex-wrap
 text-xs text-ellipsis break-all line-clamp-1 
 `;
+
+{
+  /* {selectedArtwork && (
+                      <div className="overflow-inherit">
+                        <Artwork_Modal
+                          isOpen={true}
+                          closeModal={closeModal}
+                          artworkInfo={selectedArtwork}
+                          currentUser={currentUser}
+                          CloudInfo={MyArtworkInfo}
+                        />
+                      </div>
+                    )} */
+}

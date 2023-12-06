@@ -1,4 +1,4 @@
-// import React from "react";
+import React, { useState } from "react";
 // import { loadImg } from "../assets/images";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { ArtworkInfo } from "../page/Artwork";
@@ -6,19 +6,21 @@ import tw from "tailwind-styled-components";
 import { ReactComponent as SaveIcon } from "../assets/customSvg/bookmark.svg";
 import { db } from "../Firebase";
 import { doc, setDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
-import { useAuth } from "../page/context/AuthContext";
-import { useState } from "react";
+// import { useAuth } from "../page/context/AuthContext";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 
 interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
   artworkInfo: ArtworkInfo | null;
   currentUser: any;
+  CloudInfo?: any;
 }
 
 interface ArtWorkSaveInfo {
   Uid: string;
   // Artwork_No : number;
+  isSaved: boolean;
   DP_NAME: string;
   DP_EX_NO: number;
   DP_MAIN_IMG: string;
@@ -30,18 +32,19 @@ export default function Artwork_Modal({
   closeModal,
   artworkInfo,
   currentUser,
+  CloudInfo,
 }: ModalProps) {
-  if (!isOpen) return null;
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const docRef = doc(listRef, artworkInfo?.DP_NAME);
-  // const DocSnap = await getDoc(docRef);
-  // console.log(DocSnap.data());
+  // const [artworkList] = useCollectionData(listRef);
+
+  if (!isOpen) return null;
 
   const ArtWorkSaving = async () => {
-    if (!isSaved && artworkInfo?.DP_NAME) {
+    const DocSnap = await getDoc(docRef);
+
+    if (!DocSnap.data()?.isSaved && artworkInfo?.DP_NAME) {
       const ArtworkRef = await setDoc(
         doc(
           db,
@@ -102,14 +105,28 @@ export default function Artwork_Modal({
           <div className="px-4">
             <div className="flex justify-between">
               <h2 className="text-xl font-bold my-3">{artworkInfo.DP_NAME}</h2>
-              <button className=" h-fit my-auto">
-                {/* <Saving onClick={ArtWorkSaving} /> */}
-                {isSaved ? (
+              {CloudInfo &&
+                CloudInfo.map((list: any, index: number) => (
+                  <button className="h-fit my-auto" key={index}>
+                    {list.isSaved ? (
+                      <Saving
+                        onClick={ArtWorkSaving}
+                        style={{ fill: "#608D00" }}
+                      />
+                    ) : (
+                      <Saving
+                        onClick={ArtWorkSaving}
+                        style={{ fill: "white" }}
+                      />
+                    )}
+                  </button>
+                ))}
+
+              {/* {isSaved ? (
                   <Saving onClick={ArtWorkSaving} style={{ fill: "#608D00" }} />
                 ) : (
                   <Saving onClick={ArtWorkSaving} style={{ fill: "white" }} />
-                )}
-              </button>
+                )} */}
             </div>
             {/* 상세정보 */}
             <div className="space-y-1">

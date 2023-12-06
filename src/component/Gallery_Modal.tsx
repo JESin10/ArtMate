@@ -56,7 +56,7 @@ export default function Gallery_Modal({
             <div className="flex">
               <GalleryModalLabel>홈페이지 </GalleryModalLabel>
               {galleryInfo.HOME_PAGE ? (
-                <p className="text-sm flex">
+                <div className="text-sm flex">
                   <a
                     href={galleryInfo.HOME_PAGE}
                     target="_blank"
@@ -67,7 +67,7 @@ export default function Gallery_Modal({
                       홈페이지 방문
                     </GalleryModalContent>
                   </a>
-                </p>
+                </div>
               ) : (
                 <p className="text-sm flex cursor-not-allowed text-gray-400">
                   홈페이지 방문
