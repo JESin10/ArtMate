@@ -110,7 +110,7 @@ export default function Home() {
       });
     }
     UserSaving();
-    console.log(1);
+    // console.log(1);
   }, []);
 
   //Modal

@@ -77,6 +77,7 @@ export default function Artwork_Modal({
       }
     }
   };
+  // console.log(artworkInfo);
 
   function parseAndStyleInfo(info: string) {
     const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
@@ -105,7 +106,7 @@ export default function Artwork_Modal({
           <div className="px-4">
             <div className="flex justify-between">
               <h2 className="text-xl font-bold my-3">{artworkInfo.DP_NAME}</h2>
-              {CloudInfo &&
+              {/* {CloudInfo &&
                 CloudInfo.map((list: any, index: number) => (
                   <button className="h-fit my-auto" key={index}>
                     {list.isSaved ? (
@@ -120,7 +121,54 @@ export default function Artwork_Modal({
                       />
                     )}
                   </button>
-                ))}
+                ))} */}
+              {CloudInfo &&
+                CloudInfo.map(
+                  (list: any, index: number) =>
+                    list.DP_NAME === artworkInfo.DP_NAME ? (
+                      <button className="h-fit my-auto" key={index}>
+                        {list.isSaved ? (
+                          <Saving
+                            onClick={ArtWorkSaving}
+                            style={{ fill: "#608D00" }}
+                          />
+                        ) : (
+                          <Saving
+                            onClick={ArtWorkSaving}
+                            style={{ fill: "white" }}
+                          />
+                        )}
+                      </button>
+                    ) : null
+                  // <button className="h-fit my-auto" key={index}>
+                  //   <Saving
+                  //     onClick={ArtWorkSaving}
+                  //     style={{ fill: "white" }}
+                  //   />
+                  // </button>
+                )}
+
+              {/* {CloudInfo ? (
+                CloudInfo.map((list: any, index: number) => (
+                  <button className="h-fit my-auto" key={index}>
+                    {list.isSaved ? (
+                      <Saving
+                        onClick={ArtWorkSaving}
+                        style={{ fill: "#608D00" }}
+                      />
+                    ) : (
+                      <Saving
+                        onClick={ArtWorkSaving}
+                        style={{ fill: "white" }}
+                      />
+                    )}
+                  </button>
+                ))
+              ) : (
+                <button className="h-fit my-auto">
+                  <Saving onClick={ArtWorkSaving} style={{ fill: "white" }} />
+                </button>
+              )} */}
 
               {/* {isSaved ? (
                   <Saving onClick={ArtWorkSaving} style={{ fill: "#608D00" }} />
@@ -186,9 +234,9 @@ export default function Artwork_Modal({
               </div>
             </div>
             {/* 갤러리 상세설명 */}
-            <p className="text-xs text-primary-Gray my-4 flex">
+            <div className="text-xs text-primary-Gray my-4 flex">
               {parseAndStyleInfo(artworkInfo.DP_INFO)}
-            </p>
+            </div>
           </div>
         </ArtworkModalContainer>
       )}

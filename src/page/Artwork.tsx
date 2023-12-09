@@ -8,8 +8,8 @@ import tw from "tailwind-styled-components";
 import Artwork_Modal from "../component/Artwork_Modal";
 import { useAuth } from "./context/AuthContext";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { collection, doc } from "firebase/firestore";
 import { db } from "../Firebase";
+import { collection, doc } from "firebase/firestore";
 
 // import Loading from "./Loading";
 
@@ -44,8 +44,7 @@ export default function Artwork() {
   // const docRef = doc(listRef, selectedArtwork?.DP_NAME);
   const [MyArtworkInfo] = useCollectionData(listRef);
 
-  console.log(MyArtworkInfo);
-
+  // console.log(MyArtworkInfo);
   // console.log(artworkList);
 
   // 페이지 렌딩과 동시에 데이터 가져오기
@@ -128,7 +127,7 @@ export default function Artwork() {
                     {MyArtworkInfo &&
                       selectedArtwork &&
                       MyArtworkInfo?.map((list: any, index: number) => (
-                        <div className="overflow-inherit">
+                        <div className="overflow-inherit" key={index}>
                           {list.DP_NAME === selectedArtwork.DP_NAME ? (
                             <Artwork_Modal
                               isOpen={true}
