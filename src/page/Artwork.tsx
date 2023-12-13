@@ -9,7 +9,8 @@ import Artwork_Modal from "../component/Artwork_Modal";
 import { useAuth } from "./context/AuthContext";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
-import { collection, doc } from "firebase/firestore";
+import { DocumentData, collection, doc } from "firebase/firestore";
+import { isArray } from "util";
 
 // import Loading from "./Loading";
 
@@ -42,7 +43,8 @@ export default function Artwork() {
   const { currentUser } = useAuth();
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   // const docRef = doc(listRef, selectedArtwork?.DP_NAME);
-  const [MyArtworkInfo] = useCollectionData(listRef);
+  // const MyArtworkInfo = Array(useCollectionData(listRef));
+  const MyArtworkInfo = useCollectionData(listRef)[0];
 
   // console.log(MyArtworkInfo);
   // console.log(artworkList);
@@ -57,7 +59,7 @@ export default function Artwork() {
     fetchData();
   }, []);
 
-  const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
+  // const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
 
   //Modal
   const openModal = (artwork: ArtworkInfo) => {
@@ -123,32 +125,19 @@ export default function Artwork() {
                         )}
                       </div>
                     </ArtworkContainer>
-
-                    {MyArtworkInfo &&
-                      selectedArtwork &&
-                      MyArtworkInfo?.map((list: any, index: number) => (
-                        <div className="overflow-inherit" key={index}>
-                          {list.DP_NAME === selectedArtwork.DP_NAME ? (
-                            <Artwork_Modal
-                              isOpen={true}
-                              closeModal={closeModal}
-                              artworkInfo={selectedArtwork}
-                              currentUser={currentUser}
-                              CloudInfo={MyArtworkInfo}
-                            />
-                          ) : (
-                            <Artwork_Modal
-                              isOpen={true}
-                              closeModal={closeModal}
-                              artworkInfo={selectedArtwork}
-                              currentUser={currentUser}
-                              // CloudInfo={MyArtworkInfo}
-                            />
-                          )}
-                        </div>
-                      ))}
                   </div>
                 ))}
+
+              {/* 1------------ */}
+              {selectedArtwork && (
+                <Artwork_Modal
+                  isOpen={true}
+                  closeModal={closeModal}
+                  artworkInfo={selectedArtwork}
+                  currentUser={currentUser}
+                  CloudInfo={MyArtworkInfo}
+                />
+              )}
             </div>
           </div>
         </div>
