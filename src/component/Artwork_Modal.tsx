@@ -6,8 +6,6 @@ import tw from "tailwind-styled-components";
 import { ReactComponent as SaveIcon } from "../assets/customSvg/bookmark.svg";
 import { db } from "../Firebase";
 import { doc, setDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
-// import { useAuth } from "../page/context/AuthContext";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 
 interface ModalProps {
   isOpen: boolean;

@@ -11,9 +11,10 @@ import tw from "tailwind-styled-components";
 import { ArtworkInfo } from "./Artwork";
 import Artwork_Modal from "../component/Artwork_Modal";
 import { useAuth } from "./context/AuthContext";
-import { doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../Firebase";
 import { v4 as uidv } from "uuid";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 
 export interface UserInfo {
   userId: string;
@@ -44,6 +45,11 @@ export default function Home() {
   // const [getToken, setGetToken] = useState();
   const [userInfo, setUserInfo] = useState<UserInfo>();
   const LoginUserUid = uidv();
+  const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
+  const MyArtworkInfo = useCollectionData(listRef)[0];
+
+  console.log(MyArtworkInfo);
+  console.log(selectedArtwork);
 
   const fetchData = async () => {
     const response = await MainPage(1, 10);
@@ -75,27 +81,7 @@ export default function Home() {
     } catch (err) {
       console.error(err);
     }
-    // if (currentUser && userInfo) {
-    //   const docRef = await setDoc(
-    //     doc(db, `userInfo/${currentUser?.uid}/UserInfo`, currentUser?.email),
-    //     {
-    //       Uid: currentUser?.uid,
-    //       userId: LoginUserUid,
-    //       Email: userInfo.email,
-    //       NickName: userInfo.name,
-    //       ProfileURL: userInfo.profileURL,
-    //       FollowerCnt: 0,
-    //       FollowingCnt: 0,
-    //       ReviewList: [],
-    //       LikePostList: [],
-    //       SavePostList: [],
-    //     }
-    //   );
-    //   return docRef;
-    // }
   };
-
-  // const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
 
   useEffect(() => {
     fetchData();
@@ -106,11 +92,9 @@ export default function Home() {
         name: currentUser.displayName,
         profileURL: currentUser.photoURL,
         email: currentUser.email,
-        // access_token?: string
       });
     }
     UserSaving();
-    // console.log(1);
   }, []);
 
   //Modal
@@ -267,16 +251,17 @@ export default function Home() {
               ))}
           </div>
         </div>
-        {selectedArtwork && (
-          <div className="overflow-inherit">
+        <div className="overflow-inherit">
+          {selectedArtwork && (
             <Artwork_Modal
               isOpen={true}
               closeModal={closeModal}
               artworkInfo={selectedArtwork}
               currentUser={currentUser}
+              CloudInfo={MyArtworkInfo}
             />
-          </div>
-        )}
+          )}
+        </div>
       </div>
       <Menu_Footer />
     </div>
