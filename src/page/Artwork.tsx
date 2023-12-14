@@ -46,9 +46,6 @@ export default function Artwork() {
   // const MyArtworkInfo = Array(useCollectionData(listRef));
   const MyArtworkInfo = useCollectionData(listRef)[0];
 
-  // console.log(MyArtworkInfo);
-  // console.log(artworkList);
-
   // 페이지 렌딩과 동시에 데이터 가져오기
   const fetchData = async () => {
     const response = await SeoulArtMuseum_ArtWork_OpenData(1, 30);
