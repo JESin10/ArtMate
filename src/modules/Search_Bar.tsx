@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
+import { ReactComponent as Searching } from "../assets/customSvg/search.svg";
+
 import tw from "tailwind-styled-components";
 
 export default function Search_Bar(): JSX.Element {
@@ -39,12 +41,7 @@ export default function Search_Bar(): JSX.Element {
                 onClick={handleSearchClick}
                 // onKeyPress={onKeyPressHandler}
               >
-                <img
-                  className="w-6 h-6 mr-2"
-                  src={"./icons/Outline/search.svg"}
-                  alt="Search"
-                  style={{ fill: "#608D00" }}
-                />
+                <SearchingIcon className="mr-2" />
               </button>
             </SearchContainer>
           </>
@@ -57,12 +54,7 @@ export default function Search_Bar(): JSX.Element {
               onClick={handleSearchClick}
               className="bg-transparent flex justify-end"
             >
-              <img
-                className="w-6 h-6"
-                src={"./icons/Outline/search.svg"}
-                alt="Search"
-                style={{ fill: "#608D00" }}
-              />
+              <SearchingIcon />
             </button>
           </MainBarContainer>
         )}
@@ -73,22 +65,27 @@ export default function Search_Bar(): JSX.Element {
 
 const MainTextLogo = tw(MainLogo)`
 fill-primary-YellowGreen
-w-30 h-fit mx-auto
+  w-30 h-fit mx-auto
 `;
 
 const MainBarContainer = tw.div`
-flex border-primary-YellowGreen border-b-2 py-2 w-4/5 justify-center mx-auto
+ border-primary-YellowGreen border-b-2 
+ flex py-2 w-4/5 justify-center mx-auto
 `;
 
 const SearchInput = tw.input`
-w-full h-8 
-rounded-2xl indent-0 px-3 
-bg-transparent outline-none
+  w-full h-8 
+  rounded-2xl indent-0 px-3 
+  bg-transparent outline-none
 `;
 
 const SearchContainer = tw.div`
-flex justify-between 
-border-black border-2 
-bg-white w-4/5 rounded-2xl 
-mt-4 mx-auto
+  flex justify-between 
+  border-black border-2 
+  bg-white w-4/5 rounded-2xl 
+  mt-4 mx-auto
+`;
+
+const SearchingIcon = tw(Searching)`
+  w-6 h-6 fill-primary-YellowGreen
 `;

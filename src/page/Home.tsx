@@ -48,8 +48,8 @@ export default function Home() {
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const MyArtworkInfo = useCollectionData(listRef)[0];
 
-  console.log(MyArtworkInfo);
-  console.log(selectedArtwork);
+  // console.log(MyArtworkInfo);
+  // console.log(selectedArtwork);
 
   const fetchData = async () => {
     const response = await MainPage(1, 10);

@@ -2,11 +2,13 @@
 import { useEffect, useState } from "react";
 import { SeoulArtMuseum_ArtWork_OpenData } from "../api/Gallery_OpenApi";
 import Search_Bar from "../modules/Search_Bar";
+import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
 import tw from "tailwind-styled-components";
 import Artwork_Modal from "../component/Artwork_Modal";
 import { useAuth } from "./context/AuthContext";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
+
 import { collection, doc } from "firebase/firestore";
 
 export interface ArtworkInfo {
@@ -78,7 +80,7 @@ export default function Artwork() {
                   onClick={() => window.location.reload()}
                   className="cursor-pointer"
                 >
-                  <img src={"./icons/Outline/reload.svg"} alt="refresh" />
+                  <Reload />
                 </button>
               </div>
             </div>
@@ -148,4 +150,10 @@ const ArtworkContainer = tw.div`
 const ArtworkDesc = tw.div`
 overflow-hidden flex-wrap
 text-xs text-ellipsis break-all line-clamp-1 
+`;
+
+const Reload = tw(ReloadIcon)`
+ w-6 h-auto fill-black
+ hover:fill-primary-YellowGreen
+ hover:rotate-180 hover:duration-500
 `;
