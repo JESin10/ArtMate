@@ -1,5 +1,5 @@
 import React from "react";
-import { loadImg } from "../../assets/images";
+import { loadImg } from "../assets/images";
 import tw from "tailwind-styled-components";
 import { useNavigate } from "react-router-dom";
 import { BsArrowRightSquare } from "react-icons/bs";

@@ -1,5 +1,5 @@
 import React from "react";
-import Search_Bar from "../component/Search_Bar";
+import Search_Bar from "../modules/Search_Bar";
 import { loadImg } from "../assets/images";
 
 export default function Review() {

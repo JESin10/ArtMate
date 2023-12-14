@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+/* eslint-disable react/jsx-pascal-case */
+import { useEffect, useState } from "react";
 import { SeoulArtMuseum_ArtWork_OpenData } from "../api/Gallery_OpenApi";
-import Search_Bar from "../component/Search_Bar";
+import Search_Bar from "../modules/Search_Bar";
+import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
 import tw from "tailwind-styled-components";
-import { loadImg } from "../assets/images";
 import Artwork_Modal from "../component/Artwork_Modal";
-import Loading from "./exception/Loading";
+import { useAuth } from "./context/AuthContext";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { db } from "../Firebase";
+
+import { collection, doc } from "firebase/firestore";
 
 export interface ArtworkInfo {
   DP_ARTIST?: string;
@@ -29,10 +33,15 @@ export interface ArtworkInfo {
 }
 
 export default function Artwork() {
-  const [artworkList, setArtWorkList] = useState([]);
+  const [artworkList, setArtWorkList] = useState<Array<ArtworkInfo>>([]);
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkInfo | null>(
     null
   );
+  const { currentUser } = useAuth();
+  const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
+  // const docRef = doc(listRef, selectedArtwork?.DP_NAME);
+  // const MyArtworkInfo = Array(useCollectionData(listRef));
+  const MyArtworkInfo = useCollectionData(listRef)[0];
 
   // 페이지 렌딩과 동시에 데이터 가져오기
   const fetchData = async () => {
@@ -44,7 +53,7 @@ export default function Artwork() {
     fetchData();
   }, []);
 
-  const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
+  // const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
 
   //Modal
   const openModal = (artwork: ArtworkInfo) => {
@@ -55,9 +64,7 @@ export default function Artwork() {
     setSelectedArtwork(null);
   };
 
-  return isLoading ? (
-    <Loading />
-  ) : (
+  return (
     <>
       <Search_Bar />
       <div className="w-full h-screen flex flex-col items-center overflow-y-auto pb-[120px]">
@@ -73,7 +80,7 @@ export default function Artwork() {
                   onClick={() => window.location.reload()}
                   className="cursor-pointer"
                 >
-                  <img src={"./icons/Outline/reload.svg"} alt="refresh" />
+                  <Reload />
                 </button>
               </div>
             </div>
@@ -109,20 +116,22 @@ export default function Artwork() {
                           </ArtworkDesc>
                         ) : (
                           <ArtworkDesc>{list.DP_ART_PART}</ArtworkDesc>
-                        )}{" "}
+                        )}
                       </div>
                     </ArtworkContainer>
-                    {selectedArtwork && (
-                      <div className="overflow-inherit">
-                        <Artwork_Modal
-                          isOpen={true}
-                          closeModal={closeModal}
-                          artworkInfo={selectedArtwork}
-                        />
-                      </div>
-                    )}
                   </div>
                 ))}
+
+              {/* 1------------ */}
+              {selectedArtwork && (
+                <Artwork_Modal
+                  isOpen={true}
+                  closeModal={closeModal}
+                  artworkInfo={selectedArtwork}
+                  currentUser={currentUser}
+                  CloudInfo={MyArtworkInfo}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -141,4 +150,10 @@ const ArtworkContainer = tw.div`
 const ArtworkDesc = tw.div`
 overflow-hidden flex-wrap
 text-xs text-ellipsis break-all line-clamp-1 
+`;
+
+const Reload = tw(ReloadIcon)`
+ w-6 h-auto fill-black
+ hover:fill-primary-YellowGreen
+ hover:rotate-180 hover:duration-500
 `;

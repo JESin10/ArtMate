@@ -6,6 +6,10 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { RxSlash } from "react-icons/rx";
 import { ArtworkInfo } from "../page/Artwork";
 import Artwork_Modal from "../component/Artwork_Modal";
+import { useAuth } from "../page/context/AuthContext";
+import { collection } from "firebase/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { db } from "../Firebase";
 
 interface RecommendArtworkInfo {
   index: number;
@@ -15,6 +19,9 @@ export default function RecommendSlider() {
   const [recentArray, setRecentArray] = useState<React.ReactNode[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const PerItem = 4;
+  const { currentUser } = useAuth();
+  const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
+  const MyArtworkInfo = useCollectionData(listRef)[0];
 
   const { data } = useQuery(
     [
@@ -136,6 +143,8 @@ export default function RecommendSlider() {
             isOpen={true}
             closeModal={closeModal}
             artworkInfo={selectedArtwork}
+            currentUser={currentUser}
+            CloudInfo={MyArtworkInfo}
           />
         </div>
       )}

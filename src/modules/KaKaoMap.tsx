@@ -59,40 +59,40 @@ export default function KaKaoMap({ mapMode, setMapMode }: MapModeProps) {
 
     geolocation.getCurrentPosition(handleSuccess);
     // console.log("KAKAO", location.latitude, location.longitude);
-  }, [location.option]);
+  }, [location.latitude]);
 
   const handleSuccess = (pos: GeolocationPosition) => {
     const { latitude, longitude } = pos.coords;
     setLocation({ latitude, longitude, option: location.option });
     // console.log(location.latitude, location.longitude, "zzz");
-    // if (!map) {
-    //   map = new (window as any).kakao.maps.Map(
-    //     document.getElementById("map"),
-    //     mapOption
-    //   );
-    // }
-    // // 마커생성, 위치설정
-    // if (!marker) {
-    //   const newMarker = new (window as any).kakao.maps.Marker({
-    //     position: new (window as any).kakao.maps.LatLng(
-    //       location.latitude,
-    //       location.longitude
-    //     ),
-    //     mapOption,
-    //   });
-    //   // console.log(1);
-    //   newMarker.setMap(map);
-    //   setMarker(newMarker);
-    //   // console.log(newMarker);
-    // } else {
-    //   marker.setPosition(
-    //     new (window as any).kakao.maps.LatLng(
-    //       location.latitude,
-    //       location.longitude
-    //     )
-    //   );
-    //   // console.log(2);
-    // }
+    if (!map) {
+      map = new (window as any).kakao.maps.Map(
+        document.getElementById("map"),
+        mapOption
+      );
+    }
+    // 마커생성, 위치설정
+    if (!marker) {
+      const newMarker = new (window as any).kakao.maps.Marker({
+        position: new (window as any).kakao.maps.LatLng(
+          location.latitude,
+          location.longitude
+        ),
+        mapOption,
+      });
+      // console.log(1);
+      newMarker.setMap(map);
+      setMarker(newMarker);
+      // console.log(newMarker);
+    } else {
+      marker.setPosition(
+        new (window as any).kakao.maps.LatLng(
+          location.latitude,
+          location.longitude
+        )
+      );
+      // console.log(2);
+    }
   };
 
   return (

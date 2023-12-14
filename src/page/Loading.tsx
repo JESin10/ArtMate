@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
-import { loadImg } from "../../assets/images";
+import { loadImg } from "../assets/images";
 import { Oval } from "react-loader-spinner";
 
 export default function Loading() {
@@ -13,8 +13,6 @@ export default function Loading() {
       setLoading(false);
     }, 5000); // 예시로 5초 후에 로딩을 종료하는 것으로 설정
   }, []);
-
-  // console.log(loading);
 
   return (
     <LoadingContainer>

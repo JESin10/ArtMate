@@ -1,3 +1,8 @@
+import { ReactComponent as DescLogo } from "./customSvg/Menubar_gallery.svg";
+import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
+
+export { DescLogo, MainLogo };
+
 export const loadImg = {
   Main_Logo: "./icons/Outline/main_logo.svg",
   Main_TextLogo: "./icons/Outline/main_text_logo.svg",
@@ -23,7 +28,7 @@ export const loadImg = {
   EX_image2: "./images/main_img_ex2.png",
   EX_image3: "./images/gallery_img_ex1.png",
   EX_image4: "./images/gallery_img_ex2.png",
-  EX_Event_Banner: "./images/Event_Banner.png",
+  EX_Event_Banner: "./images/Event_Banner.svg",
 
   Map_all: "./icons/Outline/location_map.svg",
   Map_current1: "./icons/Outline/location_current1.svg",
@@ -35,4 +40,6 @@ export const loadImg = {
   Google_LoginBtn: "./icons/Solid/google_Btn.svg",
   Kakao_LoginBtn: "./icons/Solid/kakao_Btn.png",
   Naver_LoginBtn: "./icons/Solid/naver_Btn.png",
+
+  User_LogOut: "./icons/Outline/user_logout.svg",
 };

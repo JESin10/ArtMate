@@ -3,17 +3,21 @@ import React, { useEffect, useState } from "react";
 import Menu_Footer from "../component/Menu_Footer";
 import Carousel from "../modules/Carousel";
 import { loadImg } from "../assets/images";
-import RecommendSlider from "../modules/RecommendSlider";
-import Search_Bar from "../component/Search_Bar";
-import { useAuth } from "../modules/UserAuth_Google";
-import { useQuery } from "react-query";
+import RecommendSlider from "../component/RecommendSlider";
+import Search_Bar from "../modules/Search_Bar";
+// import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
-import Loading from "./exception/Loading";
 import tw from "tailwind-styled-components";
 import { ArtworkInfo } from "./Artwork";
 import Artwork_Modal from "../component/Artwork_Modal";
+import { useAuth } from "./context/AuthContext";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "../Firebase";
+import { v4 as uidv } from "uuid";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 
 export interface UserInfo {
+  userId: string;
   uid: string;
   name: string;
   profileURL: string;
@@ -23,7 +27,6 @@ export interface UserInfo {
 
 export interface LatestArtworkInfo {
   DP_END: Date;
-  DP_DATE: Date;
   DP_MAIN_IMG: string;
   DP_NAME: string;
   DP_START: Date;
@@ -39,8 +42,14 @@ export default function Home() {
     null
   );
   const { currentUser } = useAuth();
-  const [getToken, setGetToken] = useState();
+  // const [getToken, setGetToken] = useState();
   const [userInfo, setUserInfo] = useState<UserInfo>();
+  const LoginUserUid = uidv();
+  const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
+  const MyArtworkInfo = useCollectionData(listRef)[0];
+
+  // console.log(MyArtworkInfo);
+  // console.log(selectedArtwork);
 
   const fetchData = async () => {
     const response = await MainPage(1, 10);
@@ -49,22 +58,43 @@ export default function Home() {
     return response;
   };
 
-  useEffect(() => {
-    fetchData(); // 페이지 렌딩과 동시에 데이터 가져오기
-  }, []);
+  const UserSaving = async () => {
+    try {
+      if (currentUser && userInfo) {
+        const docRef = await setDoc(
+          doc(db, `userInfo/${currentUser?.uid}/UserInfo`, currentUser?.email),
+          {
+            Uid: currentUser?.uid,
+            userId: LoginUserUid,
+            Email: userInfo.email,
+            NickName: userInfo.name,
+            ProfileURL: userInfo.profileURL,
+            FollowerCnt: 0,
+            FollowingCnt: 0,
+            ReviewList: [],
+            LikePostList: [],
+            SavePostList: [],
+          }
+        );
+        return docRef;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
-
   useEffect(() => {
+    fetchData();
     if (currentUser) {
-      setGetToken(currentUser.accessToken);
       setUserInfo({
+        userId: LoginUserUid,
         uid: currentUser.uid,
-        name: currentUser.reloadUserInfo.displayName,
-        profileURL: currentUser.reloadUserInfo.photoUrl,
-        email: currentUser.reloadUserInfo.email,
+        name: currentUser.displayName,
+        profileURL: currentUser.photoURL,
+        email: currentUser.email,
       });
     }
+    UserSaving();
   }, []);
 
   //Modal
@@ -76,16 +106,14 @@ export default function Home() {
     setSelectedArtwork(null);
   };
 
-  function parseAndStyleInfo(info: string) {
-    const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
-      return `<span style="font-weight: bold;">${content}</span>`;
-    });
-    return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
-  }
+  // function parseAndStyleInfo(info: string) {
+  //   const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
+  //     return `<span style="font-weight: bold;">${content}</span>`;
+  //   });
+  //   return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
+  // }
 
-  return isLoading ? (
-    <Loading />
-  ) : (
+  return (
     <div className="h-fit border-2 ">
       <Search_Bar />
       <div className="my-3">
@@ -93,16 +121,30 @@ export default function Home() {
       </div>
       {/* 취향저격 전시 */}
       <div className="w-11/12 mx-auto">
-        {currentUser ? (
+        {currentUser && currentUser.displayName && currentUser?.email ? (
           <h1 className="w-fit text-lg px-4 my-2 flex">
             <p className="mr-2 font-extrabold">{currentUser.displayName}</p>
             님께 추천하는 전시 모음
           </h1>
         ) : (
-          <h1 className="w-fit font-extrabold text-2xl px-4 my-4">
-            지금 떠오르는 전시는?
-          </h1>
+          <>
+            {currentUser &&
+            currentUser.displayName === null &&
+            currentUser.email ? (
+              <h1 className="w-fit text-lg px-4 my-2 flex">
+                <p className="mr-2 font-extrabold">
+                  {currentUser.email.split("@", 1)[0]}
+                </p>
+                님께 추천하는 전시 모음
+              </h1>
+            ) : (
+              <h1 className="w-fit font-extrabold text-2xl px-4 my-4">
+                지금 떠오르는 전시는?
+              </h1>
+            )}
+          </>
         )}
+
         <Carousel>
           {baseArray &&
             baseArray.map((list) => (
@@ -209,15 +251,17 @@ export default function Home() {
               ))}
           </div>
         </div>
-        {selectedArtwork && (
-          <div className="overflow-inherit">
+        <div className="overflow-inherit">
+          {selectedArtwork && (
             <Artwork_Modal
               isOpen={true}
               closeModal={closeModal}
               artworkInfo={selectedArtwork}
+              currentUser={currentUser}
+              CloudInfo={MyArtworkInfo}
             />
-          </div>
-        )}
+          )}
+        </div>
       </div>
       <Menu_Footer />
     </div>
@@ -225,7 +269,7 @@ export default function Home() {
 }
 
 const Tag = tw.p`
-text-xs text-primary-YellowGreen font-semibold
-border-primary-YellowGreen border-2 bg-white rounded-2xl
-w-fit h-fit py-1 px-3 m-1
+  text-xs text-primary-YellowGreen font-semibold
+  border-primary-YellowGreen border-2 bg-white rounded-2xl
+  w-fit h-fit py-1 px-3 m-1
 `;
