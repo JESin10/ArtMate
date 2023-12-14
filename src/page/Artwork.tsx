@@ -1,18 +1,13 @@
 /* eslint-disable react/jsx-pascal-case */
-import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useEffect, useState } from "react";
 import { SeoulArtMuseum_ArtWork_OpenData } from "../api/Gallery_OpenApi";
 import Search_Bar from "../modules/Search_Bar";
 import tw from "tailwind-styled-components";
-// import { loadImg } from "../assets/images";
 import Artwork_Modal from "../component/Artwork_Modal";
 import { useAuth } from "./context/AuthContext";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
-import { DocumentData, collection, doc } from "firebase/firestore";
-import { isArray } from "util";
-
-// import Loading from "./Loading";
+import { collection, doc } from "firebase/firestore";
 
 export interface ArtworkInfo {
   DP_ARTIST?: string;
@@ -154,17 +149,3 @@ const ArtworkDesc = tw.div`
 overflow-hidden flex-wrap
 text-xs text-ellipsis break-all line-clamp-1 
 `;
-
-{
-  /* {selectedArtwork && (
-                      <div className="overflow-inherit">
-                        <Artwork_Modal
-                          isOpen={true}
-                          closeModal={closeModal}
-                          artworkInfo={selectedArtwork}
-                          currentUser={currentUser}
-                          CloudInfo={MyArtworkInfo}
-                        />
-                      </div>
-                    )} */
-}
