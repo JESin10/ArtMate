@@ -6,10 +6,10 @@ import { useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
 import { UserInfo } from "./Home";
 import { useAuth } from "./context/AuthContext";
-// import { useCollectionData } from "react-firebase-hooks/firestore";
-// import { addDoc, collection, doc, setDoc } from "firebase/firestore";
-// import "firebase/compat/firestore";
-// import { db } from "../Firebase";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import "firebase/compat/firestore";
+import { db } from "../Firebase";
 import { v4 as uidv } from "uuid";
 
 export default function Mypage() {
@@ -17,12 +17,18 @@ export default function Mypage() {
   const navigate = useNavigate();
   // const UserUid = uidv();
   const [userInfo, setUserInfo] = useState<UserInfo>();
-  // const listRef = collection(db, `user/${currentUser?.uid}/list`);
-  // const [list] = useCollectionData<any>(listRef);
+  const UserlistRef = collection(db, `userInfo/${currentUser?.uid}/UserInfo`);
+  const SavinglistRef = collection(
+    db,
+    `userInfo/${currentUser?.uid}/ArtworkInfo`
+  );
+
+  const NowUserInfo = useCollectionData(UserlistRef);
+  const MyArtworkInfo = useCollectionData(SavinglistRef)[0];
   const LoginUserUid = uidv();
 
-  // console.log(db);
-  // console.log(currentUser);
+  console.log(MyArtworkInfo);
+  // console.log(NowUserInfo);
 
   useEffect(() => {
     if (!currentUser) {
@@ -148,7 +154,7 @@ export default function Mypage() {
               <MyPageBtnImg alt="review" src={"./icons/Outline/receipt.svg"} />
               <MyPageBtnLabel>관람 내역</MyPageBtnLabel>
             </MyPageBtn>
-            <MyPageBtn>
+            <MyPageBtn onClick={() => navigate("/my-page/saving")}>
               {/* <BookMark_Icon /> */}
               <MyPageBtnImg
                 alt="bookmark"
