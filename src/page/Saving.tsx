@@ -3,13 +3,10 @@ import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
 import { ReactComponent as BookmarkIcon } from "../assets/customSvg/bookmark.svg";
 import Search_Bar from "../modules/Search_Bar";
 import tw from "tailwind-styled-components";
-import { loadImg } from "../assets/images";
-import { ArtworkInfo } from "./Artwork";
 import { useAuth } from "./context/AuthContext";
-import { collection, deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
-import { ArtWorkSaveInfo } from "../component/Artwork_Modal";
 
 export default function Saving() {
   const { currentUser } = useAuth();
@@ -41,7 +38,7 @@ export default function Saving() {
               <div className="flex space-x-1">
                 <button
                   onClick={() => window.location.reload()}
-                  className="cursor-pointe"
+                  className="cursor-pointer"
                 >
                   <Reload />
                 </button>
@@ -86,7 +83,6 @@ export default function Saving() {
                           </>
                         )}
                       </div>
-                      {/* <p className="text-sm text-primary-DarkGray">{list.DP_NAME}</p> */}
                       <p className=" text-xs text-primary-Gray text-right">
                         {list.DP_END} 까지
                       </p>
@@ -94,27 +90,6 @@ export default function Saving() {
                   </div>
                 </div>
               ))}
-            {/* <div className="border-primary-YellowGreen border-2 rounded-xl w-full h-[168px]">
-              <div className="flex items-center space-x-4 m-4 ">
-                <img
-                  className="w-32 h-32 rounded-xl"
-                  alt="artworkIMG"
-                  src={loadImg.EX_image1}
-                />
-                <div className="w-36 h-5/6 flex flex-col">
-                  <div className="flex w-full bg-blue-300 justify-between">
-                    <p className="text-lg font-extrabold">제목</p>
-                    <button>
-                      <Bookmark />
-                    </button>
-                  </div>
-                  <p className="text-sm text-primary-DarkGray">작가명</p>
-                  <p className=" mx-auto my-3 text-xs text-primary-Gray overflow-hidden text-ellipsis break-all line-clamp-3 flex-wrap">
-                    말하는 사람은 ‘화자’에 대한 이야기다.
-                  </p>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>
