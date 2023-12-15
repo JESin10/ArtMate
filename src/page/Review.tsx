@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Search_Bar from "../modules/Search_Bar";
 import { loadImg } from "../assets/images";
 import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
@@ -6,30 +6,46 @@ import { ReactComponent as LikeIcon } from "../assets/customSvg/Heart.svg";
 import { ReactComponent as AddIcon } from "../assets/customSvg/Adding.svg";
 
 import tw from "tailwind-styled-components";
+import Review_Modal, { ReviewInfo } from "../component/Review_Modal";
+import { useAuth } from "./context/AuthContext";
 
 export default function Review() {
+  const { currentUser } = useAuth();
+  const [selectedReview, setSelectedReview] = useState<ReviewInfo | null>(null);
+  const [isWriting, setIsWriting] = useState<boolean>(false);
+
+  //Modal
+  const openModal = () => {
+    // setSelectedReview(review);
+    setIsWriting(true);
+  };
+
+  const closeModal = () => {
+    // setSelectedReview(null);
+    setIsWriting(false);
+  };
+
+  console.log(isWriting);
+
   return (
     <>
       <Search_Bar />
-      <div className="w-full h-screen flex flex-col items-center bg-black/30 overflow-y-auto pb-[120px]">
+      <div className="w-full h-screen flex flex-col items-center overflow-y-auto pb-[120px]">
         <div className="w-full h-fit">
           <div className="w-11/12 mx-auto bg-white">
             <div className="flex justify-between">
-              <h1 className="text-3xl font-extrabold my-2">관람 후기</h1>
+              <h1 className="text-3xl font-extrabold my-3">관람 후기</h1>
               <div className="flex space-x-2">
-                {/* <button>
-                  <img alt="filter-btn" src={"./icons/Outline/filter.svg"} />
-                </button> */}
                 <button onClick={() => window.location.reload()}>
                   <Reload />
                 </button>
                 <button>
-                  <Adding />
+                  <Adding onClick={openModal} />
                 </button>
               </div>
             </div>
             {/* 리뷰카드 */}
-            <div className="border-primary-YellowGreen border-2 rounded-xl w-full h-[450px]">
+            <div className="border-primary-YellowGreen border-2 rounded-xl w-full h-[450px] mt-3">
               <div className="flex items-center space-x-4 m-4">
                 <img
                   alt="profile-img"
@@ -59,6 +75,13 @@ export default function Review() {
                 </div>
               </div>
             </div>
+            {isWriting ? (
+              <Review_Modal
+                isOpen={isWriting}
+                closeModal={closeModal}
+                currentUser={currentUser}
+              />
+            ) : null}
           </div>
         </div>
       </div>
