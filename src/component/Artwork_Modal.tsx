@@ -23,6 +23,7 @@ export interface ArtWorkSaveInfo {
   DP_EX_NO: number;
   DP_MAIN_IMG: string;
   DP_END: Date;
+  DP_ART_PART: string;
 }
 
 export default function Artwork_Modal({
@@ -63,6 +64,7 @@ export default function Artwork_Modal({
           DP_EX_NO: artworkInfo?.DP_EX_NO,
           DP_MAIN_IMG: artworkInfo?.DP_MAIN_IMG,
           DP_END: artworkInfo?.DP_END,
+          DP_ART_PART: artworkInfo?.DP_ART_PART,
         }
       );
       setIsSaved(true);

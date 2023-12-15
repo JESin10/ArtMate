@@ -5,12 +5,14 @@ import Menu_Bar from "../component/Menu_Bar";
 import Loading from "./Loading";
 import Error from "./Error";
 import PrivateRoute from "./context/PrivateRoute";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import { collection } from "firebase/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { db } from "../Firebase";
 
 function Page() {
   const Login = lazy(() => import("./Login"));
   const Signup = lazy(() => import("./Signup"));
-
   const Home = lazy(() => import("./Home"));
   const Mypage = lazy(() => import("./Mypage"));
   const Review = lazy(() => import("./Review"));
@@ -18,7 +20,6 @@ function Page() {
   const Artwork = lazy(() => import("./Artwork"));
   const Saving = lazy(() => import("./Saving"));
   const KaKaoMap = lazy(() => import("../modules/KaKaoMap"));
-  // const PrivateRoute = lazy(() => import("./context/PrivateRoute"));
 
   const [mapMode, setMapMode] = useState(false);
 

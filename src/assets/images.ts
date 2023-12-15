@@ -3,6 +3,12 @@ import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.s
 
 export { DescLogo, MainLogo };
 
+export const BannerZip = [
+  "./images/Main_Banner_no1.svg",
+  "./images/Main_Banner_no2.svg",
+  "./images/Main_Banner_no3.svg",
+];
+
 export const loadImg = {
   Main_Logo: "./icons/Outline/main_logo.svg",
   Main_TextLogo: "./icons/Outline/main_text_logo.svg",
@@ -28,7 +34,8 @@ export const loadImg = {
   EX_image2: "./images/main_img_ex2.png",
   EX_image3: "./images/gallery_img_ex1.png",
   EX_image4: "./images/gallery_img_ex2.png",
-  EX_Event_Banner: "./images/Event_Banner.svg",
+
+  Event_Banner: "./images/Main_Banner_no1.svg",
 
   Map_all: "./icons/Outline/location_map.svg",
   Map_current1: "./icons/Outline/location_current1.svg",
