@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Menu_Footer from "../component/Menu_Footer";
 import Carousel from "../modules/Carousel";
-import { loadImg } from "../assets/images";
+import { loadImg, BannerZip } from "../assets/images";
 import RecommendSlider from "../component/RecommendSlider";
 import Search_Bar from "../modules/Search_Bar";
 // import { useQuery } from "react-query";
@@ -117,7 +117,9 @@ export default function Home() {
     <div className="h-fit border-2 ">
       <Search_Bar />
       <div className="my-3">
-        <img src={loadImg.EX_Event_Banner} />
+        {/* {BannerZip.map((banner) => ( */}
+        <img src={BannerZip[0]} />
+        {/* ))} */}
       </div>
       {/* 취향저격 전시 */}
       <div className="w-11/12 mx-auto">
