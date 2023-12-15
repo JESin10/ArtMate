@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { loadImg } from "../assets/images";
-import { useNavigate } from "react-router-dom";
+import { Route, useNavigate } from "react-router-dom";
 // import { ReactComponent as BookMarkIcon } from "../assets/CustomSvg/bookmark.svg";
 // import { ReactComponent as LikeIcon } from "../assets/CustomSvg/like.svg";
 import tw from "tailwind-styled-components";
@@ -11,6 +11,7 @@ import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import "firebase/compat/firestore";
 import { db } from "../Firebase";
 import { v4 as uidv } from "uuid";
+import Saving from "./Saving";
 
 export default function Mypage() {
   const { currentUser, logout } = useAuth();
