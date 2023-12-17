@@ -1,6 +1,7 @@
 import { getAuth, GoogleAuthProvider } from "@firebase/auth";
 import { initializeApp } from "@firebase/app";
 import { getFirestore } from "@firebase/firestore";
+import { getStorage } from "@firebase/storage";
 
 export const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
@@ -22,5 +23,8 @@ export const auth = getAuth(app); // app 객체를 넘겨줘야 함
 
 // database
 export const db = getFirestore(app);
+
+// storage
+export const storage = getStorage(app);
 
 export default app;

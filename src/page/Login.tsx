@@ -31,23 +31,6 @@ export default function Login() {
     setLoading(false);
   };
 
-  // const UserSaving = async () => {
-  //   if (currentUser && userInfo) {
-  //     const docRef = await setDoc(doc(db, `userInfo`, userInfo?.uid), {
-  //       Uid: userInfo?.uid,
-  //       userId: LoginUserUid,
-  //       Email: userInfo.email,
-  //       NickName: userInfo.name,
-  //       ProfileURL: userInfo.profileURL,
-  //       FollowerCnt: 0,
-  //       FollowingCnt: 0,
-  //       ReviewList: [],
-  //       LikePostList: [],
-  //       SavePostList: [],
-  //     });
-  //   }
-  // };
-
   // basic login form
   const BasicLoginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
