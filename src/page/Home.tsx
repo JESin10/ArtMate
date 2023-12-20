@@ -76,6 +76,7 @@ export default function Home() {
             SavePostList: [],
           }
         );
+        console.log("Save userInfo Successfully!");
         return docRef;
       }
     } catch (err) {

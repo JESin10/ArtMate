@@ -25,14 +25,14 @@ interface ReviewProps {
 }
 
 export interface ReviewInfo {
-  Uid: string;
+  Review_Uid: string;
   User_ID: string;
   Title: string;
   Content: string;
-  Img?: string | ArrayBuffer | null;
-  Visited_Date?: Date;
+  Img?: string | null;
+  Visited_Date: Date;
   Like_Cnt?: number;
-  Comment_Uid?: string;
+  Comment_Uid: string;
 }
 
 export interface ReviewCommentInfo {
@@ -57,9 +57,10 @@ export default function Review_Modal({
     db,
     `userInfo/${currentUser?.uid}/AllReview`
   );
-  const CommentUid = uidv4();
+
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [imageList, setImageList] = useState<string[]>([]);
+  const [imageURL, setImageURL] = useState<string>("");
 
   if (!isOpen) return null;
 
@@ -78,50 +79,74 @@ export default function Review_Modal({
   const SubmitReviewHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const CommentUid = uidv4();
+      const ReviewUid = uidv4();
       if (TitleRef.current && ContentRef.current) {
-        const ReviewList = await setDoc(
-          doc(db, `userInfo/${currentUser?.uid}/Reviews`, currentUser.uid),
-          {
-            Uid: currentUser.uid,
+        if (imageUpload !== null) {
+          const imageRef = ref(
+            storage,
+            `ReviewImage/${ReviewUid}/${imageUpload.name}`
+          );
+          await uploadBytes(imageRef, imageUpload);
+          const imageURL = await getDownloadURL(imageRef);
+          setImageList([imageURL]);
+        }
+        console.log(imageList);
+        if (imageList) {
+          await setDoc(
+            doc(db, `userInfo/${currentUser?.uid}/Reviews`, ReviewUid),
+            {
+              Review_Uid: ReviewUid,
+              User_Uid: currentUser.uid,
+              User_ID: currentUser.email,
+              Title: TitleRef.current?.value,
+              Content: ContentRef.current?.value,
+              Img: imageList,
+              Visited_Date: DateRef.current?.value,
+              // Like_Cnt: 0,
+              Comment_Uid: CommentUid,
+            }
+          );
+          await setDoc(doc(db, "AllReview", ReviewUid), {
+            Review_Uid: ReviewUid,
+            User_Uid: currentUser.uid,
             User_ID: currentUser.email,
             Title: TitleRef.current?.value,
             Content: ContentRef.current?.value,
-            // Img?: imageList,
+            Img: imageList,
             Visited_Date: DateRef.current?.value,
             Like_Cnt: 0,
             Comment_Uid: CommentUid,
-          }
-        );
-        const ALLReviewList = await setDoc(
-          doc(db, "AllReview", currentUser.uid),
-          {
-            Uid: currentUser.uid,
-            User_ID: currentUser.email,
-            Title: TitleRef.current?.value,
-            Content: ContentRef.current?.value,
-            // Img?: imageList as string[],
-            Visited_Date: DateRef.current?.value,
-            Like_Cnt: 0,
-            Comment_Uid: CommentUid,
-          }
-        );
-        if (imageUpload === null) return;
-
-        const imageRef = ref(storage, `images/${imageUpload.name}`);
-        uploadBytes(imageRef, imageUpload).then((snapshot) => {
-          getDownloadURL(snapshot.ref).then((url) => {
-            setImageList((prev) => [...prev, url]);
           });
-        });
+        }
+
+        // if (imageUpload === null) return;
+
+        // const imageRef = ref(storage, `images/${imageUpload.name}`);
+        // uploadBytes(imageRef, imageUpload).then((snapshot) => {
+        //   getDownloadURL(snapshot.ref).then((url) => {
+        //     setImageList((prev) => [...prev, url]);
+        //     setImageURL(url);
+        //   });
+        // });
+
+        // 업로드 진행률을 모니터링, 업로드 진행률 퍼센트로 상태 지정
+        // const task = uploadBytesResumable(storageRef, file);
+        // task.on("state_changed", (snapshot) => {
+        //   setProgress(
+        //     Math.round(
+        //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        //     )
+        //   );
+        // });
         TitleRef.current.value = "";
         ContentRef.current.value = "";
+        console.log("Successfully upload the review!");
+        // return getDownloadURL(imageRef);
       }
-      console.log("Successfully upload the review!");
     } catch (err) {
       console.error(err);
     }
-
-    // console.log(TitleRef.current?.value, DateRef.current?.value);
   };
 
   return (
