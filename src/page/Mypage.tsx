@@ -12,6 +12,7 @@ import "firebase/compat/firestore";
 import { db } from "../Firebase";
 import { v4 as uidv } from "uuid";
 import Saving from "./Saving";
+import { FaFilePen } from "react-icons/fa6";
 
 export default function Mypage() {
   const { currentUser, logout } = useAuth();
@@ -23,12 +24,19 @@ export default function Mypage() {
     db,
     `userInfo/${currentUser?.uid}/ArtworkInfo`
   );
+  const MyReviewRef = collection(db, `userInfo/${currentUser?.uid}/Reviews`);
+  const MyReviewInfo = useCollectionData(MyReviewRef)[0];
+  // const LikedReviewRef = collection(
+  //   db,
+  //   `userInfo/${currentUser?.uid}/MyLikeReviews`
+  // );
+  // const LikedReviewInfo = useCollectionData(LikedReviewRef)[0];
 
   const NowUserInfo = useCollectionData(UserlistRef);
   const MyArtworkInfo = useCollectionData(SavinglistRef)[0];
   const LoginUserUid = uidv();
 
-  console.log(MyArtworkInfo);
+  // console.log(MyReviewInfo);
   // console.log(NowUserInfo);
 
   useEffect(() => {
@@ -163,7 +171,7 @@ export default function Mypage() {
               />
               <MyPageBtnLabel>스크랩북</MyPageBtnLabel>
             </MyPageBtn>
-            <MyPageBtn>
+            <MyPageBtn onClick={() => navigate("/my-page/liked")}>
               {/* <Like_Icon /> */}
               <MyPageBtnImg alt="like" src={"./icons/Outline/like.svg"} />
               <MyPageBtnLabel>좋아요</MyPageBtnLabel>
@@ -171,15 +179,29 @@ export default function Mypage() {
           </div>
         </div>
         <div>
-          <p className="w-fit my-4">나의 후기 목록</p>
-          <ReviewContainer>
-            <ReviewImg alt="preview" src={loadImg.EX_image1} />
-            <ReviewImg alt="preview" src={loadImg.EX_image2} />
-            <ReviewImg alt="preview" src={loadImg.EX_image1} />
-            <ReviewImg alt="blank" />
-            <ReviewImg alt="blank" />
-            <ReviewImg alt="blank" />
-          </ReviewContainer>
+          <p className="w-fit mt-10 mx-2 font-extrabold text-lg">
+            나의 후기 목록
+          </p>
+          <div className="flex my-4 mx-auto justify-center">
+            {MyReviewInfo && MyReviewInfo.length > 0 ? (
+              MyReviewInfo.map((list: any, index: number) => (
+                <ReviewContainer key={index}>
+                  <ReviewImg alt="preview" src={list.Img[0]} key={index} />
+                  {/* <ReviewImg alt="blank" /> */}
+                </ReviewContainer>
+              ))
+            ) : (
+              <div className=" mx-auto w-3/4 flex flex-col text-center mt-10 font-semibold">
+                <p className="text-sm text-primary-DarkGray">
+                  리뷰를 등록해보세요!
+                </p>
+                <GotoReviewBtn onClick={() => navigate("/review")}>
+                  <p className="mx-2">첫 리뷰 남기기</p>
+                  <FaFilePen />
+                </GotoReviewBtn>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -201,9 +223,18 @@ w-fit text-white mx-auto
 `;
 
 const ReviewContainer = tw.div`
-grid grid-cols-3 w-[330px] mx-auto
+grid grid-cols-3 w-[330px] 
+mx-auto my-4
 `;
 
 const ReviewImg = tw.img`
 w-[100px] h-[120px] rounded-2xl bg-white my-1 border-2
+`;
+
+const GotoReviewBtn = tw.button`
+p-2 border-none text-base
+font-extrabold mt-4 
+flex justify-center items-center
+hover:text-primary-YellowGreen
+hover:underline
 `;

@@ -19,6 +19,8 @@ function Page() {
   const Gallery = lazy(() => import("./Gallery"));
   const Artwork = lazy(() => import("./Artwork"));
   const Saving = lazy(() => import("./Saving"));
+  const Liked = lazy(() => import("./Liked"));
+
   const KaKaoMap = lazy(() => import("../modules/KaKaoMap"));
 
   const [mapMode, setMapMode] = useState(false);
@@ -43,6 +45,9 @@ function Page() {
               </Route>
               <Route element={<PrivateRoute />}>
                 <Route path="/my-page/saving" element={<Saving />} />
+              </Route>
+              <Route element={<PrivateRoute />}>
+                <Route path="/my-page/liked" element={<Liked />} />
               </Route>
 
               <Route path="/sign-up" element={<Signup />} />
