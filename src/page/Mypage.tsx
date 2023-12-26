@@ -182,26 +182,27 @@ export default function Mypage() {
           <p className="w-fit mt-10 mx-2 font-extrabold text-lg">
             나의 후기 목록
           </p>
-          <div className="flex my-4 mx-auto justify-center">
-            {MyReviewInfo && MyReviewInfo.length > 0 ? (
-              MyReviewInfo.map((list: any, index: number) => (
-                <ReviewContainer key={index}>
-                  <ReviewImg alt="preview" src={list.Img[0]} key={index} />
-                  {/* <ReviewImg alt="blank" /> */}
-                </ReviewContainer>
-              ))
-            ) : (
-              <div className=" mx-auto w-3/4 flex flex-col text-center mt-10 font-semibold">
-                <p className="text-sm text-primary-DarkGray">
-                  리뷰를 등록해보세요!
-                </p>
-                <GotoReviewBtn onClick={() => navigate("/review")}>
-                  <p className="mx-2">첫 리뷰 남기기</p>
-                  <FaFilePen />
-                </GotoReviewBtn>
-              </div>
-            )}
-          </div>
+          {/* <div className="flex my-4 bg-black mx-auto justify-center"> */}
+          {/* <ReviewContainer> */}
+          {MyReviewInfo && MyReviewInfo.length > 0 ? (
+            <ReviewContainer>
+              {MyReviewInfo.map((list: any, index: number) => (
+                <ReviewImg alt="preview" src={list.Img[0]} key={index} />
+              ))}
+            </ReviewContainer>
+          ) : (
+            <div className=" mx-auto w-3/4 flex flex-col text-center mt-10 font-semibold">
+              <p className="text-sm text-primary-DarkGray">
+                리뷰를 등록해보세요!
+              </p>
+              <GotoReviewBtn onClick={() => navigate("/review")}>
+                <p className="mx-2">첫 리뷰 남기기</p>
+                <FaFilePen />
+              </GotoReviewBtn>
+            </div>
+          )}
+          {/* </div> */}
+          {/* </ReviewContainer> */}
         </div>
       </div>
     </div>
@@ -223,7 +224,7 @@ w-fit text-white mx-auto
 `;
 
 const ReviewContainer = tw.div`
-grid grid-cols-3 w-[330px] 
+grid grid-cols-3 w-[330px]
 mx-auto my-4
 `;
 

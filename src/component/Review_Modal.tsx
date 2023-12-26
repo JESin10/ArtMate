@@ -53,14 +53,14 @@ export default function Review_Modal({
   const ContentRef = useRef<HTMLTextAreaElement | null>(null);
   const DateRef = useRef<HTMLInputElement | null>(null);
   // const ReviewList = collection(db, `userInfo/${currentUser?.uid}/Reviews`);
-  const AllReviewList = collection(
-    db,
-    `userInfo/${currentUser?.uid}/AllReview`
-  );
+  // const AllReviewList = collection(
+  //   db,
+  //   `userInfo/${currentUser?.uid}/AllReview`
+  // );
 
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [imageList, setImageList] = useState<string[]>([]);
-  const [imageURL, setImageURL] = useState<string>("");
+  // const [imageURL, setImageURL] = useState<string>("");
 
   if (!isOpen) return null;
 
@@ -92,6 +92,7 @@ export default function Review_Modal({
           setImageList([imageURL]);
         }
         console.log(imageList);
+        // console.log("imageURL", imageURL);
         if (imageList) {
           await setDoc(
             doc(db, `userInfo/${currentUser?.uid}/Reviews`, ReviewUid),
