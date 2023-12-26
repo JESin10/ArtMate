@@ -31,14 +31,16 @@ export default function Review() {
   const [isLike, setIsLike] = useState<boolean>(false);
   const [isWriting, setIsWriting] = useState<boolean>(false);
   const AllReviewRef = collection(db, "AllReview");
+  const AllReviewInfo = useCollectionData(AllReviewRef)[0];
   const MyReviewRef = collection(db, `userInfo/${currentUser?.uid}/Reviews`);
+  const MyReviewInfo = useCollectionData(MyReviewRef)[0];
+
   const MyLikeReviewRef = collection(
     db,
     `userInfo/${currentUser?.uid}/MyLikeReviews`
   );
-
-  const AllReviewInfo = useCollectionData(AllReviewRef)[0];
   const MyLikeReviewInfo = useCollectionData(MyLikeReviewRef)[0];
+
   const ComparedReview =
     MyLikeReviewInfo &&
     Array.isArray(MyLikeReviewInfo) &&
@@ -47,8 +49,24 @@ export default function Review() {
         item.Review_Uid === AllReviewInfo?.map((list: any) => list.Review_Uid)
     );
 
-  console.log(AllReviewInfo);
-  console.log(MyLikeReviewInfo);
+  const MyReviews = [];
+  if (MyReviewInfo && AllReviewInfo) {
+    for (let m = 0; m < MyReviewInfo.length; m++) {
+      const myReviewUid = MyReviewInfo[m].Review_Uid;
+      for (let n = 0; n < AllReviewInfo.length; n++) {
+        const allReviewUid = AllReviewInfo[n].Review_Uid;
+        if (myReviewUid === allReviewUid) {
+          MyReviews.push(AllReviewInfo[n]);
+          break;
+        }
+      }
+    }
+  }
+
+  console.log(MyReviews);
+
+  // console.log(AllReviewInfo);
+  // console.log(MyLikeReviewInfo);
   // console.log("likeCount: ", likeCount);
   // console.log("isLike: ", isLike);
 
@@ -77,17 +95,6 @@ export default function Review() {
       });
     });
   }, []);
-
-  // const DeleteMyLikeReviews = async (id: string) => {
-  //   try {
-  //     await deleteDoc(
-  //       doc(db, `userInfo/${currentUser?.uid}/MyLikeReviews`, id)
-  //     );
-  //     console.log(`dislike successfully`);
-  //   } catch (error) {
-  //     console.error(`Error updating document: ${error}`);
-  //   }
-  // };
 
   const onLikeCountHandler = async (id: string, like: number) => {
     setLikeCount(likeCount + 1);
@@ -118,6 +125,10 @@ export default function Review() {
     }
   };
 
+  // const MyReviewChecker = () =>{
+  //   MyReviewInfo
+  // }
+
   return (
     <>
       <Search_Bar />
@@ -125,7 +136,7 @@ export default function Review() {
         <div className="w-full h-fit">
           <div className="w-11/12 mx-auto bg-white">
             <div className="flex justify-between">
-              <h1 className="text-3xl font-extrabold my-3">관람 후기</h1>
+              <h1 className="text-3xl font-extrabold my-3">Review</h1>
               <div className="flex space-x-2">
                 <button onClick={() => window.location.reload()}>
                   <Reload />

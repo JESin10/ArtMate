@@ -34,7 +34,7 @@ export default function Saving() {
         <div className="w-full h-fit">
           <div className="w-11/12 mx-auto bg-white">
             <div className="flex justify-between">
-              <h1 className="text-3xl font-extrabold my-4">스크랩북</h1>
+              <h1 className="text-3xl font-extrabold my-4">Bookmark</h1>
               <div className="flex space-x-1">
                 <button
                   onClick={() => window.location.reload()}
