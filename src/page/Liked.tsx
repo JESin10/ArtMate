@@ -9,8 +9,11 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
 import { SeoulArtMuseum_ArtWork_OpenData } from "../api/Gallery_OpenApi";
 import { ArtworkInfo } from "./Artwork";
+import { FaFilePen } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 export default function Liked() {
+  const navigate = useNavigate();
   const { currentUser } = useAuth();
   const AllReviewRef = collection(db, `AllReview`);
   const AllReviewInfo = useCollectionData(AllReviewRef)[0];
@@ -76,7 +79,7 @@ export default function Liked() {
                 </button>
               </div>
             </div>
-            {LikedReviews &&
+            {LikedReviews && LikedReviews.length > 0 ? (
               LikedReviews.map((list: any, index: number) => (
                 <div
                   key={index}
@@ -109,7 +112,18 @@ export default function Liked() {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))
+            ) : (
+              <div className=" mx-auto w-3/4 flex flex-col text-center mt-32 font-semibold">
+                <p className="text-sm text-primary-DarkGray">
+                  다른 사람들이 올린 리뷰를 확인해보세요!
+                </p>
+                <GotoReviewBtn onClick={() => navigate("/review")}>
+                  <p className="mx-2">리뷰 둘러보기</p>
+                  <FaFilePen />
+                </GotoReviewBtn>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -130,4 +144,12 @@ const Bookmark = tw(BookmarkIcon)`
 const Tag = tw.p`
   text-[10px] text-primary-Gray font-semibold
   w-fit h-fit my-3 mr-1
+`;
+
+const GotoReviewBtn = tw.button`
+p-2 border-none text-base
+font-extrabold mt-4 
+flex justify-center items-center
+hover:text-primary-YellowGreen
+hover:underline
 `;
