@@ -92,3 +92,15 @@ export const Visit_Seoul_OpenData = async () => {
     console.error(err);
   }
 };
+
+//서울시립미술관 전시 정보-searching
+export const SearchingInfo = async () => {
+  try {
+    const { data } = await axios.get(
+      `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/ListExhibitionOfSeoulMOAInfo/1/800/`
+    );
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};

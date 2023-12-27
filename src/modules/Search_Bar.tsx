@@ -1,26 +1,46 @@
 import React, { useState } from "react";
 import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
 import { ReactComponent as Searching } from "../assets/customSvg/search.svg";
+import { SearchingInfo } from "../api/Gallery_OpenApi";
 
 import tw from "tailwind-styled-components";
 
 export default function Search_Bar(): JSX.Element {
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState<string>("");
+  // const [searchkeyword, setSearchKeyword] = useState("");
 
   const handleSearchClick = () => {
     setInputVisible((prevVisible) => !prevVisible);
   };
 
-  const onKeyPressHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
+  const onKeyPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
       onSearchHandler();
-      console.log("검색완료");
     }
-    setSearchInput("");
+    setSearchInput(searchInput);
   };
 
-  const onSearchHandler = async () => {};
+  const onSearchHandler = async () => {
+    if (searchInput.trim() === "") {
+      window.alert("검색어를 입력하세요");
+    }
+    try {
+      const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo.row;
+      // 검색어가 포함된 결과만 필터링
+      const searchResults = response.filter((item: any) => {
+        // DP_ARTIST 또는 DP_NAME 중에 검색어가 포함되어 있는지 확인
+        return (
+          item.DP_ARTIST?.toLowerCase().includes(searchInput.toLowerCase()) ||
+          item.DP_NAME?.toLowerCase().includes(searchInput.toLowerCase())
+        );
+      });
+
+      console.log(searchResults);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="py-4 flex-col mx-auto justify-center ">
@@ -33,6 +53,7 @@ export default function Search_Bar(): JSX.Element {
             <SearchContainer>
               <SearchInput
                 type="text"
+                value={searchInput || ""}
                 placeholder="전시, 작품, 작가를 검색해보세요."
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyUp={onKeyPressHandler}
@@ -70,7 +91,7 @@ fill-primary-YellowGreen
 
 const MainBarContainer = tw.div`
  border-primary-YellowGreen border-b-2 
- flex py-2 w-4/5 justify-center mx-auto
+ flex py-2 w-11/12 justify-center mx-auto
 `;
 
 const SearchInput = tw.input`
