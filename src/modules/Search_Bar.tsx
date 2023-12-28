@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
 import { ReactComponent as Searching } from "../assets/customSvg/search.svg";
 import { SearchingInfo } from "../api/Gallery_OpenApi";
-
 import tw from "tailwind-styled-components";
+import SearchResult from "../page/SearchResult";
+import { Route, Routes } from "react-router-dom";
 
 export default function Search_Bar(): JSX.Element {
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
-  // const [searchkeyword, setSearchKeyword] = useState("");
+  const [searchMode, setSearchMode] = useState<boolean>(false);
+
+  const [searchResults, setSearchResults] = useState();
 
   const handleSearchClick = () => {
     setInputVisible((prevVisible) => !prevVisible);
@@ -17,6 +20,7 @@ export default function Search_Bar(): JSX.Element {
   const onKeyPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       onSearchHandler();
+      setSearchMode(true);
     }
     setSearchInput(searchInput);
   };
@@ -24,11 +28,12 @@ export default function Search_Bar(): JSX.Element {
   const onSearchHandler = async () => {
     if (searchInput.trim() === "") {
       window.alert("검색어를 입력하세요");
+      return;
     }
     try {
       const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo.row;
       // 검색어가 포함된 결과만 필터링
-      const searchResults = response.filter((item: any) => {
+      const Results = response.filter((item: any) => {
         // DP_ARTIST 또는 DP_NAME 중에 검색어가 포함되어 있는지 확인
         return (
           item.DP_ARTIST?.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -36,15 +41,22 @@ export default function Search_Bar(): JSX.Element {
         );
       });
 
-      console.log(searchResults);
+      console.log(Results, searchMode);
+      // <SearchResult searchMode={searchMode} keyword={searchInput} />
+
+      return setSearchResults(Results);
+      // <Route
+      //   path="/search/:searchInput"
+      //   element={<SearchResult searchMode={searchMode} keyword={searchInput} />}
+      // />;
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <div className="py-4 flex-col mx-auto justify-center ">
-      <div className="flex flex-col">
+    <div className="py-4 flex-col mx-auto justify-center">
+      <div className="flex flex-col shadow-md">
         {isInputVisible ? (
           <>
             <MainBarContainer>
@@ -80,6 +92,14 @@ export default function Search_Bar(): JSX.Element {
           </MainBarContainer>
         )}
       </div>
+
+      {searchMode && (
+        <SearchResult
+          searchMode={searchMode}
+          keyword={searchInput}
+          searchResults={searchResults}
+        />
+      )}
     </div>
   );
 }
@@ -104,7 +124,7 @@ const SearchContainer = tw.div`
   flex justify-between 
   border-black border-2 
   bg-white w-4/5 rounded-2xl 
-  mt-4 mx-auto
+  my-4 mx-auto
 `;
 
 const SearchingIcon = tw(Searching)`
