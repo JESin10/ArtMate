@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
 import { ReactComponent as BookmarkIcon } from "../assets/customSvg/bookmark.svg";
-import Search_Bar from "../modules/Search_Bar";
+import Search_Bar from "../modules/SearchBar";
 import tw from "tailwind-styled-components";
 import { useAuth } from "./context/AuthContext";
 import { collection, deleteDoc, doc } from "firebase/firestore";

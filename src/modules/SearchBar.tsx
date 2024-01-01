@@ -6,7 +6,7 @@ import tw from "tailwind-styled-components";
 import SearchResult from "../page/SearchResult";
 import { Route, Routes } from "react-router-dom";
 
-export default function Search_Bar(): JSX.Element {
+export default function SearchBar(): JSX.Element {
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchMode, setSearchMode] = useState<boolean>(false);
@@ -60,7 +60,7 @@ export default function Search_Bar(): JSX.Element {
         {isInputVisible ? (
           <>
             <MainBarContainer>
-              <MainTextLogo />
+              <MainTextLogo onClick={() => window.location.reload()} />
             </MainBarContainer>
             <SearchContainer>
               <SearchInput
@@ -107,6 +107,7 @@ export default function Search_Bar(): JSX.Element {
 const MainTextLogo = tw(MainLogo)`
 fill-primary-YellowGreen
   w-30 h-fit mx-auto
+  cursor-pointer
 `;
 
 const MainBarContainer = tw.div`

@@ -3,15 +3,14 @@ import React, { useEffect, useState } from "react";
 import KaKaoMap from "../modules/KaKaoMap";
 import { loadImg } from "../assets/images";
 import { useNavigate } from "react-router-dom";
-import Search_Bar from "../modules/Search_Bar";
+import SearchBar from "../modules/SearchBar";
 import tw from "tailwind-styled-components";
-import Gallery_Modal from "../component/Gallery_Modal";
+import GalleryModal from "../component/GalleryModal";
 import { useQuery } from "react-query";
 import {
   Seoul_Museum_Gallery_OpenData,
   Visit_Seoul_OpenData,
 } from "../api/Gallery_OpenApi";
-import Loading from "./Loading";
 
 export interface GalleryInfo {
   CATEGORY: string;
@@ -64,7 +63,7 @@ export default function Gallery() {
 
   return (
     <>
-      <Search_Bar />
+      <SearchBar />
       <GalleryPageContainer>
         <div className="w-[350px] h-fit my-4 mx-auto">
           <LocationSearch placeholder="장소, 주소를 검색해보세요" />
@@ -106,7 +105,7 @@ export default function Gallery() {
                       </div>
                     </GalleryContainer>
                     {selectedArtwork && (
-                      <Gallery_Modal
+                      <GalleryModal
                         isOpen={true}
                         closeModal={closeModal}
                         galleryInfo={selectedArtwork}

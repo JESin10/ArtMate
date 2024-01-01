@@ -43,7 +43,7 @@ export interface ReviewCommentInfo {
   Updated_Date: Date;
 }
 
-export default function Review_Modal({
+export default function ReviewModal({
   isOpen,
   closeModal,
   currentUser,

@@ -1,14 +1,14 @@
 import React, { Suspense, lazy, useState } from "react";
 import tw from "tailwind-styled-components";
 import { Route, Routes } from "react-router-dom";
-import Menu_Bar from "../component/Menu_Bar";
+import MenuBar from "../component/MenuBar";
 import Loading from "./Loading";
 import Error from "./Error";
 import PrivateRoute from "./context/PrivateRoute";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import { collection } from "firebase/firestore";
-import { useCollectionData } from "react-firebase-hooks/firestore";
-import { db } from "../Firebase";
+// import { collection } from "firebase/firestore";
+// import { useCollectionData } from "react-firebase-hooks/firestore";
+// import { db } from "../Firebase";
 
 function Page() {
   const Login = lazy(() => import("./Login"));
@@ -27,7 +27,7 @@ function Page() {
 
   return (
     <BasicDiv>
-      <Menu_Bar />
+      <MenuBar />
       <div className="pb-[100px]">
         <AuthProvider>
           <Suspense fallback={<Loading />}>

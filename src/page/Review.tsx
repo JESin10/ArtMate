@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Search_Bar from "../modules/Search_Bar";
+import SearchBar from "../modules/SearchBar";
 import { loadImg } from "../assets/images";
 import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
 import { ReactComponent as LikeIcon } from "../assets/customSvg/Heart.svg";
 import { ReactComponent as AddIcon } from "../assets/customSvg/Adding.svg";
 
 import tw from "tailwind-styled-components";
-import Review_Modal, { ReviewInfo } from "../component/Review_Modal";
+import ReviewModal, { ReviewInfo } from "../component/ReviewModal";
 import { useAuth } from "./context/AuthContext";
 import {
   collection,
@@ -135,7 +135,7 @@ export default function Review() {
 
   return (
     <>
-      <Search_Bar />
+      <SearchBar />
       <div className="w-full h-screen flex flex-col items-center overflow-y-auto pb-[120px]">
         <div className="w-full h-fit">
           <div className="w-11/12 mx-auto bg-white">
@@ -251,7 +251,7 @@ export default function Review() {
               </div>
             )}
             {isWriting ? (
-              <Review_Modal
+              <ReviewModal
                 isOpen={isWriting}
                 closeModal={closeModal}
                 currentUser={currentUser}

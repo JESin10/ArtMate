@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Search_Bar from "../modules/Search_Bar";
+// import SearchBar from "../modules/SearchBar";
 import tw from "tailwind-styled-components";
-import Gallery_Modal from "../component/Gallery_Modal";
+// import GalleryModal from "../component/GalleryModal";
 import { GalleryInfo } from "./Gallery";
-import Artwork_Modal from "../component/Artwork_Modal";
+import ArtworkModal from "../component/ArtworkModal";
 import { ArtworkInfo } from "./Artwork";
 import { useAuth } from "./context/AuthContext";
 import { collection } from "firebase/firestore";
@@ -38,7 +38,7 @@ export default function SearchResult({
   };
   return (
     <>
-      {/* <Search_Bar /> */}
+      {/* <SearchBar /> */}
       <GalleryPageContainer>
         <div className="w-full h-fit">
           {/* gallery zip */}
@@ -47,24 +47,30 @@ export default function SearchResult({
               <div className="flex justify-between">
                 <h1 className="text-3xl font-extrabold my-4 mx-2">검색 결과</h1>
               </div>
-              {searchResults &&
+              {searchResults && searchResults.length > 0 ? (
                 searchResults.map((list: any, index: number) => (
                   <div className="flex flex-col space-y-2" key={index}>
                     <GalleryContainer onClick={() => openModal(list)}>
-                      <div className="w-32 h-24 my-2 bg-primary-YellowGreen rounded-2xl">
+                      <div className="w-28 h-24 my-2 bg-primary-YellowGreen rounded-2xl">
                         <GalleryMockupIMG
                           alt="gallery_mockup"
                           src={list.DP_MAIN_IMG}
                         />
                       </div>
-                      <div className="flex flex-col w-40 h-fit my-auto justify-center">
+                      <div className="flex flex-col w-44 h-fit my-auto justify-center">
                         <div className="flex justify-between w-full h-6 text-center">
-                          <div className=" w-3/4 h-6 font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
+                          <div className=" w-3/5 h-6 font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
                             {list.DP_NAME}
                           </div>
-                          <div className="text-sm text-right w-1/4">
-                            {list.DP_ARTIST}
-                          </div>
+                          {list.DP_ARTIST ? (
+                            <div className="text-sm my-auto text-right w-12 overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
+                              {list.DP_ARTIST}
+                            </div>
+                          ) : (
+                            <div className="text-sm text-right w-12 my-auto">
+                              미상
+                            </div>
+                          )}
                         </div>
 
                         <div className="text-sm">{list.DP_PLACE}</div>
@@ -75,7 +81,7 @@ export default function SearchResult({
                       </div>
                     </GalleryContainer>
                     {selectedArtwork && (
-                      <Artwork_Modal
+                      <ArtworkModal
                         isOpen={true}
                         closeModal={closeModal}
                         artworkInfo={selectedArtwork}
@@ -84,7 +90,12 @@ export default function SearchResult({
                       />
                     )}
                   </div>
-                ))}
+                ))
+              ) : (
+                <div className="flex justify-center my-32 text-primary-Gray">
+                  검색결과가 없습니다.
+                </div>
+              )}
             </div>
           )}
         </div>

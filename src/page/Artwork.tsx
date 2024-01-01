@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-pascal-case */
 import { useEffect, useState } from "react";
 import { SeoulArtMuseum_ArtWork_OpenData } from "../api/Gallery_OpenApi";
-import Search_Bar from "../modules/Search_Bar";
+import SearchBar from "../modules/SearchBar";
 import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
 import tw from "tailwind-styled-components";
-import Artwork_Modal from "../component/Artwork_Modal";
+import ArtworkModal from "../component/ArtworkModal";
 import { useAuth } from "./context/AuthContext";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
@@ -66,7 +66,7 @@ export default function Artwork() {
 
   return (
     <>
-      <Search_Bar />
+      <SearchBar />
       <div className="w-full h-screen flex flex-col items-center overflow-y-auto pb-[120px]">
         <div className="w-full h-fit">
           <div className="w-11/12 mx-auto ">
@@ -124,7 +124,7 @@ export default function Artwork() {
 
               {/* 1------------ */}
               {selectedArtwork && (
-                <Artwork_Modal
+                <ArtworkModal
                   isOpen={true}
                   closeModal={closeModal}
                   artworkInfo={selectedArtwork}

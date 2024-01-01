@@ -1,7 +1,7 @@
 import React from "react";
 import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
 import { ReactComponent as BookmarkIcon } from "../assets/customSvg/bookmark.svg";
-import Search_Bar from "../modules/Search_Bar";
+import SearchBar from "../modules/SearchBar";
 import tw from "tailwind-styled-components";
 import { useAuth } from "./context/AuthContext";
 import { collection, deleteDoc, doc } from "firebase/firestore";
@@ -29,7 +29,7 @@ export default function Saving() {
 
   return (
     <>
-      <Search_Bar />
+      <SearchBar />
       <div className="w-full h-screen flex flex-col items-center overflow-y-auto pb-[120px]">
         <div className="w-full h-fit">
           <div className="w-11/12 mx-auto bg-white">
