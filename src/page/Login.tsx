@@ -27,7 +27,7 @@ export default function Login() {
   const SignupWithGoogleHandler = () => {
     setLoading(true);
     signupWithGoogle();
-    navigate("/");
+    window.location.replace("/");
     setLoading(false);
   };
 
@@ -40,7 +40,7 @@ export default function Login() {
         await login(emailRef.current.value, passwordRef.current.value);
       }
       // UserSaving();
-      navigate("/");
+      window.location.replace("/");
     } catch (err) {
       console.error(err);
       // window.alert("Fail Log-in User");

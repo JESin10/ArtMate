@@ -85,7 +85,10 @@ export default function Home() {
   };
 
   useEffect(() => {
+    console.log(1);
+    UserSaving();
     fetchData();
+
     if (currentUser) {
       setUserInfo({
         userId: LoginUserUid,
@@ -95,7 +98,6 @@ export default function Home() {
         email: currentUser.email,
       });
     }
-    UserSaving();
   }, []);
 
   //Modal

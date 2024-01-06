@@ -1,9 +1,16 @@
 // import React, { useEffect } from "react";
 // import { loadImg } from "../assets/images";
-import { deleteDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  deleteField,
+  doc,
+  updateDoc,
+} from "@firebase/firestore";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import tw from "tailwind-styled-components";
 import { db } from "../Firebase";
+import { getAuth, deleteUser } from "firebase/auth";
 
 interface SettingModalProps {
   isOpen?: boolean;
@@ -18,14 +25,27 @@ export default function UserSettingModal({
 }: SettingModalProps) {
   if (!isOpen) return null;
 
-  console.log(currentUser);
+  const auth = getAuth();
+
+  const User = collection(db, "userInfo");
+  // console.log("UserInfo:", UserInfo);
 
   const onUserDeleteHandler = async (uid: string) => {
+    const user = auth.currentUser;
+    const UserInfoRef = doc(User, uid);
+    // console.log(UserInfoRef);
+    // console.log(uid);
     const isConfirmed = window.confirm("정말 탈퇴하시겠습니까?");
-    if (isConfirmed) {
+    if (isConfirmed && user) {
       try {
-        await deleteDoc(doc(db, `userInfo/${uid}`));
-        console.log(`Delete User successfully`);
+        await deleteDoc(doc(db, `userInfo/${currentUser.uid}`));
+        // deleteUser(user);
+        //   .then(() => {
+        //     console.log(`Delete ${currentUser.email} successfully!`);
+        //   })
+        //   .catch((err: any) => {
+        //     console.error(err);
+        //   });
       } catch (error) {
         console.error(`Error! : ${error}`);
       }
