@@ -8,7 +8,7 @@ import { ReactComponent as MenuGallery } from "../assets/customSvg/Menubar_galle
 import { ReactComponent as MenuReview } from "../assets/customSvg/Menubar_bookmark.svg";
 import { ReactComponent as MenuUser } from "../assets/customSvg/Menubar_user.svg";
 
-export default function Menu_Bar() {
+export default function MenuBar() {
   // const [hoveredImage, setHoveredImage] = useState<string>("");
   const navigate = useNavigate();
 

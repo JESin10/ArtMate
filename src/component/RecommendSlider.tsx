@@ -5,7 +5,7 @@ import { MainPage } from "../api/Gallery_OpenApi";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { RxSlash } from "react-icons/rx";
 import { ArtworkInfo } from "../page/Artwork";
-import Artwork_Modal from "../component/Artwork_Modal";
+import ArtworkModal from "./ArtworkModal";
 import { useAuth } from "../page/context/AuthContext";
 import { collection } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -85,13 +85,13 @@ export default function RecommendSlider() {
               {currentItems.map((data: any, index: number) => (
                 <div key={index} onClick={() => openModal(data)}>
                   {index % 4 === 0 && (
-                    <RecommendImg_ver1
+                    <RecommendImgVer1
                       alt={index.toString()}
                       src={data.DP_MAIN_IMG}
                     />
                   )}
                   {index % 4 === 1 && (
-                    <RecommendImg_ver2
+                    <RecommendImgVer2
                       alt={index.toString()}
                       src={data.DP_MAIN_IMG}
                     />
@@ -103,13 +103,13 @@ export default function RecommendSlider() {
               {currentItems.map((data: any, index: number) => (
                 <div key={index} onClick={() => openModal(data)}>
                   {index % 4 === 2 && (
-                    <RecommendImg_ver2
+                    <RecommendImgVer2
                       alt={index.toString()}
                       src={data.DP_MAIN_IMG}
                     />
                   )}
                   {index % 4 === 3 && (
-                    <RecommendImg_ver1
+                    <RecommendImgVer1
                       alt={index.toString()}
                       src={data.DP_MAIN_IMG}
                     />
@@ -139,7 +139,7 @@ export default function RecommendSlider() {
       </RecommendSliderContainer>
       {selectedArtwork && (
         <div className="overflow-inherit">
-          <Artwork_Modal
+          <ArtworkModal
             isOpen={true}
             closeModal={closeModal}
             artworkInfo={selectedArtwork}
@@ -164,14 +164,14 @@ rounded-lg mx-auto mb-4
 overflow-hidden
 `;
 
-const RecommendImg_ver1 = tw.img`
+const RecommendImgVer1 = tw.img`
 w-[150px] h-[250px] rounded-xl
 object-cover mx-2 my-1
 border-primary-Gray/30 border-2
 hover:scale-[102%] hover:duration-300
 `;
 
-const RecommendImg_ver2 = tw.img`
+const RecommendImgVer2 = tw.img`
 w-[150px] h-[140px] rounded-xl
 object-cover mx-2 my-1
 border-primary-Gray/30 border-2

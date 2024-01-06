@@ -26,7 +26,7 @@ export interface ArtWorkSaveInfo {
   DP_ART_PART: string;
 }
 
-export default function Artwork_Modal({
+export default function ArtworkModal({
   isOpen,
   closeModal,
   artworkInfo,
@@ -96,7 +96,7 @@ export default function Artwork_Modal({
   }
 
   return (
-    <ArtworkModal>
+    <ArtworkModalDiv>
       {artworkInfo && (
         <ArtworkModalContainer>
           <div className="fixed z-10">
@@ -189,11 +189,11 @@ export default function Artwork_Modal({
           </div>
         </ArtworkModalContainer>
       )}
-    </ArtworkModal>
+    </ArtworkModalDiv>
   );
 }
 
-const ArtworkModal = tw.div`
+const ArtworkModalDiv = tw.div`
   fixed inset-0 flex items-center justify-center z-30 
 `;
 

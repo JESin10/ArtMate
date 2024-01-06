@@ -7,7 +7,7 @@
 //   }
 // }
 
-// export default function UserAuth_Naver({
+// export default function UserAuthNaver({
 //   setGetToken,
 //   setNaverUserInfo,
 // }: {

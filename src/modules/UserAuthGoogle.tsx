@@ -94,6 +94,6 @@
 // }
 import React from "react";
 
-export default function UserAuth_Google() {
+export default function UserAuthGoogle() {
   return <div>UserAuth_Google</div>;
 }

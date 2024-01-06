@@ -10,7 +10,7 @@ interface ModalProps {
   galleryInfo: GalleryInfo;
 }
 
-export default function Gallery_Modal({
+export default function GalleryModal({
   isOpen,
   closeModal,
   galleryInfo,
@@ -18,7 +18,7 @@ export default function Gallery_Modal({
   if (!isOpen) return null;
 
   return (
-    <GalleryModal>
+    <GalleryModalDiv>
       <GalleryModalContainer>
         <div className="fixed z-10">
           <button
@@ -82,11 +82,11 @@ export default function Gallery_Modal({
           {/* 위치 map */}
         </div>
       </GalleryModalContainer>
-    </GalleryModal>
+    </GalleryModalDiv>
   );
 }
 
-const GalleryModal = tw.div`
+const GalleryModalDiv = tw.div`
 fixed inset-0 flex items-center justify-center z-30
 `;
 

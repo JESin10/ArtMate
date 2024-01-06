@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Search_Bar from "../modules/Search_Bar";
+import SearchBar from "../modules/SearchBar";
 import { loadImg } from "../assets/images";
 import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
 import { ReactComponent as LikeIcon } from "../assets/customSvg/Heart.svg";
 import { ReactComponent as AddIcon } from "../assets/customSvg/Adding.svg";
 
 import tw from "tailwind-styled-components";
-import Review_Modal, { ReviewInfo } from "../component/Review_Modal";
+import ReviewModal, { ReviewInfo } from "../component/ReviewModal";
 import { useAuth } from "./context/AuthContext";
 import {
   collection,
@@ -63,8 +63,7 @@ export default function Review() {
     }
   }
 
-  console.log(MyReviews);
-
+  // console.log(MyReviews);
   // console.log(AllReviewInfo);
   // console.log(MyLikeReviewInfo);
   // console.log("likeCount: ", likeCount);
@@ -96,13 +95,18 @@ export default function Review() {
     });
   }, []);
 
-  const onLikeCountHandler = async (id: string, like: number) => {
+  const onLikeCountHandler = async (
+    id: string,
+    title: string,
+    like: number
+  ) => {
     setLikeCount(likeCount + 1);
     setIsLike(true);
     try {
       await updateDoc(doc(AllReviewRef, id), { Like_Cnt: likeCount + 1 });
       await setDoc(doc(db, `userInfo/${currentUser?.uid}/MyLikeReviews`, id), {
         // Reviewer_Id: AllReview.User_ID,
+        Title: title,
         Review_Uid: id,
       });
       console.log(`like successfully`);
@@ -131,7 +135,7 @@ export default function Review() {
 
   return (
     <>
-      <Search_Bar />
+      <SearchBar />
       <div className="w-full h-screen flex flex-col items-center overflow-y-auto pb-[120px]">
         <div className="w-full h-fit">
           <div className="w-11/12 mx-auto bg-white">
@@ -170,14 +174,16 @@ export default function Review() {
                       src={img}
                     />
                   ))} */}
-                  <img
-                    alt="review-img"
-                    className="w-11/12 mx-auto h-60 object-cover bg-black/30"
-                    src={list.Img}
-                  />
+                  <div className="w-11/12 mx-auto h-1/2 bg-black/20">
+                    <img
+                      alt="review-img"
+                      className="w-full h-full object-cover mx-auto border-red-500 border-solid border-2 bg-black/30"
+                      src={list.Img[0]}
+                    />
+                  </div>
                   <div className="w-5/6 flex flex-col mx-auto my-3">
                     <div className="font-semibold">{list.Title}</div>
-                    <div className="text-sm text-primary-Gray overflow-hidden text-ellipsis break-all line-clamp-3 flex-wrap">
+                    <div className="text-sm text-primary-Gray overflow-hidden text-ellipsis break-all line-clamp-2 flex-wrap">
                       {list.Content}
                     </div>
                     <div className="text-xs text-primary-Gray text-right">
@@ -200,7 +206,11 @@ export default function Review() {
                         <ToLike
                           key={index}
                           onClick={() =>
-                            onLikeCountHandler(list.Review_Uid, list.Like_Cnt)
+                            onLikeCountHandler(
+                              list.Review_Uid,
+                              list.Title,
+                              list.Like_Cnt
+                            )
                           }
                         />
                       )}
@@ -241,7 +251,7 @@ export default function Review() {
               </div>
             )}
             {isWriting ? (
-              <Review_Modal
+              <ReviewModal
                 isOpen={isWriting}
                 closeModal={closeModal}
                 currentUser={currentUser}

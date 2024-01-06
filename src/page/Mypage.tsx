@@ -13,8 +13,10 @@ import { db } from "../Firebase";
 import { v4 as uidv } from "uuid";
 import Saving from "./Saving";
 import { FaFilePen } from "react-icons/fa6";
+import UserSettingModal from "../component/UserSettingModal";
 
 export default function Mypage() {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   // const UserUid = uidv();
@@ -65,6 +67,15 @@ export default function Mypage() {
     }
   };
 
+  //Modal
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   // console.log(currentUser);
 
   // const UserSaving = async () => {
@@ -94,7 +105,7 @@ export default function Mypage() {
         <button>
           <img alt="share_icon" src={"./icons/Outline/share.svg"} />
         </button>
-        <button>
+        <button onClick={() => openModal()}>
           <img alt="setting_icon" src={"./icons/Outline/setting.svg"} />
         </button>
       </div>
@@ -205,6 +216,13 @@ export default function Mypage() {
           {/* </ReviewContainer> */}
         </div>
       </div>
+      {isModalOpen && (
+        <UserSettingModal
+          isOpen={isModalOpen}
+          closeModal={closeModal}
+          currentUser={currentUser}
+        />
+      )}
     </div>
   );
 }

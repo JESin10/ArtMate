@@ -1,20 +1,20 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
-import Menu_Footer from "../component/Menu_Footer";
 import Carousel from "../modules/Carousel";
 import { loadImg, BannerZip } from "../assets/images";
 import RecommendSlider from "../component/RecommendSlider";
-import Search_Bar from "../modules/Search_Bar";
+import SearchBar from "../modules/SearchBar";
 // import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
 import tw from "tailwind-styled-components";
 import { ArtworkInfo } from "./Artwork";
-import Artwork_Modal from "../component/Artwork_Modal";
 import { useAuth } from "./context/AuthContext";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../Firebase";
 import { v4 as uidv } from "uuid";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import ArtworkModal from "../component/ArtworkModal";
+import MenuFooter from "../component/MenuFooter";
 
 export interface UserInfo {
   userId: string;
@@ -85,7 +85,10 @@ export default function Home() {
   };
 
   useEffect(() => {
+    console.log(1);
+    UserSaving();
     fetchData();
+
     if (currentUser) {
       setUserInfo({
         userId: LoginUserUid,
@@ -95,7 +98,6 @@ export default function Home() {
         email: currentUser.email,
       });
     }
-    UserSaving();
   }, []);
 
   //Modal
@@ -116,7 +118,7 @@ export default function Home() {
 
   return (
     <div className="h-fit border-2 ">
-      <Search_Bar />
+      <SearchBar />
       <div className="my-3">
         {/* {BannerZip.map((banner) => ( */}
         <img src={BannerZip[0]} />
@@ -256,7 +258,7 @@ export default function Home() {
         </div>
         <div className="overflow-inherit">
           {selectedArtwork && (
-            <Artwork_Modal
+            <ArtworkModal
               isOpen={true}
               closeModal={closeModal}
               artworkInfo={selectedArtwork}
@@ -266,7 +268,7 @@ export default function Home() {
           )}
         </div>
       </div>
-      <Menu_Footer />
+      <MenuFooter />
     </div>
   );
 }
