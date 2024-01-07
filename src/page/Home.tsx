@@ -85,10 +85,9 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log(1);
+    // console.log(currentUser.uid);
     UserSaving();
     fetchData();
-
     if (currentUser) {
       setUserInfo({
         userId: LoginUserUid,

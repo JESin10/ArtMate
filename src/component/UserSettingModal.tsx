@@ -25,27 +25,37 @@ export default function UserSettingModal({
 }: SettingModalProps) {
   if (!isOpen) return null;
 
-  const auth = getAuth();
+  // console.log(currentUser.uid);
 
+  const auth = getAuth();
   const User = collection(db, "userInfo");
   // console.log("UserInfo:", UserInfo);
 
-  const onUserDeleteHandler = async (uid: string) => {
+  const onUserDeleteHandler = async (UID: string) => {
     const user = auth.currentUser;
-    const UserInfoRef = doc(User, uid);
+    console.log(user?.uid);
+    // console.log(UID);
+    // const UserInfoRef = doc(User, uid);
     // console.log(UserInfoRef);
-    // console.log(uid);
     const isConfirmed = window.confirm("정말 탈퇴하시겠습니까?");
     if (isConfirmed && user) {
       try {
-        await deleteDoc(doc(db, `userInfo/${currentUser.uid}`));
-        // deleteUser(user);
-        //   .then(() => {
-        //     console.log(`Delete ${currentUser.email} successfully!`);
-        //   })
-        //   .catch((err: any) => {
-        //     console.error(err);
-        //   });
+        await deleteDoc(
+          doc(db, `userInfo/`, `${user.uid}/UserInfo/${user.email}`)
+        )
+          .then(() => {
+            deleteDoc(doc(db, `userInfo/`, `${user.uid}`));
+            console.log("success");
+          })
+          .catch((err) => console.error(err));
+        deleteUser(user)
+          .then(() => {
+            window.location.replace("/");
+            console.log(`Delete ${currentUser.email} successfully!`);
+          })
+          .catch((err: any) => {
+            console.error(err);
+          });
       } catch (error) {
         console.error(`Error! : ${error}`);
       }
