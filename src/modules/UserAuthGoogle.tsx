@@ -92,8 +92,56 @@
 //     </UserAuth_Google.Provider>
 //   );
 // }
-import React from "react";
+import { useEffect, useState } from "react";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "../Firebase";
+import { v4 as uidv } from "uuid";
+import { UserInfo } from "../page/Home";
+import { useAuth } from "../page/context/AuthContext";
 
 export default function UserAuthGoogle() {
-  return <div>UserAuth_Google</div>;
+  const { currentUser } = useAuth();
+  const [userInfo, setUserInfo] = useState<UserInfo>();
+  const LoginUserUid = uidv();
+
+  useEffect(() => {
+    if (currentUser) {
+      setUserInfo({
+        userId: LoginUserUid,
+        uid: currentUser.uid,
+        name: currentUser.displayName,
+        profileURL: currentUser.photoURL,
+        email: currentUser.email,
+      });
+    }
+  }, [currentUser]);
+
+  const UserSaving = async () => {
+    try {
+      if (currentUser && userInfo) {
+        const docRef = await setDoc(
+          doc(db, `userInfo/${currentUser?.uid}/UserInfo`, currentUser?.email),
+          {
+            Uid: currentUser?.uid,
+            userId: LoginUserUid,
+            Email: userInfo.email,
+            NickName: userInfo.name,
+            ProfileURL: userInfo.profileURL,
+            FollowerCnt: 0,
+            FollowingCnt: 0,
+            ReviewList: [],
+            LikePostList: [],
+            SavePostList: [],
+          }
+        );
+        console.log("Save userInfo Successfully!");
+        window.location.replace("/");
+        // return docRef;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return UserSaving();
 }

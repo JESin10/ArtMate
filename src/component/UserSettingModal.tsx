@@ -25,56 +25,39 @@ export default function UserSettingModal({
 }: SettingModalProps) {
   if (!isOpen) return null;
 
-  // console.log(currentUser.uid);
-
   const auth = getAuth();
-  const User = collection(db, "userInfo");
+
+  // console.log(currentUser.uid);
+  // const User = collection(db, "userInfo");
   // console.log("UserInfo:", UserInfo);
 
   const onUserDeleteHandler = async (UID: string) => {
     const user = auth.currentUser;
-    console.log(user?.uid);
-    // console.log(UID);
-    // const UserInfoRef = doc(User, uid);
-    // console.log(UserInfoRef);
     const isConfirmed = window.confirm("정말 탈퇴하시겠습니까?");
     if (isConfirmed && user) {
       try {
+        //Cloud userInfo 삭제구문
         await deleteDoc(
           doc(db, `userInfo/`, `${user.uid}/UserInfo/${user.email}`)
         )
           .then(() => {
             deleteDoc(doc(db, `userInfo/`, `${user.uid}`));
-            console.log("success");
           })
           .catch((err) => console.error(err));
+        //Authentication User 삭제구문
         deleteUser(user)
           .then(() => {
             window.location.replace("/");
-            console.log(`Delete ${currentUser.email} successfully!`);
           })
           .catch((err: any) => {
             console.error(err);
           });
+        console.log(`Delete ${currentUser.email} successfully!`);
       } catch (error) {
         console.error(`Error! : ${error}`);
       }
     } else return;
   };
-
-  // const onDislikeCountHandler = async (id: string, like: number) => {
-  //   setLikeCount(likeCount - 1);
-  //   setIsLike(false);
-  //   try {
-  //     await updateDoc(doc(AllReviewRef, id), { Like_Cnt: likeCount - 1 });
-  //     await deleteDoc(
-  //       doc(db, `userInfo/${currentUser?.uid}/MyLikeReviews`, id)
-  //     );
-  //     console.log(`dislike successfully`);
-  //   } catch (error) {
-  //     console.error(`Error updating document: ${error}`);
-  //   }
-  // };
 
   return (
     <SettingModalBG>

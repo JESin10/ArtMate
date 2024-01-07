@@ -39,7 +39,6 @@ export default function Login() {
       if (emailRef.current && passwordRef.current) {
         await login(emailRef.current.value, passwordRef.current.value);
       }
-      // UserSaving();
       window.location.replace("/");
     } catch (err) {
       console.error(err);

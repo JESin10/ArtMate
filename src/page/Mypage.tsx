@@ -76,24 +76,56 @@ export default function Mypage() {
     setIsModalOpen(false);
   };
 
-  // console.log(currentUser);
+  //Copy
+  const handleCopyClipBoard = async () => {
+    const URL = window.location.href;
 
-  // const UserSaving = async () => {
-  //   const docRef = await setDoc(
-  //     doc(db, `userList/${currentUser.uid}/userInfo`, LoginUserUid),
-  //     {
-  //       id: currentUser?.uid,
-  //       Email: userInfo?.email,
-  //       NickName: userInfo?.name,
-  //       ProfileURL: userInfo?.profileURL,
-  //       FollowerCount: 0,
-  //       FollowingCount: 0,
-  //       ReviewList: [],
-  //       LikePostList: [],
-  //       SavePostList: [],
-  //     }
-  //   );
-  //   console.log(docRef);
+    try {
+      await navigator.clipboard.writeText(URL);
+      window.alert("클립보드에 복사되었습니다");
+      // Swal.fire({
+      //   position: "center",
+      //   icon: "success",
+      //   title: "클립보드에 복사되었습니다.",
+      //   confirmButtonColor: "#FFD53F",
+      //   timer: 3000,
+      // });
+    } catch (err) {
+      window.alert("복사에 실패하였습니다. 다시 시도 해주세요");
+      console.error(err);
+    }
+  };
+  //Share
+  // const sharePage = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   const shareObject = {
+  //     title: "Artmate",
+  //     text: "art is your mate, Artmate!",
+  //     url: window.location.href,
+  //   };
+
+  //   if (navigator.share) {
+  //     navigator
+  //       .share(shareObject)
+  //       .then(() => {
+  //         console.log("공유 성공");
+  //       })
+  //       .catch((error) => {
+  //         window.alert("공유에 실패하였습니다. 다시 시도 해주세요");
+  //         console.error(error);
+  //       });
+  //   } else {
+  //     // navigator.share()를 지원하지 않는 경우
+  //     window.alert("웹공유를 지원하지 않는 페이지입니다.");
+  //     // Swal.fire({
+  //     //   position: "center",
+  //     //   icon: "error",
+  //     //   title: "공유기능을 지원하지 않는 브라우저입니다.",
+  //     //   confirmButtonColor: "#FFD53F",
+  //     //   timer: 3000,
+  //     // });
+  //   }
   // };
 
   return (
@@ -102,7 +134,7 @@ export default function Mypage() {
         <button>
           <img alt="notify_icon" src={"./icons/Outline/notification.svg"} />
         </button>
-        <button>
+        <button onClick={handleCopyClipBoard}>
           <img alt="share_icon" src={"./icons/Outline/share.svg"} />
         </button>
         <button onClick={() => openModal()}>
