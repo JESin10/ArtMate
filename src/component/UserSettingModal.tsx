@@ -67,7 +67,16 @@ export default function UserSettingModal({
             <IoIosCloseCircleOutline size="100%" />
           </CloseBtn>
           <div className="flex flex-col mx-auto w-full">
-            <SettingBtn>고객문의</SettingBtn>
+            <SettingBtn>
+              <a
+                href="mailto:shinej1029@gmail.com"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="email-link"
+              >
+                고객문의
+              </a>
+            </SettingBtn>
             <SettingBtn onClick={() => onUserDeleteHandler(currentUser.uid)}>
               회원탈퇴
             </SettingBtn>
