@@ -11,6 +11,7 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import tw from "tailwind-styled-components";
 import { db } from "../Firebase";
 import { getAuth, deleteUser } from "firebase/auth";
+import Swal from "sweetalert2";
 
 interface SettingModalProps {
   isOpen?: boolean;
@@ -31,32 +32,59 @@ export default function UserSettingModal({
   // const User = collection(db, "userInfo");
   // console.log("UserInfo:", UserInfo);
 
-  const onUserDeleteHandler = async (UID: string) => {
+  const onUserDeleteHandler = (UID: string) => {
     const user = auth.currentUser;
-    const isConfirmed = window.confirm("정말 탈퇴하시겠습니까?");
-    if (isConfirmed && user) {
-      try {
-        //Cloud userInfo 삭제구문
-        await deleteDoc(
-          doc(db, `userInfo/`, `${user.uid}/UserInfo/${user.email}`)
-        )
-          .then(() => {
-            deleteDoc(doc(db, `userInfo/`, `${user.uid}`));
-          })
-          .catch((err) => console.error(err));
-        //Authentication User 삭제구문
-        deleteUser(user)
-          .then(() => {
-            window.location.replace("/");
-          })
-          .catch((err: any) => {
-            console.error(err);
-          });
-        console.log(`Delete ${currentUser.email} successfully!`);
-      } catch (error) {
-        console.error(`Error! : ${error}`);
+    // const isConfirmed = window.confirm("정말 탈퇴하시겠습니까?");
+    Swal.fire({
+      width: "300px",
+      position: "center",
+      icon: "warning",
+      showCancelButton: true,
+      title: "User Withdrawal",
+      text: "정말 탈퇴하시겠습니까?",
+      confirmButtonColor: "#d33", // confrim 버튼 색깔 지정
+      cancelButtonColor: "#6F6F6F", // cancel 버튼 색깔 지정
+      confirmButtonText: "승인", // confirm 버튼 텍스트 지정
+      cancelButtonText: "취소", // cancel 버튼 텍스트 지정
+      timer: 10000,
+    }).then(async (result) => {
+      // 만약 Promise리턴을 받으면,
+      if (result.isConfirmed) {
+        // 만약 모달창에서 confirm 버튼을 눌렀다면
+        if (user) {
+          try {
+            //Cloud userInfo 삭제구문
+            await deleteDoc(
+              doc(db, `userInfo/`, `${user.uid}/UserInfo/${user.email}`)
+            )
+              .then(() => {
+                deleteDoc(doc(db, `userInfo/`, `${user.uid}`));
+              })
+              .catch((err) => console.error(err));
+            //Authentication User 삭제구문
+            deleteUser(user)
+              .then(() => {
+                window.location.replace("/");
+              })
+              .catch((err: any) => {
+                console.error(err);
+              });
+            console.log(`Delete ${currentUser.email} successfully!`);
+            Swal.fire({
+              width: "300px",
+              title: "Good Bye!",
+              html: "완료되었습니다. <br/> 다음에 또 이용해주세요!",
+              icon: "success",
+              confirmButtonText: "OK",
+              confirmButtonColor: "#608D00",
+              timer: 3000,
+            });
+          } catch (error) {
+            console.error(`Error! : ${error}`);
+          }
+        }
       }
-    } else return;
+    });
   };
 
   return (

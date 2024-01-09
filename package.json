@@ -31,6 +31,7 @@
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
     "styled-components": "^6.0.7",
+    "sweetalert2": "^11.10.2",
     "swiper": "^10.3.0",
     "tailwind-styled-components": "^2.2.0",
     "typescript": "^5.2.2",
