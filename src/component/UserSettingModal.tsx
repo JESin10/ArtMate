@@ -1,12 +1,4 @@
-// import React, { useEffect } from "react";
-// import { loadImg } from "../assets/images";
-import {
-  collection,
-  deleteDoc,
-  deleteField,
-  doc,
-  updateDoc,
-} from "@firebase/firestore";
+import { deleteDoc, doc } from "@firebase/firestore";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import tw from "tailwind-styled-components";
 import { db } from "../Firebase";
@@ -27,10 +19,6 @@ export default function UserSettingModal({
   if (!isOpen) return null;
 
   const auth = getAuth();
-
-  // console.log(currentUser.uid);
-  // const User = collection(db, "userInfo");
-  // console.log("UserInfo:", UserInfo);
 
   const onUserDeleteHandler = (UID: string) => {
     const user = auth.currentUser;
@@ -60,14 +48,38 @@ export default function UserSettingModal({
               .then(() => {
                 deleteDoc(doc(db, `userInfo/`, `${user.uid}`));
               })
-              .catch((err) => console.error(err));
+              .catch((err) => {
+                Swal.fire({
+                  width: "300px",
+                  title: "ERROR!",
+                  html: "다시 시도해주세요",
+                  icon: "error",
+                  confirmButtonText: "OK",
+                  confirmButtonColor: "#608D00",
+                  timer: 3000,
+                  footer:
+                    '<a href="#" >문제가 계속된다면 </br>고객문의를 통해 문의해주세요.</a>',
+                });
+                console.error(`Error! : ${err}`);
+              });
             //Authentication User 삭제구문
             deleteUser(user)
               .then(() => {
                 window.location.replace("/");
               })
               .catch((err: any) => {
-                console.error(err);
+                Swal.fire({
+                  width: "300px",
+                  title: "ERROR!",
+                  html: "다시 시도해주세요",
+                  icon: "error",
+                  confirmButtonText: "OK",
+                  confirmButtonColor: "#608D00",
+                  timer: 3000,
+                  footer:
+                    '<a href="#" >문제가 계속된다면 </br>고객문의를 통해 문의해주세요.</a>',
+                });
+                console.error(`Error! : ${err}`);
               });
             console.log(`Delete ${currentUser.email} successfully!`);
             Swal.fire({
@@ -79,7 +91,18 @@ export default function UserSettingModal({
               confirmButtonColor: "#608D00",
               timer: 3000,
             });
-          } catch (error) {
+          } catch (error: any) {
+            Swal.fire({
+              width: "300px",
+              title: "ERROR!",
+              html: "다시 시도해주세요",
+              icon: "error",
+              confirmButtonText: "OK",
+              confirmButtonColor: "#608D00",
+              timer: 3000,
+              footer:
+                '<a href="#" >문제가 계속된다면 </br>고객문의를 통해 문의해주세요.</a>',
+            });
             console.error(`Error! : ${error}`);
           }
         }
