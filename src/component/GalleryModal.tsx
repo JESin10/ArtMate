@@ -91,9 +91,9 @@ fixed inset-0 flex items-center justify-center z-30
 `;
 
 const GalleryModalContainer = tw.div`
-w-[370px] h-4/5  pb-[70px]
+w-[370px] h-4/5 pb-[70px]
 rounded-t-xl shadow-Ver2 overflow-y-auto
-bg-white
+bg-white   
 `;
 
 const GalleryModalLabel = tw.p`

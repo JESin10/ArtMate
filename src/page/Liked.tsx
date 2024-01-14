@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
 import { ReactComponent as BookmarkIcon } from "../assets/customSvg/bookmark.svg";
-import Search_Bar from "../modules/SearchBar";
+import SearchBar from "../modules/SearchBar";
 import tw from "tailwind-styled-components";
 import { useAuth } from "./context/AuthContext";
 import { collection, deleteDoc, doc } from "firebase/firestore";
@@ -64,7 +64,7 @@ export default function Liked() {
 
   return (
     <>
-      <Search_Bar />
+      <SearchBar />
       <div className="w-full h-screen flex flex-col items-center overflow-y-auto pb-[120px]">
         <div className="w-full h-fit">
           <div className="w-11/12 mx-auto bg-white">
@@ -85,9 +85,9 @@ export default function Liked() {
                   key={index}
                   className="border-primary-YellowGreen border-2 rounded-xl w-full h-[168px] mb-5"
                 >
-                  <div className="flex items-center space-x-4 m-4 ">
+                  <div className="flex items-center m-4 ">
                     <img
-                      className="w-32 h-32 rounded-xl"
+                      className="w-32 h-32 rounded-xl mr-4"
                       alt="artworkIMG"
                       src={list.Img[0]}
                     />
@@ -101,7 +101,7 @@ export default function Liked() {
                             {list.User_ID.split("@", 1)[0]}님
                           </p>
                         </div>
-                        <p className="w-38 text-sm h-20 overflow-hidden text-ellipsis break-all line-clamp-3 flex-wrap">
+                        <p className="w-38 text-sm h-20 overflow-hidden text-ellipsis break-all line-clamp-4 flex-wrap">
                           {list.Content}
                         </p>
                       </div>

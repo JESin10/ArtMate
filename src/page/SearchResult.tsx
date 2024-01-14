@@ -58,8 +58,8 @@ export default function SearchResult({
                         />
                       </div>
                       <div className="flex flex-col w-44 h-fit my-auto justify-center">
-                        <div className="flex justify-between w-full h-6 text-center">
-                          <div className=" w-3/5 h-6 font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
+                        <div className="flex justify-between w-full h-6 ">
+                          <div className=" w-3/5 h-6  font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
                             {list.DP_NAME}
                           </div>
                           {list.DP_ARTIST ? (

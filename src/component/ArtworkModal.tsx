@@ -246,8 +246,7 @@ const ArtworkModalDiv = tw.div`
 const ArtworkModalContainer = tw.div`
   w-[370px] h-4/5 pb-[70px]
   rounded-t-xl overflow-y-auto 
-  bg-white
-  shadow-Ver2
+  shadow-Ver2 bg-white 
 `;
 
 const ArtworkModalLabel = tw.p`
