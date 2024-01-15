@@ -56,7 +56,7 @@ export default function SearchBar(): JSX.Element {
 
   return (
     <div className="py-4 flex-col mx-auto justify-center">
-      <div className="flex flex-col shadow-md">
+      <div className="flex flex-col">
         {isInputVisible ? (
           <>
             <MainBarContainer>

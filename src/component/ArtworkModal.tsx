@@ -6,6 +6,7 @@ import tw from "tailwind-styled-components";
 import { ReactComponent as SaveIcon } from "../assets/customSvg/bookmark.svg";
 import { db } from "../Firebase";
 import { doc, setDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
+import Swal from "sweetalert2";
 
 interface ModalProps {
   isOpen: boolean;
@@ -85,15 +86,43 @@ export default function ArtworkModal({
     }
   };
 
-  // const targetArtwork = CloudInfo && Object.entries(CloudInfo);
-  // console.log(targetArtwork);
-
   function parseAndStyleInfo(info: string) {
     const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
       return `<span style="font-weight: bold;">${content}</span>`;
     });
     return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
   }
+
+  //Copy
+  const handleCopyClipBoard = async (artworkInfo: ArtworkInfo) => {
+    const URL = window.location.href;
+    // const copiedArtwork = {
+    //   Title: `${artworkInfo?.DP_NAME}`,
+    //   Artist: `${artworkInfo?.DP_ARTIST}`,
+    //   Image: `${artworkInfo?.DP_MAIN_IMG}`,
+    //   Place: `${artworkInfo?.DP_PLACE}`,
+    //   Due: `${artworkInfo?.DP_START} ~ ${artworkInfo?.DP_END}`,
+    //   Site: `${artworkInfo?.DP_LNK}`,
+    // };
+
+    try {
+      await navigator.clipboard.writeText(URL);
+      // window.alert("클립보드에 복사되었습니다");
+      Swal.fire({
+        width: "300px",
+        position: "center",
+        icon: "success",
+        titleText: "COPY SUCCESS!",
+        html: "클립보드에 복사되었습니다.",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#608D00",
+        timer: 300000,
+      });
+    } catch (err) {
+      window.alert("복사에 실패하였습니다. 다시 시도 해주세요");
+      console.error(err);
+    }
+  };
 
   return (
     <ArtworkModalDiv>
@@ -112,18 +141,35 @@ export default function ArtworkModal({
             className="w-full h-[350px] object-cover mt-12"
             src={artworkInfo.DP_MAIN_IMG}
           />
-          <div className="px-4">
+          <div className="px-3">
             <div className="flex justify-between">
-              <h2 className="text-xl font-bold my-3">{artworkInfo.DP_NAME}</h2>
-              {targetArtwork && (targetArtwork as ArtWorkSaveInfo).isSaved ? (
-                <button className="h-fit my-auto">
-                  <Saving onClick={ArtWorkSaving} style={{ fill: "#608D00" }} />
+              <h2 className="w-3/4 text-xl font-bold my-3">
+                {artworkInfo.DP_NAME}
+              </h2>
+              <div className="h-fit my-auto w-1/4 justify-center flex space-x-3">
+                <button
+                  onClick={() => handleCopyClipBoard(artworkInfo)}
+                  className="h-8 w-auto my-auto"
+                >
+                  <img
+                    className="w-auto h-full"
+                    alt="share_icon"
+                    src={"./icons/Outline/share.svg"}
+                  />
                 </button>
-              ) : (
-                <button className="h-fit my-auto">
-                  <Saving onClick={ArtWorkSaving} style={{ fill: "white" }} />
-                </button>
-              )}
+                {targetArtwork && (targetArtwork as ArtWorkSaveInfo).isSaved ? (
+                  <button className="h-fit w-fit my-auto">
+                    <Saving
+                      onClick={ArtWorkSaving}
+                      style={{ fill: "#608D00" }}
+                    />
+                  </button>
+                ) : (
+                  <button className="h-fit w-fit my-auto">
+                    <Saving onClick={ArtWorkSaving} style={{ fill: "white" }} />
+                  </button>
+                )}
+              </div>
             </div>
             {/* 상세정보 */}
             <div className="space-y-1">
@@ -194,14 +240,15 @@ export default function ArtworkModal({
 }
 
 const ArtworkModalDiv = tw.div`
+  w-mobileWidth mx-auto  bg-black/30
   fixed inset-0 flex items-center justify-center z-30 
+  border-red-400 border-4 border-dotted
 `;
 
 const ArtworkModalContainer = tw.div`
   w-[370px] h-4/5 pb-[70px]
   rounded-t-xl overflow-y-auto 
-  bg-white
-  shadow-Ver2
+  shadow-Ver2 bg-white 
 `;
 
 const ArtworkModalLabel = tw.p`
@@ -213,8 +260,8 @@ const ArtworkModalContent = tw.p`
 `;
 
 const Saving = tw(SaveIcon)`
-mx-2 w-8 h-8
-cursor-pointer 
+  w-8 h-8 space-x-2
+  cursor-pointer 
 `;
 
 // hover:fill-primary-YellowGreen

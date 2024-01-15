@@ -34,12 +34,17 @@ export default function Review() {
   const AllReviewInfo = useCollectionData(AllReviewRef)[0];
   const MyReviewRef = collection(db, `userInfo/${currentUser?.uid}/Reviews`);
   const MyReviewInfo = useCollectionData(MyReviewRef)[0];
-
   const MyLikeReviewRef = collection(
     db,
     `userInfo/${currentUser?.uid}/MyLikeReviews`
   );
   const MyLikeReviewInfo = useCollectionData(MyLikeReviewRef)[0];
+
+  // console.log(MyReviews);
+  // console.log(AllReviewInfo);
+  // console.log(MyLikeReviewInfo);
+  // console.log("likeCount: ", likeCount);
+  // console.log("isLike: ", isLike);
 
   const ComparedReview =
     MyLikeReviewInfo &&
@@ -63,13 +68,7 @@ export default function Review() {
     }
   }
 
-  // console.log(MyReviews);
-  // console.log(AllReviewInfo);
-  // console.log(MyLikeReviewInfo);
-  // console.log("likeCount: ", likeCount);
-  // console.log("isLike: ", isLike);
-
-  //Modal
+  //Modal ON-OFF
   const openModal = () => {
     // setSelectedReview(review);
     setIsWriting(true);
@@ -95,15 +94,16 @@ export default function Review() {
     });
   }, []);
 
+  //Like Btn
   const onLikeCountHandler = async (
     id: string,
     title: string,
     like: number
   ) => {
-    setLikeCount(likeCount + 1);
+    setLikeCount(like + 1);
     setIsLike(true);
     try {
-      await updateDoc(doc(AllReviewRef, id), { Like_Cnt: likeCount + 1 });
+      await updateDoc(doc(AllReviewRef, id), { Like_Cnt: like + 1 });
       await setDoc(doc(db, `userInfo/${currentUser?.uid}/MyLikeReviews`, id), {
         // Reviewer_Id: AllReview.User_ID,
         Title: title,
@@ -115,6 +115,7 @@ export default function Review() {
     }
   };
 
+  //DisLike Btn
   const onDislikeCountHandler = async (id: string, like: number) => {
     setLikeCount(likeCount - 1);
     setIsLike(false);
@@ -177,7 +178,7 @@ export default function Review() {
                   <div className="w-11/12 mx-auto h-1/2 bg-black/20">
                     <img
                       alt="review-img"
-                      className="w-full h-full object-cover mx-auto border-red-500 border-solid border-2 bg-black/30"
+                      className="w-full h-full object-cover mx-auto bg-black/30"
                       src={list.Img[0]}
                     />
                   </div>

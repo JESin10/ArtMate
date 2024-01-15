@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
 import { loadImg } from "../assets/images";
-import { Route, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import { ReactComponent as BookMarkIcon } from "../assets/CustomSvg/bookmark.svg";
 // import { ReactComponent as LikeIcon } from "../assets/CustomSvg/like.svg";
 import tw from "tailwind-styled-components";
 import { UserInfo } from "./Home";
 import { useAuth } from "./context/AuthContext";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import "firebase/compat/firestore";
-import { db } from "../Firebase";
+import { db, storage } from "../Firebase";
 import { v4 as uidv } from "uuid";
-import Saving from "./Saving";
+// import Saving from "./Saving";
 import { FaFilePen } from "react-icons/fa6";
 import UserSettingModal from "../component/UserSettingModal";
+import { FaCheckCircle } from "react-icons/fa";
+import Swal from "sweetalert2";
+import { ref, uploadBytes, listAll, getDownloadURL } from "@firebase/storage";
+import { BiSolidImageAdd } from "react-icons/bi";
 
 export default function Mypage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -21,11 +25,15 @@ export default function Mypage() {
   const navigate = useNavigate();
   // const UserUid = uidv();
   const [userInfo, setUserInfo] = useState<UserInfo>();
-  const UserlistRef = collection(db, `userInfo/${currentUser?.uid}/UserInfo`);
-  const SavinglistRef = collection(
-    db,
-    `userInfo/${currentUser?.uid}/ArtworkInfo`
-  );
+  const [nickname, setNickName] = useState<string>("");
+  const [ProfileImage, setProfileImage] = useState<string>("");
+  const [IsEditMode, setIsEditMode] = useState<boolean>(false);
+
+  // const UserlistRef = collection(db, `userInfo/${currentUser?.uid}/UserInfo`);
+  // const SavinglistRef = collection(
+  //   db,
+  //   `userInfo/${currentUser?.uid}/ArtworkInfo`
+  // );
   const MyReviewRef = collection(db, `userInfo/${currentUser?.uid}/Reviews`);
   const MyReviewInfo = useCollectionData(MyReviewRef)[0];
   // const LikedReviewRef = collection(
@@ -34,11 +42,16 @@ export default function Mypage() {
   // );
   // const LikedReviewInfo = useCollectionData(LikedReviewRef)[0];
 
-  const NowUserInfo = useCollectionData(UserlistRef);
-  const MyArtworkInfo = useCollectionData(SavinglistRef)[0];
+  // const NowUserInfo = useCollectionData(UserlistRef);
+  // const MyArtworkInfo = useCollectionData(SavinglistRef)[0];
   const LoginUserUid = uidv();
+  const BasicImage = ref(storage, "Basic/");
 
-  // console.log(MyReviewInfo);
+  const Test = async () => {
+    const BasicImageURL = await getDownloadURL(BasicImage);
+    console.log(BasicImageURL);
+    setProfileImage(BasicImageURL);
+  };
   // console.log(NowUserInfo);
 
   useEffect(() => {
@@ -82,51 +95,49 @@ export default function Mypage() {
 
     try {
       await navigator.clipboard.writeText(URL);
-      window.alert("클립보드에 복사되었습니다");
-      // Swal.fire({
-      //   position: "center",
-      //   icon: "success",
-      //   title: "클립보드에 복사되었습니다.",
-      //   confirmButtonColor: "#FFD53F",
-      //   timer: 3000,
-      // });
+      // window.alert("클립보드에 복사되었습니다");
+      Swal.fire({
+        width: "300px",
+        position: "center",
+        icon: "success",
+        titleText: "COPY SUCCESS!",
+        html: "클립보드에 복사되었습니다.",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#608D00",
+        timer: 300000,
+      });
     } catch (err) {
       window.alert("복사에 실패하였습니다. 다시 시도 해주세요");
       console.error(err);
     }
   };
-  //Share
-  // const sharePage = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  //   const shareObject = {
-  //     title: "Artmate",
-  //     text: "art is your mate, Artmate!",
-  //     url: window.location.href,
-  //   };
 
-  //   if (navigator.share) {
-  //     navigator
-  //       .share(shareObject)
-  //       .then(() => {
-  //         console.log("공유 성공");
-  //       })
-  //       .catch((error) => {
-  //         window.alert("공유에 실패하였습니다. 다시 시도 해주세요");
-  //         console.error(error);
-  //       });
-  //   } else {
-  //     // navigator.share()를 지원하지 않는 경우
-  //     window.alert("웹공유를 지원하지 않는 페이지입니다.");
-  //     // Swal.fire({
-  //     //   position: "center",
-  //     //   icon: "error",
-  //     //   title: "공유기능을 지원하지 않는 브라우저입니다.",
-  //     //   confirmButtonColor: "#FFD53F",
-  //     //   timer: 3000,
-  //     // });
-  //   }
-  // };
+  const onUserInfoEditHandler = async () => {
+    setIsEditMode(true);
+    // const isConfirmed = window.confirm("tnwjd");
+    // const userRef = doc(
+    //   db,
+    //   "userInfo/",
+    //   `${currentUser.uid}/UserInfo/${currentUser.email}/`
+    // );
+    // if (currentUser) {
+    //   try {
+    //     //Cloud userInfo 삭제구문
+    //     await updateDoc(userRef, {
+    //       // NickName : UpdatedNickName,
+    //       // profileURL : UpdatedImage
+    //     })
+    //       .then(() => {
+    //         console.log(`Update ${currentUser.email} 's Info successfully!`);
+    //       })
+    //       .catch((err) => console.error(err));
+    //     //Authentication User 삭제구문
+    //   } catch (error) {
+    //     console.error(`Error! : ${error}`);
+    //   }
+    // } else return;
+  };
+  // console.log(currentUser);
 
   return (
     <div className="w-full h-screen">
@@ -143,63 +154,130 @@ export default function Mypage() {
       </div>
       <div className="w-fit mx-auto my-5">
         <div className="bg-primary-YellowGreen w-[350px] h-[250px] rounded-xl shadow-md py-4">
-          <div className="flex p-4 h-fit  my-auto">
-            {currentUser && currentUser.photoURL ? (
-              <img
-                alt="user_img"
-                src={currentUser.photoURL}
-                className="w-[80px] h-[80px] mx-3 bg-white shadow-lg rounded-full"
-              />
-            ) : (
-              <img
-                alt="user_img"
-                src={"./favicon.ico"}
-                className="w-[80px] h-[80px] mx-3 bg-white shadow-lg rounded-full"
-              />
-            )}
-            <div className="text-white flex flex-col justify-center ml-4 ">
-              <div className=" font-extrabold flex space-x-3 text-center items-center justify-center my-auto">
-                {currentUser && currentUser.displayName ? (
-                  <p className="text-xl h-fit overflow-hidden text-center items-center">
-                    {currentUser.displayName}
-                  </p>
+          {IsEditMode ? (
+            // Edit-Mode
+            <div className="flex p-4 h-fit  my-auto">
+              <div className="flex flex-col w-fit relative ">
+                {currentUser && currentUser.photoURL ? (
+                  <img
+                    alt="user_img"
+                    src={currentUser.photoURL}
+                    className="w-[80px] h-[80px] mx-3 bg-white shadow-lg rounded-full"
+                  />
                 ) : (
-                  <p className="text-xl h-fit overflow-hidden text-center items-center">
-                    {currentUser.email.split("@", 1)[0]}
-                  </p>
+                  <img
+                    alt="user_img"
+                    src={"./favicon.ico"}
+                    className="w-[80px] h-[80px] mx-3 bg-white shadow-lg rounded-full"
+                  />
                 )}
-
-                {/* <p>{currentUser.displayName}</p> */}
-                <div className="flex space-x-2 justify-center px-2">
-                  {/* <button
-                    className="bg-transparent outline-none rounded-md text-sm px-2"
-                  > */}
-                  <img
-                    className="cursor-pointer"
-                    src={"./icons/Outline/user_edit.svg"}
-                    alt="user-edit"
-                  />
-                  <img
-                    className="cursor-pointer "
-                    src={loadImg.User_LogOut}
-                    alt="user-logout"
-                    onClick={googleLogoutHandler}
-                  />
+                <div className=" cursor-pointer w-auto h-6 inline-block absolute bottom-0 right-0">
+                  <BiSolidImageAdd size="100%" color="white">
+                    <input
+                      className="text-black hidden"
+                      id="Profile-Image"
+                      type="file"
+                      placeholder={currentUser.photoURL}
+                      value={ProfileImage}
+                      onChange={(e) => setProfileImage(e.target.value)}
+                    />
+                  </BiSolidImageAdd>
                 </div>
               </div>
-
-              <div className="flex text-xs">
-                <div className="flex mr-2 mt-2 space-x-1">
-                  <p>팔로워</p>
-                  <p>00</p>
+              <div className="text-white flex flex-col justify-center ml-4 ">
+                <div className=" font-extrabold flex space-x-3 text-center items-center justify-center my-auto">
+                  <p className="text-xl h-fit overflow-hidden text-center items-center">
+                    <input
+                      className="text-black w-32 indent-1 font-normal  outline-none rounded-sm"
+                      id="NickNameInput"
+                      type="text"
+                      placeholder={currentUser.displayName}
+                      value={nickname}
+                      onChange={(e) => setNickName(e.target.value)}
+                    />
+                  </p>
+                  <div className="flex space-x-2 justify-center w-6">
+                    <button
+                      className="cursor-pointer "
+                      onClick={() => setIsEditMode(false)}
+                    >
+                      <CheckBtn size="100%" />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex mx-2 mt-2 space-x-1">
-                  <p>팔로잉</p>
-                  <p>00</p>
+
+                <div className="flex text-xs">
+                  <div className="flex mr-2 mt-2 space-x-1">
+                    <p>팔로워</p>
+                    <p>00</p>
+                  </div>
+                  <div className="flex mx-2 mt-2 space-x-1">
+                    <p>팔로잉</p>
+                    <p>00</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            // Normal-Mode
+            <div className="flex p-4 h-fit  my-auto">
+              {currentUser && currentUser.photoURL ? (
+                <img
+                  alt="user_img"
+                  src={currentUser.photoURL}
+                  className="w-[80px] h-[80px] mx-3 bg-white shadow-lg rounded-full"
+                />
+              ) : (
+                <img
+                  alt="user_img"
+                  src={"./favicon.ico"}
+                  className="w-[80px] h-[80px] mx-3 bg-white shadow-lg rounded-full"
+                />
+              )}
+              <div className="text-white flex flex-col justify-center ml-4 ">
+                <div className=" font-extrabold flex space-x-3 text-left items-center justify-center my-auto">
+                  {currentUser && currentUser.displayName ? (
+                    <p className="text-xl w-32 h-fit overflow-hidden text-center items-center">
+                      {currentUser.displayName}
+                    </p>
+                  ) : (
+                    <p className="text-xl w-32 text-left h-fit overflow-hidden  items-center">
+                      {currentUser.email.split("@", 1)[0]}
+                    </p>
+                  )}
+
+                  <div className="flex space-x-2 justify-center px-2">
+                    <button onClick={onUserInfoEditHandler}>
+                      <img
+                        className="cursor-pointer"
+                        src={"./icons/Outline/user_edit.svg"}
+                        alt="user-edit"
+                      />
+                    </button>
+                    <button onClick={googleLogoutHandler}>
+                      <img
+                        className="cursor-pointer "
+                        src={loadImg.User_LogOut}
+                        alt="user-logout"
+                      />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex text-xs">
+                  <div className="flex mr-2 mt-2 space-x-1">
+                    <p>팔로워</p>
+                    <p>00</p>
+                  </div>
+                  <div className="flex mx-2 mt-2 space-x-1">
+                    <p>팔로잉</p>
+                    <p>00</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex space-x-6 w-fit justify-center mx-auto my-4">
             <MyPageBtn>
               {/* <Review_Icon /> */}
@@ -288,4 +366,9 @@ font-extrabold mt-4
 flex justify-center items-center
 hover:text-primary-YellowGreen
 hover:underline
+`;
+
+const CheckBtn = tw(FaCheckCircle)`
+hover:fill-primary-Yellow
+hover:rotate-y-360 hover:duration-500
 `;
