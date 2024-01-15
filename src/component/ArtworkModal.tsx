@@ -240,7 +240,9 @@ export default function ArtworkModal({
 }
 
 const ArtworkModalDiv = tw.div`
+  w-mobileWidth mx-auto  bg-black/30
   fixed inset-0 flex items-center justify-center z-30 
+  border-red-400 border-4 border-dotted
 `;
 
 const ArtworkModalContainer = tw.div`
@@ -258,8 +260,8 @@ const ArtworkModalContent = tw.p`
 `;
 
 const Saving = tw(SaveIcon)`
-w-8 h-8 space-x-2
-cursor-pointer 
+  w-8 h-8 space-x-2
+  cursor-pointer 
 `;
 
 // hover:fill-primary-YellowGreen

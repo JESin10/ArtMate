@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import KaKaoMap from "../modules/KaKaoMap";
 import { loadImg } from "../assets/images";
-import { useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import SearchBar from "../modules/SearchBar";
 import tw from "tailwind-styled-components";
 import GalleryModal from "../component/GalleryModal";
@@ -30,7 +30,7 @@ export default function Gallery() {
   const navigate = useNavigate();
   const [mapMode, setMapMode] = useState<boolean>(false);
   const [GalleryOpenData, setGalleryOpenData] = useState([]);
-  const [selectedArtwork, setSelectedArtwork] = useState<GalleryInfo | null>(
+  const [selectedGallery, setSelectedGallery] = useState<GalleryInfo | null>(
     null
   );
 
@@ -54,11 +54,21 @@ export default function Gallery() {
 
   //Modal
   const openModal = (gallery: GalleryInfo) => {
-    setSelectedArtwork(gallery);
+    setSelectedGallery(gallery);
   };
 
   const closeModal = () => {
-    setSelectedArtwork(null);
+    setSelectedGallery(null);
+  };
+
+  const modalOpenHandler = (gallery: GalleryInfo) => {
+    return (
+      <GalleryModal
+        isOpen={true}
+        closeModal={closeModal}
+        galleryInfo={gallery}
+      />
+    );
   };
 
   return (
@@ -104,15 +114,15 @@ export default function Gallery() {
                         <div className="text-right text-sm">00m</div>
                       </div>
                     </GalleryContainer>
-                    {selectedArtwork && (
-                      <GalleryModal
-                        isOpen={true}
-                        closeModal={closeModal}
-                        galleryInfo={selectedArtwork}
-                      />
-                    )}
                   </div>
                 ))}
+              {selectedGallery && (
+                <GalleryModal
+                  isOpen={true}
+                  closeModal={closeModal}
+                  galleryInfo={selectedGallery}
+                />
+              )}
             </div>
           )}
         </div>

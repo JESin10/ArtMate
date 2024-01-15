@@ -6,6 +6,8 @@ import Loading from "./Loading";
 import Error from "./Error";
 import PrivateRoute from "./context/PrivateRoute";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import GalleryModal from "../component/GalleryModal";
+import { GalleryInfo } from "./Gallery";
 // import { collection } from "firebase/firestore";
 // import { useCollectionData } from "react-firebase-hooks/firestore";
 // import { db } from "../Firebase";
@@ -22,7 +24,6 @@ function Page() {
   const Liked = lazy(() => import("./Liked"));
 
   const KaKaoMap = lazy(() => import("../modules/KaKaoMap"));
-
   const [mapMode, setMapMode] = useState(false);
 
   return (
@@ -66,6 +67,6 @@ export default Page;
 
 const BasicDiv = tw.div`
 w-mobileWidth h-full mx-auto
-border-2 border-solid border-black
+border-2 border-dotted border-black
 
 `;

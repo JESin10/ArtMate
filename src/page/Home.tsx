@@ -116,7 +116,7 @@ export default function Home() {
   // }
 
   return (
-    <div className="h-fit border-2 ">
+    <div className="h-fit border-2 border-blue-400">
       <SearchBar />
       <div className="my-3">
         {/* {BannerZip.map((banner) => ( */}
