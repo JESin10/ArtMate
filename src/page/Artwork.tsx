@@ -10,6 +10,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
 
 import { collection, doc } from "firebase/firestore";
+import FilterModal from "../component/FilterModal";
 
 export interface ArtworkInfo {
   DP_ARTIST?: string;
@@ -42,6 +43,7 @@ export default function Artwork() {
   // const docRef = doc(listRef, selectedArtwork?.DP_NAME);
   // const MyArtworkInfo = Array(useCollectionData(listRef));
   const MyArtworkInfo = useCollectionData(listRef)[0];
+  const [filterMode, setFilterMode] = useState(false);
 
   // 페이지 렌딩과 동시에 데이터 가져오기
   const fetchData = async () => {
@@ -64,6 +66,17 @@ export default function Artwork() {
     setSelectedArtwork(null);
   };
 
+  //Activate Filter
+  const IsFilterMode = () => {
+    setFilterMode(!filterMode);
+    if (filterMode) {
+      console.log("FilterMode!");
+      console.log(filterMode);
+    } else {
+      console.log(filterMode);
+    }
+  };
+
   return (
     <>
       <SearchBar />
@@ -71,11 +84,22 @@ export default function Artwork() {
         <div className="w-full h-fit">
           <div className="w-11/12 mx-auto ">
             <div className="flex justify-between">
-              <h1 className="text-3xl font-extrabold my-2">작품 정보</h1>
+              <h1 className="text-3xl font-extrabold my-2 ml-3">Artwork</h1>
               <div className="flex mx-2 space-x-2">
-                <button className="cursor-pointer">
-                  <img src={"./icons/Outline/filter.svg"} alt="filter" />
-                </button>
+                <div className="h-fit w-fit flex my-auto">
+                  <button className="cursor-pointer" onClick={IsFilterMode}>
+                    <img src={"./icons/Outline/filter.svg"} alt="filter" />
+                  </button>
+                  {filterMode ? (
+                    <FilterModal
+                      isOpen={true}
+                      closeModal={closeModal}
+                      artworkInfo={selectedArtwork}
+                      currentUser={currentUser}
+                      selectedKeyword={["aa", "dd"]}
+                    />
+                  ) : null}
+                </div>
                 <button
                   onClick={() => window.location.reload()}
                   className="cursor-pointer"
