@@ -10,6 +10,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
 
 import { collection, doc } from "firebase/firestore";
+import FilterModal from "../component/FilterModal";
 
 export interface ArtworkInfo {
   DP_ARTIST?: string;
@@ -30,6 +31,7 @@ export interface ArtworkInfo {
   DP_SPONSOR?: string;
   DP_SUBNAME?: string | null;
   DP_VIEWPOINT?: string | null;
+  DP_VIEWTIME: string;
 }
 
 export default function Artwork() {
@@ -42,16 +44,34 @@ export default function Artwork() {
   // const docRef = doc(listRef, selectedArtwork?.DP_NAME);
   // const MyArtworkInfo = Array(useCollectionData(listRef));
   const MyArtworkInfo = useCollectionData(listRef)[0];
+  const [filterMode, setFilterMode] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   // 페이지 렌딩과 동시에 데이터 가져오기
   const fetchData = async () => {
-    const response = await SeoulArtMuseum_ArtWork_OpenData(1, 30);
+    const response = await SeoulArtMuseum_ArtWork_OpenData(31, 90);
     setArtWorkList(response.ListExhibitionOfSeoulMOAInfo.row);
     return response;
   };
   useEffect(() => {
     fetchData();
+    test();
   }, []);
+
+  const test = () => {
+    if (artworkList) {
+      const movement = artworkList.map((list: any) => list.DP_ART_PART);
+      console.log(movement.sort());
+      return movement;
+    }
+  };
+  console.log(artworkList);
+
+  // if(artworkList) {
+  // return  (artworkList.map(
+  //   (list: any) =>
+  //     list.DP_ART_PART)
+  // ))}
 
   // const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
 
@@ -64,6 +84,17 @@ export default function Artwork() {
     setSelectedArtwork(null);
   };
 
+  //Activate Filter
+  const IsFilterMode = () => {
+    setFilterMode(!filterMode);
+    // if (filterMode) {
+    //   console.log("FilterMode!");
+    //   console.log(filterMode);
+    // } else {
+    //   console.log(filterMode);
+    // }
+  };
+
   return (
     <>
       <SearchBar />
@@ -71,11 +102,25 @@ export default function Artwork() {
         <div className="w-full h-fit">
           <div className="w-11/12 mx-auto ">
             <div className="flex justify-between">
-              <h1 className="text-3xl font-extrabold my-2">작품 정보</h1>
+              <h1 className="text-3xl font-extrabold my-2 ml-3">Artwork</h1>
               <div className="flex mx-2 space-x-2">
-                <button className="cursor-pointer">
-                  <img src={"./icons/Outline/filter.svg"} alt="filter" />
-                </button>
+                <div className="h-fit w-fit flex my-auto">
+                  <button className="cursor-pointer" onClick={IsFilterMode}>
+                    <img src={"./icons/Outline/filter.svg"} alt="filter" />
+                  </button>
+
+                  {filterMode ? (
+                    // <FilterModalDiv id="mousedown">
+                    <FilterModal
+                      isOpen={() => setIsOpen(true)}
+                      closeModal={IsFilterMode}
+                      artworkInfo={selectedArtwork}
+                      currentUser={currentUser}
+                      selectedKeyword={["aa", "dd"]}
+                    />
+                  ) : // </FilterModalDiv>
+                  null}
+                </div>
                 <button
                   onClick={() => window.location.reload()}
                   className="cursor-pointer"
@@ -156,4 +201,10 @@ const Reload = tw(ReloadIcon)`
  w-6 h-auto fill-black
  hover:fill-primary-YellowGreen
  hover:rotate-180 hover:duration-500
+`;
+
+const FilterModalDiv = tw.div`
+  w-mobileWidth mx-auto  bg-black/30
+  fixed inset-0 flex items-center justify-center z-30 
+  border-red-400 border-4 border-dotted
 `;

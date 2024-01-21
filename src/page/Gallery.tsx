@@ -85,7 +85,7 @@ export default function Gallery() {
           ) : (
             <div className="w-11/12 mx-auto">
               <div className="flex justify-between">
-                <h1 className="text-3xl font-extrabold my-2">가까운 전시장</h1>
+                <h1 className="text-3xl font-extrabold my-2  ml-3">Gallery</h1>
                 <div className="flex space-x-2 mx-2">
                   <button>
                     <img src={loadImg.Map_current1} alt="current-location" />

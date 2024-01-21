@@ -138,9 +138,9 @@ export default function Review() {
     <>
       <SearchBar />
       <div className="w-full h-screen flex flex-col items-center overflow-y-auto pb-[120px]">
-        <div className="w-full h-fit">
-          <div className="w-11/12 mx-auto bg-white">
-            <div className="flex justify-between">
+        <div className="w-full h-fit ">
+          <div className="w-11/12 mx-auto">
+            <div className="flex justify-between mx-3">
               <h1 className="text-3xl font-extrabold my-3">Review</h1>
               <div className="flex space-x-2">
                 <button onClick={() => window.location.reload()}>
@@ -156,7 +156,7 @@ export default function Review() {
               AllReviewInfo.map((list: any, index: number) => (
                 <div
                   key={index}
-                  className="border-primary-YellowGreen border-2 rounded-xl w-full h-[450px] mt-3"
+                  className="border-primary-YellowGreen border-2 rounded-xl w-11/12 mx-auto h-[450px] mt-3"
                 >
                   <div className="flex items-center space-x-4 m-4">
                     <img
