@@ -10,50 +10,53 @@ export default function FilterDropdown({ category }: FilterComponentProps) {
       case "Genre":
         return (
           <FilterTagContainer id="Genre">
-            <FilterTag>전체</FilterTag>
-            <FilterTag>수묵</FilterTag>
-            <FilterTag>선묘화</FilterTag>
-            <FilterTag>영상</FilterTag>
-            <FilterTag>인터렉티브아트</FilterTag>
-            <FilterTag>아크릴</FilterTag>
-            <FilterTag>담채</FilterTag>
-            <FilterTag>자화상</FilterTag>
-            <FilterTag>텍스타일</FilterTag>
-            <FilterTag>추상</FilterTag>
-            <FilterTag>상상화</FilterTag>
-            <FilterTag>세라믹</FilterTag>
-            <FilterTag>전면회화</FilterTag>
-            <FilterTag>일러스트</FilterTag>
-            <FilterTag>삽화</FilterTag>
-            <FilterTag>실크</FilterTag>
-            <FilterTag>실크스크린</FilterTag>
-            <FilterTag>애니메이션</FilterTag>
-            <FilterTag>조각</FilterTag>{" "}
+            <FilterTag id="all-Genre">전체</FilterTag>
+            <FilterTag id="Genre1">회화</FilterTag>
+            <FilterTag id="Genre2">설치</FilterTag>
+            <FilterTag id="Genre3">영상</FilterTag>
+            <FilterTag id="Genre4">조각</FilterTag>
+            <FilterTag id="Genre5">키네틱</FilterTag>
+            <FilterTag id="Genre6">조명</FilterTag>
+            <FilterTag id="Genre7">드로잉</FilterTag>
+            <FilterTag id="Genre8">아카이브</FilterTag>
+            <FilterTag id="Genre9">뉴미디어</FilterTag>
+            <FilterTag id="Genre10">한국화</FilterTag>
+            <FilterTag id="Genre11">사진</FilterTag>
+            <FilterTag id="Genre19">퍼포먼스</FilterTag>
+
+            <FilterTag id="Genre13">조각형 설치</FilterTag>
+            <FilterTag id="Genre14">사운드</FilterTag>
+            <FilterTag id="Genre15">입체</FilterTag>
+            <FilterTag id="Genre16">드로잉애니메이션</FilterTag>
+            <FilterTag id="Genre17">그래픽 디자인</FilterTag>
+            <FilterTag id="Genre18">섬유예술</FilterTag>
+            <FilterTag id="Genre20">태피스트리</FilterTag>
+            <FilterTag id="Genre12">판화</FilterTag>
           </FilterTagContainer>
         );
       case "ArtMovement":
         return (
           <FilterTagContainer id="ArtMovement">
-            <FilterTag>전체</FilterTag>
-            <FilterTag>현대미술</FilterTag>
-            <FilterTag>팝아트</FilterTag>
-            <FilterTag>바로크회화</FilterTag>
-            <FilterTag>르네상스</FilterTag>
-            <FilterTag>야수파</FilterTag>
-            <FilterTag>인상주의</FilterTag>
-            <FilterTag>표현주의</FilterTag>
-            <FilterTag>입체주의</FilterTag>
-            <FilterTag>해체주의</FilterTag>
-            <FilterTag>미래</FilterTag>
-            <FilterTag>바르비종파</FilterTag>
-            <FilterTag>미래주의</FilterTag>
-            <FilterTag>옵아트</FilterTag>
-            <FilterTag>개념주의</FilterTag>
-            <FilterTag>아카데믹미술</FilterTag>
-            <FilterTag>포스트모더니즘</FilterTag>
-            <FilterTag>원시주의</FilterTag>
-            <FilterTag>러시아구성주의</FilterTag>
-            <FilterTag>독일표현주의</FilterTag>{" "}
+            <FilterTag id="all-Move">전체</FilterTag>
+            <FilterTag id="ArtMovement1">현대미술</FilterTag>
+            <FilterTag id="ArtMovement2">팝아트</FilterTag>
+            <FilterTag id="ArtMovement3">바로크회화</FilterTag>
+            <FilterTag id="ArtMovement4">르네상스</FilterTag>
+            <FilterTag id="ArtMovement5">야수파</FilterTag>
+            <FilterTag id="ArtMovement6">인상주의</FilterTag>
+            <FilterTag id="ArtMovement7">표현주의</FilterTag>
+            <FilterTag id="ArtMovement8">입체주의</FilterTag>
+            <FilterTag id="ArtMovement9">해체주의</FilterTag>
+            <FilterTag id="ArtMovement10">미래</FilterTag>
+            <FilterTag id="ArtMovement11">바르비종파</FilterTag>
+            <FilterTag id="ArtMovement12">미래주의</FilterTag>
+            <FilterTag id="ArtMovement13">옵아트</FilterTag>
+            <FilterTag id="ArtMovement14">개념주의</FilterTag>
+            <FilterTag id="ArtMovement15">아카데믹미술</FilterTag>
+            <FilterTag id="ArtMovement16">포스트모더니즘</FilterTag>
+            <FilterTag id="ArtMovement17">원시주의</FilterTag>
+            <FilterTag id="ArtMovement18">러시아구성주의</FilterTag>
+            <FilterTag id="ArtMovement19">독일표현주의</FilterTag>
           </FilterTagContainer>
         );
       // Add more cases as needed

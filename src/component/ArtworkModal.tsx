@@ -86,11 +86,33 @@ export default function ArtworkModal({
     }
   };
 
+  // function parseAndStyleInfo(info: string) {
+  //   const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
+  //     return `<span style="font-weight: bold;">${content}</span>`;
+  //   });
+  //   return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
+  // }
+
   function parseAndStyleInfo(info: string) {
-    const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
-      return `<span style="font-weight: bold;">${content}</span>`;
+    const lines = info.split(/\r\n/);
+
+    const styledLines = lines.map((line, index) => {
+      if (line.trim() === "") {
+        return null;
+      }
+
+      if (line.includes("휴관일")) {
+        return (
+          <div key={index}>
+            <span style={{ color: "red" }}>{line}</span>
+          </div>
+        );
+      }
+
+      return <div key={index}>{line}</div>;
     });
-    return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
+
+    return <div>{styledLines}</div>;
   }
 
   //Copy
@@ -189,8 +211,20 @@ export default function ArtworkModal({
               <div className="flex">
                 <ArtworkModalLabel>운영시간</ArtworkModalLabel>
                 <div className="w-full">
-                  <ArtworkModalContent>평일 10:00-20:00</ArtworkModalContent>
-                  <ArtworkModalContent>주말 10:00-19:00</ArtworkModalContent>
+                  {artworkInfo.DP_VIEWTIME === "" ? (
+                    <>
+                      <ArtworkModalContent>
+                        평일 10:00-20:00
+                      </ArtworkModalContent>
+                      <ArtworkModalContent>
+                        주말 10:00-19:00
+                      </ArtworkModalContent>
+                    </>
+                  ) : (
+                    <ArtworkModalContent>
+                      {parseAndStyleInfo(artworkInfo.DP_VIEWTIME)}
+                    </ArtworkModalContent>
+                  )}
                 </div>
               </div>
               <div className="flex">

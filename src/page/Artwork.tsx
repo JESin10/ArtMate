@@ -31,6 +31,7 @@ export interface ArtworkInfo {
   DP_SPONSOR?: string;
   DP_SUBNAME?: string | null;
   DP_VIEWPOINT?: string | null;
+  DP_VIEWTIME: string;
 }
 
 export default function Artwork() {
@@ -44,16 +45,33 @@ export default function Artwork() {
   // const MyArtworkInfo = Array(useCollectionData(listRef));
   const MyArtworkInfo = useCollectionData(listRef)[0];
   const [filterMode, setFilterMode] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   // 페이지 렌딩과 동시에 데이터 가져오기
   const fetchData = async () => {
-    const response = await SeoulArtMuseum_ArtWork_OpenData(1, 30);
+    const response = await SeoulArtMuseum_ArtWork_OpenData(31, 90);
     setArtWorkList(response.ListExhibitionOfSeoulMOAInfo.row);
     return response;
   };
   useEffect(() => {
     fetchData();
+    test();
   }, []);
+
+  const test = () => {
+    if (artworkList) {
+      const movement = artworkList.map((list: any) => list.DP_ART_PART);
+      console.log(movement.sort());
+      return movement;
+    }
+  };
+  console.log(artworkList);
+
+  // if(artworkList) {
+  // return  (artworkList.map(
+  //   (list: any) =>
+  //     list.DP_ART_PART)
+  // ))}
 
   // const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
 
@@ -69,12 +87,12 @@ export default function Artwork() {
   //Activate Filter
   const IsFilterMode = () => {
     setFilterMode(!filterMode);
-    if (filterMode) {
-      console.log("FilterMode!");
-      console.log(filterMode);
-    } else {
-      console.log(filterMode);
-    }
+    // if (filterMode) {
+    //   console.log("FilterMode!");
+    //   console.log(filterMode);
+    // } else {
+    //   console.log(filterMode);
+    // }
   };
 
   return (
@@ -90,15 +108,18 @@ export default function Artwork() {
                   <button className="cursor-pointer" onClick={IsFilterMode}>
                     <img src={"./icons/Outline/filter.svg"} alt="filter" />
                   </button>
+
                   {filterMode ? (
+                    // <FilterModalDiv id="mousedown">
                     <FilterModal
-                      isOpen={true}
-                      closeModal={closeModal}
+                      isOpen={() => setIsOpen(true)}
+                      closeModal={IsFilterMode}
                       artworkInfo={selectedArtwork}
                       currentUser={currentUser}
                       selectedKeyword={["aa", "dd"]}
                     />
-                  ) : null}
+                  ) : // </FilterModalDiv>
+                  null}
                 </div>
                 <button
                   onClick={() => window.location.reload()}
@@ -180,4 +201,10 @@ const Reload = tw(ReloadIcon)`
  w-6 h-auto fill-black
  hover:fill-primary-YellowGreen
  hover:rotate-180 hover:duration-500
+`;
+
+const FilterModalDiv = tw.div`
+  w-mobileWidth mx-auto  bg-black/30
+  fixed inset-0 flex items-center justify-center z-30 
+  border-red-400 border-4 border-dotted
 `;

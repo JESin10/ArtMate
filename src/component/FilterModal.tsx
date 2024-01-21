@@ -1,17 +1,11 @@
-import React, { useState } from "react";
-// import { loadImg } from "../assets/images";
-import { IoIosCloseCircleOutline } from "react-icons/io";
+import React, { useEffect, useRef, useState } from "react";
 import { ArtworkInfo } from "../page/Artwork";
 import tw from "tailwind-styled-components";
-import { ReactComponent as SaveIcon } from "../assets/customSvg/bookmark.svg";
-import { db } from "../Firebase";
-import { doc, setDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
-import Swal from "sweetalert2";
 import { RiArrowDropUpLine, RiArrowDropDownLine } from "react-icons/ri";
 import FilterDropdown from "../modules/FilterDropdown";
 
 interface ModalProps {
-  isOpen: boolean;
+  isOpen: any;
   closeModal: () => void;
   selectedKeyword: Array<string>;
   artworkInfo: ArtworkInfo | null;
@@ -37,104 +31,37 @@ export default function FilterModal({
   currentUser,
 }: // CloudInfo,
 ModalProps) {
-  // const [isSaved, setIsSaved] = useState<boolean>(false);
-  // const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
-  // const docRef = doc(listRef, artworkInfo?.DP_NAME);
-  // const [artworkList] = useCollectionData(listRef);
-  // const targetArtwork =
-  //   CloudInfo &&
-  //   Array.isArray(CloudInfo) &&
-  //   CloudInfo.find(
-  //     (item: ArtWorkSaveInfo) => item.DP_NAME === artworkInfo?.DP_NAME
-  //   );
-
   const [viewGenre, setViewGenre] = useState(false);
   const [viewAMovement, setViewAMovement] = useState(false);
 
+  // 모달이외 공간 터치시 modal close
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      const modalContainer = document.getElementById("FilterModal");
+
+      if (modalContainer && !modalContainer.contains(event.target as Node)) {
+        closeModal();
+      }
+    };
+    if (isOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isOpen, closeModal]);
+
   if (!isOpen) return null;
 
-  // const ArtWorkSaving = async () => {
-  //   const DocSnap = await getDoc(docRef);
-
-  //   if (!DocSnap.data()?.isSaved && artworkInfo?.DP_NAME) {
-  //     const ArtworkRef = await setDoc(
-  //       doc(
-  //         db,
-  //         `userInfo/${currentUser?.uid}/ArtworkInfo`,
-  //         artworkInfo?.DP_NAME
-  //       ),
-  //       {
-  //         Uid: currentUser.uid,
-  //         // Artwork_No : number,
-  //         isSaved: true,
-  //         DP_NAME: artworkInfo?.DP_NAME,
-  //         DP_EX_NO: artworkInfo?.DP_EX_NO,
-  //         DP_MAIN_IMG: artworkInfo?.DP_MAIN_IMG,
-  //         DP_END: artworkInfo?.DP_END,
-  //         DP_ART_PART: artworkInfo?.DP_ART_PART,
-  //       }
-  //     );
-  //     setIsSaved(true);
-  //     console.log(`Document saved successfully`);
-  //     return ArtworkRef;
-  //   } else if ((targetArtwork as ArtWorkSaveInfo).isSaved) {
-  //     const docRef = doc(listRef, artworkInfo?.DP_NAME);
-
-  //     if (artworkInfo?.DP_NAME) {
-  //       try {
-  //         await deleteDoc(docRef);
-  //         setIsSaved(false);
-  //         console.log(`Document deleted successfully`);
-  //       } catch (error) {
-  //         console.error(`Error deleting document: ${error}`);
-  //       }
-  //     }
-  //   }
-  // };
-
-  function parseAndStyleInfo(info: string) {
-    const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
-      return `<span style="font-weight: bold;">${content}</span>`;
-    });
-    return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
-  }
-
-  //Copy
-  const handleCopyClipBoard = async (artworkInfo: ArtworkInfo) => {
-    const URL = window.location.href;
-    // const copiedArtwork = {
-    //   Title: `${artworkInfo?.DP_NAME}`,
-    //   Artist: `${artworkInfo?.DP_ARTIST}`,
-    //   Image: `${artworkInfo?.DP_MAIN_IMG}`,
-    //   Place: `${artworkInfo?.DP_PLACE}`,
-    //   Due: `${artworkInfo?.DP_START} ~ ${artworkInfo?.DP_END}`,
-    //   Site: `${artworkInfo?.DP_LNK}`,
-    // };
-
-    try {
-      await navigator.clipboard.writeText(URL);
-      // window.alert("클립보드에 복사되었습니다");
-      Swal.fire({
-        width: "300px",
-        position: "center",
-        icon: "success",
-        titleText: "COPY SUCCESS!",
-        html: "클립보드에 복사되었습니다.",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#608D00",
-        timer: 300000,
-      });
-    } catch (err) {
-      window.alert("복사에 실패하였습니다. 다시 시도 해주세요");
-      console.error(err);
-    }
+  const FilterActiveHandler = () => {
+    closeModal();
   };
 
   return (
     <FilterModalDiv>
-      <FilterModalContainer>
+      <FilterModalContainer id="FilterModal">
         <h1 className="font-extrabold text-2xl w-fit my-4 mx-auto">Filter</h1>
-        <div className=" w-11/12 flex-col my-4 mx-auto">
+        <div className=" w-11/12 flex-col my-4 mx-auto h-fit overflow-scroll">
           <div className="w-full h-fit py-4 border-b-2 border-b-primary-Gray flex flex-col">
             <div
               onClick={() => setViewGenre(!viewGenre)}
@@ -156,6 +83,9 @@ ModalProps) {
             {viewAMovement && <FilterDropdown category="ArtMovement" />}
           </div>
         </div>
+        <div className="flex w-full">
+          <ActiveBtn onClick={FilterActiveHandler}>선택완료</ActiveBtn>
+        </div>
       </FilterModalContainer>
     </FilterModalDiv>
   );
@@ -171,6 +101,7 @@ const FilterModalContainer = tw.div`
   w-[370px] h-4/5 pb-[70px]
   rounded-t-xl overflow-y-auto 
   shadow-Ver2 bg-white 
+  border-yellow-400 border-4
 `;
 
 const DropDownIcon = tw(RiArrowDropDownLine)`
@@ -179,4 +110,11 @@ const DropDownIcon = tw(RiArrowDropDownLine)`
 
 const DropUpIcon = tw(RiArrowDropUpLine)`
   w-auto h-6 bg-white 
+`;
+
+const ActiveBtn = tw.button`
+  bg-primary-YellowGreen text-white 
+  rounded-3xl px-4 py-2 w-fit mx-auto
+  font-base text-lg
+  hover:font-bold
 `;
