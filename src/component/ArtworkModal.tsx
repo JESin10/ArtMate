@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { loadImg } from "../assets/images";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { ArtworkInfo } from "../page/Artwork";
@@ -44,6 +44,22 @@ export default function ArtworkModal({
     CloudInfo.find(
       (item: ArtWorkSaveInfo) => item.DP_NAME === artworkInfo?.DP_NAME
     );
+
+  // 모달이외 공간 터치시 modal close
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      const modalContainer = document.getElementById("ArtworkModal");
+      if (modalContainer && !modalContainer.contains(event.target as Node)) {
+        closeModal();
+      }
+    };
+    if (isOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isOpen, closeModal]);
 
   if (!isOpen) return null;
 
@@ -149,7 +165,7 @@ export default function ArtworkModal({
   return (
     <ArtworkModalDiv>
       {artworkInfo && (
-        <ArtworkModalContainer>
+        <ArtworkModalContainer id="ArtworkModal">
           <div className="fixed z-10">
             <button
               className="my-2 ml-80 bg-white justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"

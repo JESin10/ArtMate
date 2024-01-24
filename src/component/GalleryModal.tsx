@@ -4,6 +4,7 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { GalleryInfo } from "../page/Gallery";
 import tw from "tailwind-styled-components";
 import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -18,14 +19,30 @@ export default function GalleryModal({
 }: ModalProps) {
   const { galleryId } = useParams();
 
-  console.log(galleryInfo);
+  // console.log(galleryInfo);
+
+  // 모달이외 공간 터치시 modal close
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      const modalContainer = document.getElementById("GalleryModal");
+      if (modalContainer && !modalContainer.contains(event.target as Node)) {
+        closeModal();
+      }
+    };
+    if (isOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isOpen, closeModal]);
 
   if (!isOpen) return null;
 
   return (
     <GalleryModalDiv>
       {galleryInfo && (
-        <GalleryModalContainer>
+        <GalleryModalContainer id="GalleryModal">
           <div className="fixed z-10">
             <button
               className="bg-white my-2 ml-80 justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"
