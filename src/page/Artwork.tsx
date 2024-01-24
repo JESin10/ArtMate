@@ -49,7 +49,7 @@ export default function Artwork() {
 
   // 페이지 렌딩과 동시에 데이터 가져오기
   const fetchData = async () => {
-    const response = await SeoulArtMuseum_ArtWork_OpenData(31, 90);
+    const response = await SeoulArtMuseum_ArtWork_OpenData(1, 100);
     setArtWorkList(response.ListExhibitionOfSeoulMOAInfo.row);
     return response;
   };
@@ -60,18 +60,23 @@ export default function Artwork() {
 
   const test = () => {
     if (artworkList) {
-      const movement = artworkList.map((list: any) => list.DP_ART_PART);
-      console.log(movement.sort());
-      return movement;
+      const movement: Array<string> = artworkList.map((list: any) => list);
+      // console.log(movement);
+      // 중복된 단어 제거
+      const uniqueMovement = Array.from(new Set(movement));
+
+      // 빈 문자열 및 공백 제거하고 새로운 배열 생성
+      const filteredMovement = uniqueMovement
+        .join(",")
+        .split(",")
+        .map((word) => word.trim())
+        .filter((word) => word !== "");
+
+      // console.log(Array.from(new Set(filteredMovement)));
+
+      return filteredMovement;
     }
   };
-  console.log(artworkList);
-
-  // if(artworkList) {
-  // return  (artworkList.map(
-  //   (list: any) =>
-  //     list.DP_ART_PART)
-  // ))}
 
   // const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
 

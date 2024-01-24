@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { ArtworkInfo } from "../page/Artwork";
 import tw from "tailwind-styled-components";
 import { RiArrowDropUpLine, RiArrowDropDownLine } from "react-icons/ri";
-import FilterDropdown from "../modules/FilterDropdown";
+import FilterDropdown, { onFilteringHandler } from "../modules/FilterDropdown";
+import { SearchingInfo } from "../api/Gallery_OpenApi";
 
 interface ModalProps {
   isOpen: any;
@@ -33,6 +34,9 @@ export default function FilterModal({
 ModalProps) {
   const [viewGenre, setViewGenre] = useState(false);
   const [viewAMovement, setViewAMovement] = useState(false);
+  const [viewAMonth, setViewMonth] = useState(false);
+
+  const [filterValue, setFilterValue] = useState("");
 
   // 모달이외 공간 터치시 modal close
   useEffect(() => {
@@ -54,8 +58,30 @@ ModalProps) {
   if (!isOpen) return null;
 
   const FilterActiveHandler = () => {
+    onFilteringHandler(filterValue);
+    setFilterValue(filterValue);
     closeModal();
   };
+
+  // const onFilteringHandler = async (filterValue: any) => {
+  //   try {
+  //     const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo.row;
+  //     // 검색어가 포함된 결과만 필터링
+  //     const Results = response.filter((item: any) => {
+  //       // DP_ARTIST 또는 DP_NAME 중에 검색어가 포함되어 있는지 확인
+  //       return item.DP_ART_PART?.toLowerCase().includes(
+  //         filterValue.toLowerCase()
+  //       );
+  //       // item.DP_NAME?.toLowerCase().includes(filterValue.toLowerCase())
+  //     });
+
+  //     console.log(Results);
+
+  //     return setFilterValue(Results);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   return (
     <FilterModalDiv>
@@ -72,7 +98,7 @@ ModalProps) {
             </div>
             {viewGenre && <FilterDropdown category="Genre" />}
           </div>
-          <div className="py-4">
+          {/* <div className="w-full h-fit py-4 border-b-2 border-b-primary-Gray flex flex-col">
             <div
               onClick={() => setViewAMovement(!viewAMovement)}
               className="flex items-center justify-between px-4 cursor-pointer"
@@ -81,10 +107,22 @@ ModalProps) {
               <p>{viewAMovement ? <DropUpIcon /> : <DropDownIcon />}</p>
             </div>
             {viewAMovement && <FilterDropdown category="ArtMovement" />}
+          </div> */}
+          <div className="py-4">
+            <div
+              onClick={() => setViewMonth(!viewAMonth)}
+              className="flex items-center justify-between px-4 cursor-pointer"
+            >
+              <h1 className=" text-xl font-bold my-2">월별</h1>
+              <p>{viewAMonth ? <DropUpIcon /> : <DropDownIcon />}</p>
+            </div>
+            {viewAMonth && <FilterDropdown category="Month" />}
           </div>
         </div>
         <div className="flex w-full">
-          <ActiveBtn onClick={FilterActiveHandler}>선택완료</ActiveBtn>
+          <ActiveBtn value={"Active"} onClick={FilterActiveHandler}>
+            선택완료
+          </ActiveBtn>
         </div>
       </FilterModalContainer>
     </FilterModalDiv>
