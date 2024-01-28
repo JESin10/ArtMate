@@ -18,6 +18,7 @@ import {
 import { db, storage } from "../Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { ref, listAll, getDownloadURL } from "@firebase/storage";
+import CommentModal from "../component/CommentModal";
 
 interface LikedReviewInfo {
   Review_Uid: string;
@@ -134,6 +135,12 @@ export default function Review() {
   //   MyReviewInfo
   // }
 
+  //Comment
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
+  const onCommentHandler = () => {
+    setIsCommentOpen(true);
+  };
+
   return (
     <>
       <SearchBar />
@@ -238,8 +245,11 @@ export default function Review() {
 
                       <p>{list.Like_Cnt} 좋아요</p>
                     </div>
-                    <div className="flex space-x-2">
-                      <img alt="commment-count" src={loadImg.Menu_List} />
+                    <div
+                      className="flex space-x-2 cursor-pointer"
+                      onClick={onCommentHandler}
+                    >
+                      <img alt="comment-count" src={loadImg.Menu_List} />
                       <p>댓글</p>
                     </div>
                   </div>
@@ -254,6 +264,14 @@ export default function Review() {
             {isWriting ? (
               <ReviewModal
                 isOpen={isWriting}
+                closeModal={closeModal}
+                currentUser={currentUser}
+              />
+            ) : null}
+
+            {isCommentOpen ? (
+              <CommentModal
+                isOpen={isCommentOpen}
                 closeModal={closeModal}
                 currentUser={currentUser}
               />
