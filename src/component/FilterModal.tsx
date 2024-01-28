@@ -2,16 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { ArtworkInfo } from "../page/Artwork";
 import tw from "tailwind-styled-components";
 import { RiArrowDropUpLine, RiArrowDropDownLine } from "react-icons/ri";
-import FilterDropdown, { onFilteringHandler } from "../modules/FilterDropdown";
+import FilterDropdown from "../modules/FilterDropdown";
 import { SearchingInfo } from "../api/Gallery_OpenApi";
 
 interface ModalProps {
   isOpen: any;
   closeModal: () => void;
-  selectedKeyword: Array<string>;
+  // selectedKeyword: any;
   artworkInfo: ArtworkInfo | null;
   currentUser: any;
   // CloudInfo?: Object | null;
+  onFilterChange: (filteredData: ArtworkInfo[]) => void; // Add this line
 }
 
 export interface FilterInfo {
@@ -28,15 +29,17 @@ export interface FilterInfo {
 export default function FilterModal({
   isOpen,
   closeModal,
-  selectedKeyword,
+  // selectedKeyword,
   currentUser,
-}: // CloudInfo,
-ModalProps) {
+  onFilterChange,
+}: ModalProps) {
   const [viewGenre, setViewGenre] = useState(false);
   const [viewAMovement, setViewAMovement] = useState(false);
   const [viewAMonth, setViewMonth] = useState(false);
 
   const [filterValue, setFilterValue] = useState("");
+  const [selectedGenreTags, setSelectedGenreTags] = useState<string[]>([]);
+  const [selectedMonthTags, setSelectedMonthTags] = useState<string[]>([]);
 
   // 모달이외 공간 터치시 modal close
   useEffect(() => {
@@ -57,31 +60,24 @@ ModalProps) {
 
   if (!isOpen) return null;
 
-  const FilterActiveHandler = () => {
-    onFilteringHandler(filterValue);
-    setFilterValue(filterValue);
+  const FilterActiveHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    // setFilterValue(filterValue);
+    // onFilterChange(selectedMonthTags);
+    // onFilteringHandler(selectedGenreTags);
     closeModal();
   };
 
-  // const onFilteringHandler = async (filterValue: any) => {
-  //   try {
-  //     const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo.row;
-  //     // 검색어가 포함된 결과만 필터링
-  //     const Results = response.filter((item: any) => {
-  //       // DP_ARTIST 또는 DP_NAME 중에 검색어가 포함되어 있는지 확인
-  //       return item.DP_ART_PART?.toLowerCase().includes(
-  //         filterValue.toLowerCase()
-  //       );
-  //       // item.DP_NAME?.toLowerCase().includes(filterValue.toLowerCase())
-  //     });
-
-  //     console.log(Results);
-
-  //     return setFilterValue(Results);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+  const onFilteringHandler = async (results: any) => {
+    try {
+      if (onFilterChange) {
+        onFilterChange(results);
+        // selectedKeyword();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <FilterModalDiv>
@@ -96,18 +92,40 @@ ModalProps) {
               <h1 className="text-xl font-bold my-2">장르</h1>
               <p>{viewGenre ? <DropUpIcon /> : <DropDownIcon />}</p>
             </div>
-            {viewGenre && <FilterDropdown category="Genre" />}
+            {viewGenre && (
+              <FilterDropdown
+                category="Genre"
+                onFilterChange={(setSelectedGenreTags) => {
+                  onFilteringHandler(setSelectedGenreTags);
+                  // selectedKeyword(selectedGenreTags);
+                }}
+                tags={[
+                  { id: "all", name: "전체" },
+                  { id: "painting", name: "회화" },
+                  { id: "oilDrawing", name: "유화" },
+                  { id: "sculpture", name: "조각" },
+                  { id: "installation", name: "설치" },
+                  { id: "kinetic", name: "키네틱" },
+                  { id: "archive", name: "아카이브" },
+                  { id: "newMedia", name: "뉴미디어" },
+                  { id: "media", name: "미디어아트" },
+                  { id: "3D", name: "입체" },
+                  { id: "video", name: "영상" },
+                  { id: "sound", name: "사운드" },
+                  { id: "animation", name: "애니메이션" },
+                  { id: "graphic", name: "그래픽디자인" },
+                  { id: "drawing", name: "드로잉" },
+                  { id: "picture", name: "사진" },
+                  { id: "light", name: "조명" },
+                  { id: "perform", name: "퍼포먼스" },
+                  { id: "koreanPainting", name: "한국화" },
+                  { id: "fiberArt", name: "섬유예술" },
+                  { id: "ceramics", name: "도예" },
+                  { id: "tapestry", name: "태피스트리" },
+                ]}
+              />
+            )}
           </div>
-          {/* <div className="w-full h-fit py-4 border-b-2 border-b-primary-Gray flex flex-col">
-            <div
-              onClick={() => setViewAMovement(!viewAMovement)}
-              className="flex items-center justify-between px-4 cursor-pointer"
-            >
-              <h1 className=" text-xl font-bold my-2">사조</h1>
-              <p>{viewAMovement ? <DropUpIcon /> : <DropDownIcon />}</p>
-            </div>
-            {viewAMovement && <FilterDropdown category="ArtMovement" />}
-          </div> */}
           <div className="py-4">
             <div
               onClick={() => setViewMonth(!viewAMonth)}
@@ -116,7 +134,32 @@ ModalProps) {
               <h1 className=" text-xl font-bold my-2">월별</h1>
               <p>{viewAMonth ? <DropUpIcon /> : <DropDownIcon />}</p>
             </div>
-            {viewAMonth && <FilterDropdown category="Month" />}
+            {viewAMonth && (
+              <FilterDropdown
+                category="Month"
+                onFilterChange={(tags) => {
+                  setSelectedMonthTags(tags);
+                  // selectedKeyword(tags);
+                }}
+                // onFilterChange={(setSelectedMonthTags) =>
+                //   console.log(setSelectedMonthTags)
+                // }
+                tags={[
+                  { id: "Jan", name: "1월" },
+                  { id: "Feb", name: "2월" },
+                  { id: "March", name: "3월" },
+                  { id: "April", name: "4월" },
+                  { id: "May", name: "5월" },
+                  { id: "June", name: "6월" },
+                  { id: "July", name: "7월" },
+                  { id: "Aug", name: "8월" },
+                  { id: "Seb", name: "9월" },
+                  { id: "Oct", name: "10월" },
+                  { id: "Nov", name: "11월" },
+                  { id: "Dec", name: "12월" },
+                ]}
+              />
+            )}
           </div>
         </div>
         <div className="flex w-full">
