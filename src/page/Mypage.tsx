@@ -47,6 +47,10 @@ export default function Mypage() {
   const LoginUserUid = uidv();
   const BasicImage = ref(storage, "Basic/");
 
+  const CommentRef = collection(db, `userInfo/${currentUser?.uid}/MyReviews`);
+  const MyCommentList = useCollectionData(CommentRef)[0];
+  console.log(MyCommentList);
+
   const Test = async () => {
     const BasicImageURL = await getDownloadURL(BasicImage);
     console.log(BasicImageURL);
@@ -140,7 +144,7 @@ export default function Mypage() {
   // console.log(currentUser);
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen mb-[70px]">
       <div className="flex w-full justify-end px-4 space-x-2 pt-5 cursor-pointer">
         <button>
           <img alt="notify_icon" src={"./icons/Outline/notification.svg"} />
@@ -324,6 +328,23 @@ export default function Mypage() {
           )}
           {/* </div> */}
           {/* </ReviewContainer> */}
+        </div>
+        <div>
+          <p className="w-fit mt-10 mx-2 font-extrabold text-lg">
+            내가 작성한 댓글
+          </p>
+          {MyCommentList &&
+            MyCommentList.map((comment: any, index: number) => (
+              <div>
+                <div className="text-xs text-primary-Gray">
+                  {comment.Comment_ID}
+                </div>
+                <div className="flex justify-between" key={index}>
+                  <div>{comment.Comment}</div>
+                  <div>{comment.Written_Date}</div>
+                </div>
+              </div>
+            ))}
         </div>
       </div>
       {isModalOpen && (

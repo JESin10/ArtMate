@@ -27,7 +27,7 @@ interface LikedReviewInfo {
 
 export default function Review() {
   const { currentUser } = useAuth();
-  // const [selectedReview, setSelectedReview] = useState<ReviewInfo | null>(null);
+  const [selectedReview, setSelectedReview] = useState<ReviewInfo | null>(null);
   const [likeCount, setLikeCount] = useState<number>(0);
   const [isLike, setIsLike] = useState<boolean>(false);
   const [isWriting, setIsWriting] = useState<boolean>(false);
@@ -73,6 +73,11 @@ export default function Review() {
   const openModal = () => {
     // setSelectedReview(review);
     setIsWriting(true);
+  };
+
+  const CommentModalClose = () => {
+    setIsCommentOpen(false);
+    setSelectedReview(null);
   };
 
   const closeModal = () => {
@@ -137,8 +142,9 @@ export default function Review() {
 
   //Comment
   const [isCommentOpen, setIsCommentOpen] = useState(false);
-  const onCommentHandler = () => {
+  const onCommentHandler = (review: ReviewInfo) => {
     setIsCommentOpen(true);
+    setSelectedReview(review);
   };
 
   return (
@@ -247,7 +253,7 @@ export default function Review() {
                     </div>
                     <div
                       className="flex space-x-2 cursor-pointer"
-                      onClick={onCommentHandler}
+                      onClick={() => onCommentHandler(list)}
                     >
                       <img alt="comment-count" src={loadImg.Menu_List} />
                       <p>댓글</p>
@@ -272,7 +278,8 @@ export default function Review() {
             {isCommentOpen ? (
               <CommentModal
                 isOpen={isCommentOpen}
-                closeModal={closeModal}
+                ReviewInfo={selectedReview}
+                closeModal={CommentModalClose}
                 currentUser={currentUser}
               />
             ) : null}
