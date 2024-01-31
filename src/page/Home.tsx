@@ -45,10 +45,16 @@ export default function Home() {
   // const [getToken, setGetToken] = useState();
   const [userInfo, setUserInfo] = useState<UserInfo>();
   const LoginUserUid = uidv();
+  const LoginedUserInfoRef = collection(
+    db,
+    `userInfo/${currentUser?.uid}/UserInfo`
+  );
+  const LoginedUserInfo = useCollectionData(LoginedUserInfoRef)[0];
+
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const MyArtworkInfo = useCollectionData(listRef)[0];
 
-  // console.log(MyArtworkInfo);
+  console.log(LoginedUserInfo);
   // console.log(selectedArtwork);
 
   const fetchData = async () => {
@@ -88,7 +94,7 @@ export default function Home() {
     // console.log(currentUser.uid);
     UserSaving();
     fetchData();
-    if (currentUser) {
+    if (LoginedUserInfo && currentUser.email !== LoginedUserInfo[0].Email) {
       setUserInfo({
         userId: LoginUserUid,
         uid: currentUser.uid,
@@ -125,9 +131,9 @@ export default function Home() {
       </div>
       {/* 취향저격 전시 */}
       <div className="w-11/12 mx-auto">
-        {currentUser && currentUser.displayName && currentUser?.email ? (
+        {currentUser && LoginedUserInfo ? (
           <h1 className="w-fit text-lg px-4 my-2 flex">
-            <p className="mr-2 font-extrabold">{currentUser.displayName}</p>
+            <p className="mr-2 font-extrabold">{LoginedUserInfo[0].NickName}</p>
             님께 추천하는 전시 모음
           </h1>
         ) : (
