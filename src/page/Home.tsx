@@ -90,6 +90,9 @@ export default function Home() {
     }
   };
 
+  // console.log("currentUser:", currentUser);
+  // console.log("LoginedUserInfo:", LoginedUserInfo);
+
   useEffect(() => {
     // console.log(currentUser.uid);
     UserSaving();
@@ -132,27 +135,27 @@ export default function Home() {
       {/* 취향저격 전시 */}
       <div className="w-11/12 mx-auto">
         {currentUser && LoginedUserInfo ? (
-          <h1 className="w-fit text-lg px-4 my-2 flex">
-            <p className="mr-2 font-extrabold">{LoginedUserInfo[0].NickName}</p>
-            님께 추천하는 전시 모음
-          </h1>
-        ) : (
           <>
-            {currentUser &&
-            currentUser.displayName === null &&
-            currentUser.email ? (
+            {currentUser && LoginedUserInfo[0].NickName ? (
               <h1 className="w-fit text-lg px-4 my-2 flex">
                 <p className="mr-2 font-extrabold">
-                  {currentUser.email.split("@", 1)[0]}
+                  {LoginedUserInfo[0].NickName}
                 </p>
                 님께 추천하는 전시 모음
               </h1>
             ) : (
-              <h1 className="w-fit font-extrabold text-2xl px-4 my-4">
-                지금 떠오르는 전시는?
+              <h1 className="w-fit text-lg px-4 my-2 flex">
+                <p className="mr-2 font-extrabold">
+                  {currentUser?.email.split("@", 1)[0]}
+                </p>
+                님께 추천하는 전시 모음
               </h1>
             )}
           </>
+        ) : (
+          <h1 className="w-fit font-extrabold text-2xl px-4 my-4">
+            지금 떠오르는 전시는?
+          </h1>
         )}
 
         <Carousel>

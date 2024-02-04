@@ -180,11 +180,8 @@ export default function ArtworkModal({
             src={artworkInfo.DP_MAIN_IMG}
           />
           <div className="px-3">
-            <div className="flex justify-between">
-              <h2 className="w-3/4 text-xl font-bold my-3">
-                {artworkInfo.DP_NAME}
-              </h2>
-              <div className="h-fit my-auto w-1/4 justify-center flex space-x-3">
+            <div className="flex-col justify-between">
+              <div className="h-fit w-full justify-end  pt-3 my-auto flex space-x-3">
                 <button
                   onClick={() => handleCopyClipBoard(artworkInfo)}
                   className="h-8 w-auto my-auto"
@@ -208,6 +205,9 @@ export default function ArtworkModal({
                   </button>
                 )}
               </div>
+              <h2 className="w-11/12 text-xl font-bold my-3">
+                {artworkInfo.DP_NAME}
+              </h2>
             </div>
             {/* 상세정보 */}
             <div className="space-y-1">
