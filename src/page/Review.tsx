@@ -85,6 +85,7 @@ export default function Review() {
     setIsWriting(false);
   };
 
+  console.log(MyLikeReviewInfo);
   const [image, setImage] = useState<any>("");
   const imageRef = ref(storage, `images`);
 
@@ -100,11 +101,16 @@ export default function Review() {
     });
   }, []);
 
+  //My Liked-Review Checker
+  const isLiked = (reviewUid: string) => {
+    return MyLikeReviewInfo?.some((item) => item.Review_Uid === reviewUid);
+  };
+
   //Like Btn
   const onLikeCountHandler = async (
     id: string,
-    title: string,
-    like: number
+    like: number,
+    title: string
   ) => {
     setLikeCount(like + 1);
     setIsLike(true);
@@ -135,10 +141,6 @@ export default function Review() {
       console.error(`Error updating document: ${error}`);
     }
   };
-
-  // const MyReviewChecker = () =>{
-  //   MyReviewInfo
-  // }
 
   //Comment
   const [isCommentOpen, setIsCommentOpen] = useState(false);
@@ -206,9 +208,8 @@ export default function Review() {
                   </div>
                   <div className="w-5/6 mx-auto border-t-2 border-black flex space-x-4">
                     <div className="flex space-x-2">
-                      {isLike ? (
+                      {isLiked(list.Review_Uid) ? (
                         <ToDislike
-                          key={index}
                           onClick={() =>
                             onDislikeCountHandler(
                               list.Review_Uid,
@@ -218,37 +219,15 @@ export default function Review() {
                         />
                       ) : (
                         <ToLike
-                          key={index}
                           onClick={() =>
                             onLikeCountHandler(
                               list.Review_Uid,
-                              list.Title,
-                              list.Like_Cnt
+                              list.Like_Cnt,
+                              list.Title
                             )
                           }
                         />
                       )}
-
-                      {/* {ComparedReview &&
-                      (ComparedReview as LikedReviewInfo).Review_Uid ? (
-                        <ToDislike
-                          key={index}
-                          onClick={() =>
-                            onDislikeCountHandler(
-                              list.Review_Uid,
-                              list.Like_Cnt
-                            )
-                          }
-                        />
-                      ) : (
-                        <ToLike
-                          key={index}
-                          onClick={() =>
-                            onLikeCountHandler(list.Review_Uid, list.Like_Cnt)
-                          }
-                        />
-                      )} */}
-
                       <p>{list.Like_Cnt} 좋아요</p>
                     </div>
                     <div
