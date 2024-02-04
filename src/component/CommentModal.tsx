@@ -1,12 +1,22 @@
-import React, { ButtonHTMLAttributes, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import tw from "tailwind-styled-components";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import Swal from "sweetalert2";
-import { collection, doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../Firebase";
 import { v4 as uidv4 } from "uuid";
 import { ReviewInfo } from "./ReviewModal";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import { ReactComponent as WriteBtn } from "../assets/customSvg/write.svg";
+import { ReactComponent as DeleteBtn } from "../assets/customSvg/delete.svg";
+import { ReactComponent as CheckBtn } from "../assets/customSvg/check.svg";
+import { ReactComponent as CancelBtn } from "../assets/customSvg/cancel.svg";
 
 interface CommentProps {
   isOpen: boolean;
@@ -15,12 +25,12 @@ interface CommentProps {
   ReviewInfo: ReviewInfo | null;
 }
 
-interface UserComment {
-  commentId: string;
-  name: string;
-  comment: string;
-  date: string | Date;
-}
+// interface UserComment {
+//   commentId: string;
+//   name: string;
+//   comment: string;
+//   date: string | Date;
+// }
 
 export default function CommentModal({
   isOpen,
@@ -29,22 +39,21 @@ export default function CommentModal({
   ReviewInfo,
 }: CommentProps) {
   const [comment, setComment] = useState<string>("");
-  // const CommentRef = useRef<HTMLInputElement | null>(null);
-  // const CommentDateRef = useRef<HTMLInputElement | null>(null);
   const CommentId = uidv4();
   const LoginedUserInfoRef = collection(
     db,
     `userInfo/${currentUser?.uid}/UserInfo`
   );
   const LoginedUserInfo = useCollectionData(LoginedUserInfoRef)[0];
-
   const CommentRef = collection(
     db,
     `AllComment/${ReviewInfo?.Review_Uid}/Comments`
   );
   const CommentList = useCollectionData(CommentRef)[0];
-  // console.log(CommentList);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [EditingComment, setEditingComment] = useState<string>("");
 
+  //UserNickName Checker
   const userName = (LoginedUserInfo: any) => {
     if (LoginedUserInfo) {
       if (LoginedUserInfo[0].NickName === null || "") {
@@ -58,11 +67,11 @@ export default function CommentModal({
     }
   };
 
+  //Comment Writing KeyPress
   const onKeyPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (comment.trim() !== "") {
         onCommentUpdateHandler(comment);
-        // console.log("comment:", comment);
         Swal.fire({
           width: "300px",
           position: "center",
@@ -88,24 +97,30 @@ export default function CommentModal({
     }
   };
 
+  //My Comment Checker
+  const isMyComment = (UserUid: string, CommentId: string) => {
+    return CommentList?.some((i: any) => UserUid === currentUser.uid);
+  };
+
+  //Write Comment
   const onCommentUpdateHandler = async (content: string) => {
     setComment(content);
-    console.log("content:", content);
     const currentDate = new Date(); // Get the current date and time
     const formattedDate = currentDate.toISOString().split("T")[0]; // Convert to a string
-
-    console.log(formattedDate);
     if (content === undefined || "") {
       console.error("Comment or Comment Date is undefined");
       return;
     }
-    await setDoc(doc(db, `userInfo/${currentUser?.uid}/MyReviews`, CommentId), {
-      User_Uid: currentUser.uid,
-      User_Name: userName(LoginedUserInfo),
-      Comment: content,
-      Written_Date: formattedDate,
-      Comment_ID: CommentId,
-    });
+    await setDoc(
+      doc(db, `userInfo/${currentUser?.uid}/MyComments`, CommentId),
+      {
+        User_Uid: currentUser.uid,
+        User_Name: userName(LoginedUserInfo),
+        Comment: content,
+        Written_Date: formattedDate,
+        Comment_ID: CommentId,
+      }
+    );
     await setDoc(
       doc(db, `AllComment/${ReviewInfo?.Review_Uid}/Comments`, CommentId),
       {
@@ -116,7 +131,89 @@ export default function CommentModal({
         Comment_ID: CommentId,
       }
     );
-    console.log("comment:", content);
+  };
+
+  //Comment Editing KeyPress
+  const onEditKeyPressHandler = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    CommentID: string
+  ) => {
+    if (e.key === "Enter") {
+      onCommentEditHandler(CommentID);
+      setIsEditMode(true);
+    }
+    setEditingComment(e.currentTarget.value);
+  };
+
+  //Comment Edit-Mode
+  const EditModeHandler = () => {
+    setEditingComment("");
+    setIsEditMode(true);
+  };
+
+  //Edit Comment
+  const onCommentEditHandler = async (CommentID: string) => {
+    if (EditingComment.trim() === "") {
+      Swal.fire({
+        width: "300px",
+        position: "center",
+        icon: "warning",
+        showCancelButton: true,
+        title: "Please fill the blank",
+        text: "수정할 내용을 입력해주세요!",
+        confirmButtonColor: "#608D00",
+        cancelButtonColor: "#6F6F6F",
+        confirmButtonText: "확인",
+        timer: 3000,
+      });
+      return setIsEditMode(false);
+    } else {
+      try {
+        await updateDoc(
+          doc(db, `AllComment/${ReviewInfo?.Review_Uid}/Comments/${CommentID}`),
+          { Comment: EditingComment }
+        );
+        await updateDoc(
+          doc(db, `userInfo/${currentUser.uid}/MyComments/${CommentID}`),
+          { Comment: EditingComment }
+        );
+        console.log(`Comment edit successfully`);
+        return setIsEditMode(false);
+      } catch (error) {
+        console.error(`Error Edit-Comment document: ${error}`);
+      }
+    }
+  };
+
+  //Delete Comment
+  const onCommentDeleteHandler = async (CommentID: string) => {
+    Swal.fire({
+      width: "300px",
+      position: "center",
+      icon: "warning",
+      showCancelButton: true,
+      title: "Delete Comment",
+      text: "정말 삭제하시겠습니까?",
+      confirmButtonColor: "#d33", // confrim 버튼 색깔 지정
+      cancelButtonColor: "#6F6F6F", // cancel 버튼 색깔 지정
+      confirmButtonText: "삭제", // confirm 버튼 텍스트 지정
+      cancelButtonText: "취소", // cancel 버튼 텍스트 지정
+      timer: 10000,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteDoc(
+            doc(db, `AllComment/${ReviewInfo?.Review_Uid}/Comments`, CommentID)
+          );
+          await deleteDoc(
+            doc(db, `userInfo/${currentUser.uid}/MyComments`, CommentID)
+          );
+          console.log(`Delete successfully`);
+        } catch (error) {
+          console.error(`Error Delete document: ${error}`);
+        }
+      }
+    });
   };
 
   return (
@@ -134,7 +231,58 @@ export default function CommentModal({
                   <div className=" text-sm my-auto text-primary-DarkGray">
                     {list.User_Name}
                   </div>
-                  <div className="w-10/12 px-2">{list.Comment}</div>
+                  {isMyComment(list.User_Uid, list.Comment_ID) ? (
+                    <div className=" w-full flex justify-between">
+                      {isEditMode ? (
+                        <div className="flex justify-between w-full">
+                          <input
+                            className="w-3/4 outline-none border-b-2 mx-2"
+                            placeholder={list.Comment}
+                            type="text"
+                            onChange={(e) => setEditingComment(e.target.value)}
+                            value={EditingComment || ""}
+                            onKeyUp={(
+                              e: React.KeyboardEvent<HTMLInputElement>
+                            ) => onEditKeyPressHandler(e, list.Comment_ID)}
+                          />
+                          <div className="flex">
+                            <button
+                              onClick={() =>
+                                onCommentEditHandler(list.Comment_ID)
+                              }
+                            >
+                              <EditCheckBtn />
+                            </button>
+                            <button onClick={() => setIsEditMode(false)}>
+                              <EditCancelBtn />
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="w-11/12 px-2">{list.Comment}</div>
+                          <div className="flex">
+                            <button
+                              id="Comment-EditButton"
+                              onClick={EditModeHandler}
+                            >
+                              <CommentEditBtn />
+                            </button>
+                            <button
+                              id="Comment-DeleteButton"
+                              onClick={() =>
+                                onCommentDeleteHandler(list.Comment_ID)
+                              }
+                            >
+                              <CommentDeleteBtn />
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="w-10/12 px-2">{list.Comment}</div>
+                  )}
                 </CommentTitle>
                 <CommentDate>{list.Written_Date} 작성</CommentDate>
               </div>
@@ -176,25 +324,43 @@ const CloseBtn = tw.button`
 `;
 
 const CommentInput = tw.input`
-w-10/12 h-10 flex mx-auto
-outline-none indent-2
+  w-10/12 h-10 flex mx-auto
+  outline-none indent-2
 `;
 
 const CommentsBox = tw.div`
-w-11/12 mx-auto h-4/5 mt-4 overflow-scroll
-border-2 border-solid border-blue-400
+  w-11/12 mx-auto h-4/5 mt-4 overflow-scroll
+  border-2 border-solid border-blue-400
 `;
 
 const CommentTitle = tw.div`
-flex px-2 my-2
+  flex px-2 my-2
 `;
 
 const CommentDate = tw.p`
-text-xs text-right  text-primary-DarkGray
+  text-xs text-right  text-primary-DarkGray
 `;
 
 const CommentInputBox = tw.div`
-w-11/12 h-fit p-2 
-mx-auto flex justify-between
-bg-red-100 
+  w-11/12 h-fit p-2 
+  mx-auto flex justify-between
+  bg-red-100 
 `;
+
+const CommentEditBtn = tw(WriteBtn)`
+  h-fit w-5 fill-black hover:fill-primary-YellowGreen
+`;
+
+const CommentDeleteBtn = tw(DeleteBtn)`
+  h-fit w-5 ml-2 fill-black hover:fill-red-600 
+`;
+
+const EditCheckBtn = tw(CheckBtn)`
+  h-fit w-6 ml-2 fill-black hover:fill-primary-YellowGreen
+`;
+
+const EditCancelBtn = tw(CancelBtn)`
+  h-fit w-6 ml-2 fill-black hover:fill-red-600 
+`;
+
+// hover:scale-[120%]
