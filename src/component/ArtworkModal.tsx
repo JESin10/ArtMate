@@ -7,6 +7,7 @@ import { ReactComponent as SaveIcon } from "../assets/customSvg/bookmark.svg";
 import { db } from "../Firebase";
 import { doc, setDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 interface ModalProps {
   isOpen: boolean;
@@ -34,6 +35,7 @@ export default function ArtworkModal({
   currentUser,
   CloudInfo,
 }: ModalProps) {
+  const navigate = useNavigate();
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const docRef = doc(listRef, artworkInfo?.DP_NAME);
@@ -63,40 +65,65 @@ export default function ArtworkModal({
 
   if (!isOpen) return null;
 
+  //Loggin-User Check
+
+  const UserCheckHandler = () => {
+    Swal.fire({
+      width: "300px",
+      position: "center",
+      icon: "warning",
+      showCancelButton: true,
+      title: "로그인 후 이용가능합니다.",
+      html: "로그인을 누르실 경우 로그인페이지로 이동합니다",
+      confirmButtonColor: "#608D00", // confrim 버튼 색깔 지정
+      cancelButtonColor: "#6F6F6F", // cancel 버튼 색깔 지정
+      confirmButtonText: "로그인", // confirm 버튼 텍스트 지정
+      cancelButtonText: "취소", // cancel 버튼 텍스트 지정
+      timer: 30000,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        navigate("/login");
+      }
+    });
+  };
+
   const ArtWorkSaving = async () => {
     const DocSnap = await getDoc(docRef);
+    if (!currentUser) {
+      UserCheckHandler();
+    } else {
+      if (!DocSnap.data()?.isSaved && artworkInfo?.DP_NAME) {
+        const ArtworkRef = await setDoc(
+          doc(
+            db,
+            `userInfo/${currentUser?.uid}/ArtworkInfo`,
+            artworkInfo?.DP_NAME
+          ),
+          {
+            Uid: currentUser.uid,
+            // Artwork_No : number,
+            isSaved: true,
+            DP_NAME: artworkInfo?.DP_NAME,
+            DP_EX_NO: artworkInfo?.DP_EX_NO,
+            DP_MAIN_IMG: artworkInfo?.DP_MAIN_IMG,
+            DP_END: artworkInfo?.DP_END,
+            DP_ART_PART: artworkInfo?.DP_ART_PART,
+          }
+        );
+        setIsSaved(true);
+        console.log(`Document saved successfully`);
+        return ArtworkRef;
+      } else if ((targetArtwork as ArtWorkSaveInfo).isSaved) {
+        const docRef = doc(listRef, artworkInfo?.DP_NAME);
 
-    if (!DocSnap.data()?.isSaved && artworkInfo?.DP_NAME) {
-      const ArtworkRef = await setDoc(
-        doc(
-          db,
-          `userInfo/${currentUser?.uid}/ArtworkInfo`,
-          artworkInfo?.DP_NAME
-        ),
-        {
-          Uid: currentUser.uid,
-          // Artwork_No : number,
-          isSaved: true,
-          DP_NAME: artworkInfo?.DP_NAME,
-          DP_EX_NO: artworkInfo?.DP_EX_NO,
-          DP_MAIN_IMG: artworkInfo?.DP_MAIN_IMG,
-          DP_END: artworkInfo?.DP_END,
-          DP_ART_PART: artworkInfo?.DP_ART_PART,
-        }
-      );
-      setIsSaved(true);
-      console.log(`Document saved successfully`);
-      return ArtworkRef;
-    } else if ((targetArtwork as ArtWorkSaveInfo).isSaved) {
-      const docRef = doc(listRef, artworkInfo?.DP_NAME);
-
-      if (artworkInfo?.DP_NAME) {
-        try {
-          await deleteDoc(docRef);
-          setIsSaved(false);
-          console.log(`Document deleted successfully`);
-        } catch (error) {
-          console.error(`Error deleting document: ${error}`);
+        if (artworkInfo?.DP_NAME) {
+          try {
+            await deleteDoc(docRef);
+            setIsSaved(false);
+            console.log(`Document deleted successfully`);
+          } catch (error) {
+            console.error(`Error deleting document: ${error}`);
+          }
         }
       }
     }
