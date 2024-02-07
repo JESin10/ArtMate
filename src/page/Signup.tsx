@@ -1,10 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { loadImg } from "../assets/images";
 import { useAuth } from "../page/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
 import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
 import { ReactComponent as DescLogo } from "../assets/customSvg/main_logo_desc.svg";
+import Swal from "sweetalert2";
+import { current } from "@reduxjs/toolkit";
+import {
+  errorAlert_verA,
+  errorAlert_verB,
+  errorAlert_verC,
+} from "../modules/AlertModule";
 // import { UserInfo } from "./Home";
 // import { v4 as uidv } from "uuid";
 // import { doc, setDoc } from "firebase/firestore";
@@ -29,8 +36,6 @@ export default function Signup() {
     setLoading(false);
   };
 
-  // console.log(nicknameRef);
-
   // basic singup form
   const BasicLoginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,19 +53,29 @@ export default function Signup() {
           nicknameRef.current?.value
         );
       }
-      // setUserInfo({
-      //   userId: LoginUserUid,
-      //   uid: currentUser.uid,
-      //   name: currentUser.displayName,
-      //   profileURL: currentUser.photoURL,
-      //   email: currentUser.email,
-      // access_token?: string;
-      // });
-      window.alert("Welcome!");
-      navigate("/");
-    } catch (err) {
+      // window.alert("Welcome!");
+      Swal.fire({
+        width: "300px",
+        icon: "success",
+        position: "center",
+        showCancelButton: false,
+        text: "Welcome to artmate!",
+        // html : "enjoy our page",
+        confirmButtonColor: "#608D00",
+        confirmButtonText: "확인",
+        timer: 30000,
+      });
+      navigate("/my-page");
+    } catch (err: any) {
       setError("Failed to create an account");
-      return error;
+      switch (err.code) {
+        case "auth/email-already-in-use":
+          return errorAlert_verB();
+        case "auth/network-request-failed" || "auth/internal-error":
+          return errorAlert_verC();
+        default:
+          return errorAlert_verA();
+      }
     } finally {
       setLoading(false);
       return loading;

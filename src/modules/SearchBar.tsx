@@ -10,6 +10,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import SearchResultPage from "../page/SearchResultPage";
+import Swal from "sweetalert2";
 
 interface SearchMode {
   isSearchOn: boolean;
@@ -39,7 +40,17 @@ export default function SearchBar(): JSX.Element {
 
   const onSearchHandler = async () => {
     if (searchInput.trim() === "") {
-      window.alert("검색어를 입력하세요");
+      Swal.fire({
+        width: "300px",
+        icon: "warning",
+        position: "center",
+        showCancelButton: false,
+        title: "검색어를 입력하세요",
+        confirmButtonColor: "#608D00", // confrim 버튼 색깔 지정
+        cancelButtonColor: "#6F6F6F", // cancel 버튼 색깔 지정
+        confirmButtonText: "확인", // confirm 버튼 텍스트 지정
+        timer: 30000,
+      });
       return;
     }
     try {

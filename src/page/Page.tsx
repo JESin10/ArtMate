@@ -37,7 +37,7 @@ function Page() {
           <Suspense fallback={<Loading />}>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/search" element={<SearchResult />} />
+              <Route path="/search/:keyword" element={<SearchResult />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route
                 path="/map"

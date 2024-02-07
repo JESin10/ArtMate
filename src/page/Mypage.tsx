@@ -26,7 +26,7 @@ export default function Mypage() {
   // const UserUid = uidv();
   const [userInfo, setUserInfo] = useState<UserInfo>();
   const [nickname, setNickName] = useState<string>("");
-  const [ProfileImage, setProfileImage] = useState<string>("");
+  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [IsEditMode, setIsEditMode] = useState<boolean>(false);
 
   // const UserlistRef = collection(db, `userInfo/${currentUser?.uid}/UserInfo`);
@@ -46,16 +46,20 @@ export default function Mypage() {
   // const MyArtworkInfo = useCollectionData(SavinglistRef)[0];
   const LoginUserUid = uidv();
   const BasicImage = ref(storage, "Basic/");
-
+  const [ProfileImageUpload, setProfileImageUpload] = useState<File | null>(
+    null
+  );
+  const [profileImgUrl, setProfileImgURL] = useState<string[]>([]);
+  const ProfileImage = ref(storage, "UserProfile/");
   const CommentRef = collection(db, `userInfo/${currentUser?.uid}/MyReviews`);
   const MyCommentList = useCollectionData(CommentRef)[0];
   console.log(MyCommentList);
 
-  const Test = async () => {
-    const BasicImageURL = await getDownloadURL(BasicImage);
-    console.log(BasicImageURL);
-    setProfileImage(BasicImageURL);
-  };
+  // const Test = async () => {
+  //   const BasicImageURL = await getDownloadURL(BasicImage);
+  //   console.log(BasicImageURL);
+  //   setProfileImage(BasicImageURL);
+  // };
   // console.log(NowUserInfo);
 
   useEffect(() => {
@@ -74,6 +78,9 @@ export default function Mypage() {
     }
   }, []);
 
+  console.log(userInfo);
+
+  //Log-out
   const googleLogoutHandler = async () => {
     try {
       await logout();
@@ -118,29 +125,29 @@ export default function Mypage() {
 
   const onUserInfoEditHandler = async () => {
     setIsEditMode(true);
-    // const isConfirmed = window.confirm("tnwjd");
-    // const userRef = doc(
-    //   db,
-    //   "userInfo/",
-    //   `${currentUser.uid}/UserInfo/${currentUser.email}/`
-    // );
-    // if (currentUser) {
-    //   try {
-    //     //Cloud userInfo 삭제구문
-    //     await updateDoc(userRef, {
-    //       // NickName : UpdatedNickName,
-    //       // profileURL : UpdatedImage
-    //     })
-    //       .then(() => {
-    //         console.log(`Update ${currentUser.email} 's Info successfully!`);
-    //       })
-    //       .catch((err) => console.error(err));
-    //     //Authentication User 삭제구문
-    //   } catch (error) {
-    //     console.error(`Error! : ${error}`);
-    //   }
-    // } else return;
   };
+
+  console.log(currentUser);
+
+  const onEditCompleteHandler = async () => {
+    setIsEditMode(false);
+    if (currentUser.displayName !== nickname) {
+      await currentUser.updateProfile({ displayName: nickname });
+    }
+    if (currentUser.photoURL !== profileImage) {
+      if (ProfileImageUpload !== null) {
+        const imageRef = ref(
+          storage,
+          `UserProfile/${currentUser.uid}/${ProfileImageUpload.name}`
+        );
+        await uploadBytes(imageRef, ProfileImageUpload);
+        const imageURL = await getDownloadURL(imageRef);
+        setProfileImgURL([imageURL]);
+      }
+      await currentUser.updateProfile({ photoURL: profileImgUrl });
+    }
+  };
+
   // console.log(currentUser);
 
   return (
@@ -182,8 +189,13 @@ export default function Mypage() {
                       id="Profile-Image"
                       type="file"
                       placeholder={currentUser.photoURL}
-                      value={ProfileImage}
-                      onChange={(e) => setProfileImage(e.target.value)}
+                      // value={profileImage}
+                      // onChange={(e) => setProfileImage(e.target.value)}
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          setProfileImage(e.target.files[0]);
+                        }
+                      }}
                     />
                   </BiSolidImageAdd>
                 </div>
@@ -192,7 +204,7 @@ export default function Mypage() {
                 <div className=" font-extrabold flex space-x-3 text-center items-center justify-center my-auto">
                   <p className="text-xl h-fit overflow-hidden text-center items-center">
                     <input
-                      className="text-black w-32 indent-1 font-normal  outline-none rounded-sm"
+                      className="text-black w-32 indent-1 font-normal text-base outline-none rounded-sm"
                       id="NickNameInput"
                       type="text"
                       placeholder={currentUser.displayName}
@@ -203,7 +215,7 @@ export default function Mypage() {
                   <div className="flex space-x-2 justify-center w-6">
                     <button
                       className="cursor-pointer "
-                      onClick={() => setIsEditMode(false)}
+                      onClick={onEditCompleteHandler}
                     >
                       <CheckBtn size="100%" />
                     </button>

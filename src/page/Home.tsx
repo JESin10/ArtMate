@@ -55,8 +55,25 @@ export default function Home() {
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const MyArtworkInfo = useCollectionData(listRef)[0];
 
-  console.log(baseArray);
+  // console.log(baseArray);
   // console.log(selectedArtwork);
+
+  useEffect(() => {
+    // console.log(currentUser.uid);
+    UserSaving();
+    fetchData();
+    if (LoginedUserInfo && currentUser?.email !== LoginedUserInfo[0].Email) {
+      setUserInfo({
+        userId: LoginUserUid,
+        uid: currentUser.Uid,
+        name: currentUser.displayName || "",
+        profileURL: currentUser.photoURL || "",
+        email: currentUser.email,
+      });
+    }
+  }, []);
+
+  console.log(userInfo);
 
   const fetchData = async () => {
     const response = await MainPage(1, 10);
@@ -65,17 +82,22 @@ export default function Home() {
     return response;
   };
 
+  console.log(currentUser);
+
   const UserSaving = async () => {
     try {
       if (currentUser && userInfo) {
+        if (currentUser.displayName !== userInfo.name) {
+          await currentUser.updateProfile({ displayName: userInfo.name });
+        }
         const docRef = await setDoc(
           doc(db, `userInfo/${currentUser?.uid}/UserInfo`, currentUser?.email),
           {
             Uid: currentUser?.uid,
             userId: LoginUserUid,
-            Email: userInfo.email,
-            NickName: userInfo.name,
-            ProfileURL: userInfo.profileURL,
+            Email: currentUser.email,
+            NickName: currentUser.displayName,
+            ProfileURL: currentUser.photoURL,
             FollowerCnt: 0,
             FollowingCnt: 0,
             ReviewList: [],
@@ -94,21 +116,6 @@ export default function Home() {
   // console.log("currentUser:", currentUser);
   // console.log("LoginedUserInfo:", LoginedUserInfo);
 
-  useEffect(() => {
-    // console.log(currentUser.uid);
-    UserSaving();
-    fetchData();
-    if (LoginedUserInfo && currentUser?.email !== LoginedUserInfo[0].Email) {
-      setUserInfo({
-        userId: LoginUserUid,
-        uid: currentUser.uid,
-        name: currentUser.displayName,
-        profileURL: currentUser.photoURL,
-        email: currentUser.email,
-      });
-    }
-  }, []);
-
   //Modal
   const openModal = (artwork: ArtworkInfo) => {
     setSelectedArtwork(artwork);
@@ -117,6 +124,8 @@ export default function Home() {
   const closeModal = () => {
     setSelectedArtwork(null);
   };
+
+  console.log(LoginedUserInfo);
 
   // function parseAndStyleInfo(info: string) {
   //   const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {

@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
 import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
 import { ReactComponent as DescLogo } from "../assets/customSvg/main_logo_desc.svg";
-// import { UserInfo } from "./Home";
-// import Signup from "./Signup";
-// import { v4 as uidv } from "uuid";
-// import { doc, setDoc } from "firebase/firestore";
-// import { db } from "../Firebase";
-// import { UserInfo } from "./Home";
+import Swal from "sweetalert2";
+import {
+  errorAlert_verA,
+  errorAlert_verB,
+  errorAlert_verC,
+} from "../modules/AlertModule";
 
 export default function Login() {
   const { login, signupWithGoogle } = useAuth();
@@ -25,25 +25,42 @@ export default function Login() {
   // const [error, setError] = useState<string>("");
 
   const SignupWithGoogleHandler = () => {
-    setLoading(true);
+    // setLoading(true);
     signupWithGoogle();
     window.location.replace("/");
-    setLoading(false);
+    // setLoading(false);
   };
 
   // basic login form
   const BasicLoginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      setLoading(!loading);
       if (emailRef.current && passwordRef.current) {
         await login(emailRef.current.value, passwordRef.current.value);
+      } else {
+        Swal.fire({
+          width: "300px",
+          icon: "warning",
+          position: "center",
+          showCancelButton: false,
+          title: "로그인 정보를 입력하세요",
+          confirmButtonColor: "#608D00", // confrim 버튼 색깔 지정
+          cancelButtonColor: "#6F6F6F", // cancel 버튼 색깔 지정
+          confirmButtonText: "확인", // confirm 버튼 텍스트 지정
+          timer: 30000,
+        });
       }
       window.location.replace("/");
-    } catch (err) {
-      console.error(err);
-      // window.alert("Fail Log-in User");
-      window.alert("Login Error");
+    } catch (err: any) {
+      switch (err.code) {
+        case "auth/email-already-in-use":
+          return errorAlert_verB();
+        case "auth/network-request-failed" || "auth/internal-error":
+          return errorAlert_verC();
+        default:
+          return errorAlert_verA();
+      }
     }
     setLoading(false);
   };
