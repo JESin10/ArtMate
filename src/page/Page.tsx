@@ -8,6 +8,8 @@ import PrivateRoute from "./context/PrivateRoute";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import GalleryModal from "../component/GalleryModal";
 import { GalleryInfo } from "./Gallery";
+import SearchResultPage from "./SearchResultPage";
+import SearchResult from "./SearchResult";
 // import { collection } from "firebase/firestore";
 // import { useCollectionData } from "react-firebase-hooks/firestore";
 // import { db } from "../Firebase";
@@ -25,6 +27,7 @@ function Page() {
 
   const KaKaoMap = lazy(() => import("../modules/KaKaoMap"));
   const [mapMode, setMapMode] = useState(false);
+  const [searchMode, setSearchMode] = useState<boolean>(false);
 
   return (
     <BasicDiv>
@@ -34,6 +37,7 @@ function Page() {
           <Suspense fallback={<Loading />}>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/search" element={<SearchResult />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route
                 path="/map"

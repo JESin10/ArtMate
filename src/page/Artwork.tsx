@@ -93,8 +93,8 @@ export default function Artwork() {
           <div className="w-11/12 mx-auto ">
             <div className="flex justify-between">
               <h1 className="text-3xl font-extrabold my-2 ml-3">Artwork</h1>
-              <div className="flex mx-2 space-x-2">
-                <div className="h-fit w-fit flex my-auto">
+              <div className="flex mx-2 space-x-2 ">
+                <div className="h-fit w-fit flex my-auto ">
                   <button className="cursor-pointer" onClick={IsFilterMode}>
                     <img src={"./icons/Outline/filter.svg"} alt="filter" />
                   </button>
@@ -119,15 +119,15 @@ export default function Artwork() {
                 </button>
               </div>
             </div>
-            <div className="flex flex-wrap justify-center">
+            <div className="flex flex-wrap justify-start">
               {artworkList.length > 0 &&
                 artworkList.map((list: ArtworkInfo, index: number) => (
                   <div
                     key={index}
-                    className="flex flex-col w-fit h-full justify-center mx-auto"
+                    className="rounded-lg hover:bg-primary-YellowGreen/10 flex flex-col w-fit pb-2 mb-2 h-full justify-center mx-auto"
                   >
                     <ArtworkContainer onClick={() => openModal(list)}>
-                      <div className="w-36 h-32 my-3">
+                      <div className="w-36 h-32 mb-3">
                         <img
                           className="w-full h-full object-cover rounded-xl justify-center shadow-Ver1"
                           alt="gallery"
@@ -135,7 +135,7 @@ export default function Artwork() {
                         />
                       </div>
                       <div className="w-36 h-fit flex flex-col my-auto justify-center">
-                        <div className="h-[22px] my-2 font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
+                        <div className="h-[22px] mb-2 font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
                           {list.DP_NAME}
                         </div>
                         {list.DP_ARTIST === "" ? (
@@ -179,7 +179,6 @@ const ArtworkContainer = tw.div`
   flex h-fit w-fit justify-between
   cursor-pointer rounded-lg
   space-y-1 flex-col
-  hover:bg-primary-YellowGreen/10
 `;
 
 const ArtworkDesc = tw.div`
