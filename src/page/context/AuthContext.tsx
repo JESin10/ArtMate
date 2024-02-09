@@ -53,11 +53,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // const [userInfo, setUserInfo] = useState<UserInfo>();
 
+  console.log(currentUser);
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
       setLoading(false);
-
       // if (currentUser) {
       //   // setUserInfo(currentUser);
       //   localStorage.setItem("user_name", currentUser.displayName);

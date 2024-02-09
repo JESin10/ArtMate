@@ -76,10 +76,10 @@ export default function Home() {
   console.log(userInfo);
 
   const fetchData = async () => {
-    const response = await MainPage(1, 10);
-    setBaseArray(response.ListExhibitionOfSeoulMOAInfo.row);
-    setLatestArray([...response.ListExhibitionOfSeoulMOAInfo.row].reverse());
-    return response;
+    // const response = await MainPage(1, 10);
+    // setBaseArray(response.ListExhibitionOfSeoulMOAInfo.row);
+    // setLatestArray([...response.ListExhibitionOfSeoulMOAInfo.row].reverse());
+    // return response;
   };
 
   console.log(currentUser);

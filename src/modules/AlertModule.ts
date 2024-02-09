@@ -44,5 +44,17 @@ export const errorAlert_verC = () => {
   });
 };
 
+export const errorAlert_NetworkErr = () => {
+  Swal.fire({
+    width: "300px",
+    icon: "warning",
+    position: "center",
+    showCancelButton: false,
+    showConfirmButton: false,
+    title: "NETWORK ERROR!",
+    html: "네트워크 에러입니다. 다시 시도해주세요!",
+    timer: 5000,
+  });
+};
 //   return;
 // }

@@ -53,14 +53,7 @@ export default function Mypage() {
   const ProfileImage = ref(storage, "UserProfile/");
   const CommentRef = collection(db, `userInfo/${currentUser?.uid}/MyReviews`);
   const MyCommentList = useCollectionData(CommentRef)[0];
-  console.log(MyCommentList);
-
-  // const Test = async () => {
-  //   const BasicImageURL = await getDownloadURL(BasicImage);
-  //   console.log(BasicImageURL);
-  //   setProfileImage(BasicImageURL);
-  // };
-  // console.log(NowUserInfo);
+  // console.log(MyCommentList);
 
   useEffect(() => {
     if (!currentUser) {
@@ -77,8 +70,6 @@ export default function Mypage() {
       // UserSaving();
     }
   }, []);
-
-  console.log(userInfo);
 
   //Log-out
   const googleLogoutHandler = async () => {

@@ -32,10 +32,10 @@ export default function SearchBar(): JSX.Element {
 
   const onKeyPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setSearchMode(true);
+      setSearchMode(!searchMode);
+      setSearchInput(searchInput);
       onSearchHandler();
     }
-    setSearchInput(searchInput);
   };
 
   const onSearchHandler = async () => {
@@ -52,36 +52,35 @@ export default function SearchBar(): JSX.Element {
         timer: 30000,
       });
       return;
-    }
-    try {
-      const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo.row;
-      // 검색어가 포함된 결과만 필터링
-      const Results = response.filter((item: any) => {
-        // DP_ARTIST 또는 DP_NAME 중에 검색어가 포함되어 있는지 확인
+    } else {
+      try {
+        const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo
+          .row;
+        // 검색어가 포함된 결과만 필터링
+        const Results = response.filter((item: any) => {
+          // DP_ARTIST 또는 DP_NAME 중에 검색어가 포함되어 있는지 확인
+          return (
+            item.DP_ARTIST?.toLowerCase().includes(searchInput.toLowerCase()) ||
+            item.DP_NAME?.toLowerCase().includes(searchInput.toLowerCase())
+          );
+        });
+        setSearchResults(Results);
         return (
-          item.DP_ARTIST?.toLowerCase().includes(searchInput.toLowerCase()) ||
-          item.DP_NAME?.toLowerCase().includes(searchInput.toLowerCase())
-        );
-      });
-      setSearchResults(Results);
-      return (
-        <>
           <SearchResult
             searchMode={searchMode}
             keyword={searchInput}
             searchResults={searchResults}
           />
-        </>
-      );
-    } catch (err) {
-      console.error(err);
-      navigate("/error");
+        );
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
   return (
     <>
-      <div className="py-4 flex-col mx-auto justify-center">
+      <div className="py-4 flex-col mx-auto justify-center ">
         <div className="flex flex-col">
           {isInputVisible ? (
             <>
