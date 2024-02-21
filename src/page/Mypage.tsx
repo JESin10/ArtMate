@@ -141,7 +141,7 @@ export default function Mypage() {
     console.log(typeof profileImgUrl, profileImgUrl);
     return profileImgUrl;
   };
-  console.log(currentUser);
+  // console.log(currentUser);
 
   const onEditCompleteHandler = async () => {
     setIsEditMode(false);
@@ -171,6 +171,7 @@ export default function Mypage() {
         { ProfileURL: profileImgUrl }
       );
     }
+    navigate("/");
   };
 
   // console.log(profileImage);

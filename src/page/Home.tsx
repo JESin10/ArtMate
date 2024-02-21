@@ -62,18 +62,18 @@ export default function Home() {
     // console.log(currentUser.uid);
     UserSaving();
     fetchData();
-    if (LoginedUserInfo && currentUser?.email !== LoginedUserInfo[0]?.Email) {
-      setUserInfo({
-        userId: LoginUserUid,
-        uid: currentUser.Uid,
-        name: currentUser.displayName || "",
-        profileURL: currentUser.photoURL || "",
-        email: currentUser.email,
-      });
-    } else {
-      return;
-    }
-  }, []);
+    // if (LoginedUserInfo && currentUser?.email !== LoginedUserInfo[0]?.Email) {
+    setUserInfo({
+      userId: LoginUserUid,
+      uid: currentUser.uid,
+      name: currentUser.displayName || "",
+      profileURL: currentUser.photoURL || "",
+      email: currentUser.email,
+    });
+    // } else {
+    //   return;
+    // }
+  }, [userInfo?.name || userInfo?.profileURL]);
 
   console.log(currentUser);
   console.log(userInfo);
@@ -99,7 +99,7 @@ export default function Home() {
             Uid: currentUser?.uid,
             userId: LoginUserUid,
             Email: currentUser.email,
-            NickName: currentUser.displayNam || "",
+            NickName: currentUser.displayName || "",
             ProfileURL: currentUser.photoURL,
             FollowerCnt: 0,
             FollowingCnt: 0,
