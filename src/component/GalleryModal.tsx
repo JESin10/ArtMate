@@ -5,6 +5,7 @@ import { GalleryInfo } from "../page/Gallery";
 import tw from "tailwind-styled-components";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
+import KaKaoMap from "../modules/KaKaoMap";
 
 interface ModalProps {
   isOpen: boolean;

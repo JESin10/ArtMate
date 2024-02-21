@@ -4,103 +4,133 @@ import { ReactComponent as Searching } from "../assets/customSvg/search.svg";
 import { SearchingInfo } from "../api/Gallery_OpenApi";
 import tw from "tailwind-styled-components";
 import SearchResult from "../page/SearchResult";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, BrowserRouter as Router } from "react-router-dom";
+
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import SearchResultPage from "../page/SearchResultPage";
+import Swal from "sweetalert2";
+
+interface SearchMode {
+  isSearchOn: boolean;
+}
 
 export default function SearchBar(): JSX.Element {
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchMode, setSearchMode] = useState<boolean>(false);
-
   const [searchResults, setSearchResults] = useState();
+  const navigate = useNavigate();
 
   const handleSearchClick = () => {
     setInputVisible((prevVisible) => !prevVisible);
+    if (isInputVisible === false) {
+      setSearchInput("");
+    }
   };
 
   const onKeyPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+      setSearchMode(!searchMode);
+      setSearchInput(searchInput);
       onSearchHandler();
-      setSearchMode(true);
     }
-    setSearchInput(searchInput);
   };
 
   const onSearchHandler = async () => {
     if (searchInput.trim() === "") {
-      window.alert("검색어를 입력하세요");
-      return;
-    }
-    try {
-      const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo.row;
-      // 검색어가 포함된 결과만 필터링
-      const Results = response.filter((item: any) => {
-        // DP_ARTIST 또는 DP_NAME 중에 검색어가 포함되어 있는지 확인
-        return (
-          item.DP_ARTIST?.toLowerCase().includes(searchInput.toLowerCase()) ||
-          item.DP_NAME?.toLowerCase().includes(searchInput.toLowerCase())
-        );
+      Swal.fire({
+        width: "300px",
+        icon: "warning",
+        position: "center",
+        showCancelButton: false,
+        title: "검색어를 입력하세요",
+        confirmButtonColor: "#608D00", // confrim 버튼 색깔 지정
+        cancelButtonColor: "#6F6F6F", // cancel 버튼 색깔 지정
+        confirmButtonText: "확인", // confirm 버튼 텍스트 지정
+        timer: 30000,
       });
-
-      console.log(Results, searchMode);
-      // <SearchResult searchMode={searchMode} keyword={searchInput} />
-
-      return setSearchResults(Results);
-      // <Route
-      //   path="/search/:searchInput"
-      //   element={<SearchResult searchMode={searchMode} keyword={searchInput} />}
-      // />;
-    } catch (err) {
-      console.error(err);
+      return;
+    } else {
+      try {
+        const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo
+          .row;
+        // 검색어가 포함된 결과만 필터링
+        const Results = response.filter((item: any) => {
+          // DP_ARTIST 또는 DP_NAME 중에 검색어가 포함되어 있는지 확인
+          return (
+            item.DP_ARTIST?.toLowerCase().includes(searchInput.toLowerCase()) ||
+            item.DP_NAME?.toLowerCase().includes(searchInput.toLowerCase())
+          );
+        });
+        setSearchResults(Results);
+        return (
+          <SearchResult
+            searchMode={searchMode}
+            keyword={searchInput}
+            searchResults={searchResults}
+          />
+        );
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
   return (
-    <div className="py-4 flex-col mx-auto justify-center">
-      <div className="flex flex-col">
-        {isInputVisible ? (
-          <>
+    <>
+      <div className="py-4 flex-col mx-auto justify-center ">
+        <div className="flex flex-col">
+          {isInputVisible ? (
+            <>
+              <MainBarContainer>
+                <div className="ml-6 flex w-60">
+                  <MainTextLogo />
+                </div>
+                <button
+                  onClick={handleSearchClick}
+                  className="bg-transparent flex justify-end"
+                >
+                  <SearchingIcon />
+                </button>
+              </MainBarContainer>
+              <SearchContainer>
+                <SearchInput
+                  type="text"
+                  value={searchInput || ""}
+                  placeholder="전시, 작품, 작가를 검색해보세요."
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  onKeyUp={onKeyPressHandler}
+                />
+                <button onClick={handleSearchClick}>
+                  <CloseIcon />
+                </button>
+              </SearchContainer>
+              {/* {searchMode && (
+                <SearchResult
+                  searchMode={searchMode}
+                  keyword={searchInput}
+                  searchResults={searchResults}
+                />
+              )} */}
+            </>
+          ) : (
             <MainBarContainer>
-              <MainTextLogo onClick={() => window.location.reload()} />
-            </MainBarContainer>
-            <SearchContainer>
-              <SearchInput
-                type="text"
-                value={searchInput || ""}
-                placeholder="전시, 작품, 작가를 검색해보세요."
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyUp={onKeyPressHandler}
-              />
+              <div className="ml-6 flex w-60">
+                <MainTextLogo />
+              </div>
               <button
                 onClick={handleSearchClick}
-                // onKeyPress={onKeyPressHandler}
+                className="bg-transparent flex justify-end"
               >
-                <SearchingIcon className="mr-2" />
+                <SearchingIcon />
               </button>
-            </SearchContainer>
-          </>
-        ) : (
-          <MainBarContainer>
-            <div className="ml-6 flex w-60">
-              <MainTextLogo />
-            </div>
-            <button
-              onClick={handleSearchClick}
-              className="bg-transparent flex justify-end"
-            >
-              <SearchingIcon />
-            </button>
-          </MainBarContainer>
-        )}
+            </MainBarContainer>
+          )}
+        </div>
       </div>
-
-      {searchMode && (
-        <SearchResult
-          searchMode={searchMode}
-          keyword={searchInput}
-          searchResults={searchResults}
-        />
-      )}
-    </div>
+    </>
   );
 }
 
@@ -130,4 +160,25 @@ const SearchContainer = tw.div`
 
 const SearchingIcon = tw(Searching)`
   w-6 h-6 fill-primary-YellowGreen
+  hover:fill
 `;
+
+const CloseIcon = tw(IoIosCloseCircleOutline)`
+  w-5 h-5 fill-primary-DarkGray
+  hover:fill-red-400 mx-2
+`;
+
+// {searchMode && (
+//  <Link to="/search">
+//   <SearchResultPage
+//     searchMode={searchMode}
+//     keyword={searchInput}
+//     searchResults={searchResults}
+//   />
+//    <SearchResult
+//      searchMode={searchMode}
+//      keyword={searchInput}
+//      searchResults={searchResults}
+//    />
+//    </Link>
+// )}

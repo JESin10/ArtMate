@@ -7,11 +7,14 @@ import { useAuth } from "./context/AuthContext";
 import { collection, deleteDoc, doc } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
+import { useNavigate } from "react-router-dom";
+import { FaCircleRight } from "react-icons/fa6";
 
 export default function Saving() {
   const { currentUser } = useAuth();
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const MyArtworkInfo = useCollectionData(listRef)[0];
+  const navigate = useNavigate();
 
   const deleteSavingInfo = async () => {
     try {
@@ -44,7 +47,7 @@ export default function Saving() {
                 </button>
               </div>
             </div>
-            {MyArtworkInfo &&
+            {MyArtworkInfo && MyArtworkInfo.length > 0 ? (
               MyArtworkInfo.map((list: any, index: number) => (
                 <div
                   key={index}
@@ -89,7 +92,18 @@ export default function Saving() {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))
+            ) : (
+              <div className=" mx-auto w-3/4 flex flex-col text-center mt-32 font-semibold">
+                <p className="text-sm text-primary-DarkGray">
+                  관심있는 작품을 저장해보세요!
+                </p>
+                <GotoReviewBtn onClick={() => navigate("/artwork")}>
+                  <p>현재 전시중인 작품 둘러보기</p>
+                  <GotoIcon />
+                </GotoReviewBtn>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -110,4 +124,17 @@ const Bookmark = tw(BookmarkIcon)`
 const Tag = tw.p`
   text-[10px] text-primary-Gray font-semibold
   w-fit h-fit my-3 mr-1
+`;
+
+const GotoReviewBtn = tw.button`
+p-2 border-none text-base
+font-extrabold mt-4 
+flex justify-center items-center
+hover:text-primary-YellowGreen
+hover:underline
+space-x-1
+`;
+
+const GotoIcon = tw(FaCircleRight)`
+h-5 w-5 py-[2px] 
 `;

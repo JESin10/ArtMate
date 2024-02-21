@@ -1,10 +1,18 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { loadImg } from "../assets/images";
 import { useAuth } from "../page/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
 import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
 import { ReactComponent as DescLogo } from "../assets/customSvg/main_logo_desc.svg";
+import Swal from "sweetalert2";
+import { current } from "@reduxjs/toolkit";
+import {
+  errorAlert_verA,
+  errorAlert_verB,
+  errorAlert_verC,
+} from "../modules/AlertModule";
+import "../page/Signup_Css.css";
 // import { UserInfo } from "./Home";
 // import { v4 as uidv } from "uuid";
 // import { doc, setDoc } from "firebase/firestore";
@@ -29,8 +37,6 @@ export default function Signup() {
     setLoading(false);
   };
 
-  // console.log(nicknameRef);
-
   // basic singup form
   const BasicLoginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,28 +45,38 @@ export default function Signup() {
       setLoading(true);
       if (
         emailRef.current &&
-        passwordRef.current &&
-        nicknameRef.current?.value
+        passwordRef.current
+        // nicknameRef.current?.value
       ) {
         await signup(
           emailRef.current.value,
-          passwordRef.current.value,
-          nicknameRef.current?.value
+          passwordRef.current.value
+          // nicknameRef.current?.value
         );
       }
-      // setUserInfo({
-      //   userId: LoginUserUid,
-      //   uid: currentUser.uid,
-      //   name: currentUser.displayName,
-      //   profileURL: currentUser.photoURL,
-      //   email: currentUser.email,
-      // access_token?: string;
-      // });
-      window.alert("Welcome!");
-      navigate("/");
-    } catch (err) {
+      // window.alert("Welcome!");
+      Swal.fire({
+        width: "300px",
+        icon: "success",
+        position: "center",
+        showCancelButton: false,
+        text: "Welcome to artmate!",
+        // html : "enjoy our page",
+        confirmButtonColor: "#608D00",
+        confirmButtonText: "확인",
+        timer: 30000,
+      });
+      navigate("/my-page");
+    } catch (err: any) {
       setError("Failed to create an account");
-      return error;
+      switch (err.code) {
+        case "auth/email-already-in-use":
+          return errorAlert_verB();
+        case "auth/network-request-failed" || "auth/internal-error":
+          return errorAlert_verC();
+        default:
+          return errorAlert_verA();
+      }
     } finally {
       setLoading(false);
       return loading;
@@ -78,47 +94,28 @@ export default function Signup() {
           className="w-fit my-5 flex flex-col space-y-4"
           onSubmit={BasicLoginHandler}
         >
-          <AuthInput>
+          <AuthInput className="relative">
             <input
-              className="w-full"
+              className="Email-Input h-full indent-1"
               type="text"
               placeholder="이메일"
               ref={emailRef}
             />
-            <p className="text-xs text-primary-Gray">이메일을 입력해주세요.</p>
+            <p className="Email-Label text-primary-Gray absolute top-4">
+              이메일을 입력해주세요.
+            </p>
           </AuthInput>
-          <AuthInput>
+          <AuthInput className="relative">
             <input
-              className="w-full"
-              type="text"
-              placeholder="닉네임"
-              ref={nicknameRef}
-            />
-            <p className="text-xs text-primary-Gray">2-10자로 구성해주세요.</p>
-          </AuthInput>
-
-          <AuthInput>
-            <input
-              className="w-full"
+              className="PW-Input h-full indent-1"
               type="text"
               placeholder="비밀번호"
               ref={passwordRef}
             />
-            <p className="text-xs text-primary-Gray">
+            <p className="PW-Label text-primary-Gray absolute top-4">
               비밀번호는 8-20자 사이여야 합니다.
             </p>
           </AuthInput>
-          {/* <div>
-            <AuthInput
-              type="text"
-              placeholder="비밀번호 확인"
-              ref={passwordRef}
-            />
-            <p className="text-xs indent-2 text-primary-Gray">
-              비밀번호가 일치하지않습니다.
-            </p>
-          </div> */}
-
           <button
             // onClick={UserSaving}
             className="bg-primary-YellowGreen rounded-3xl text-white w-[320px] h-[42px]"

@@ -1,21 +1,25 @@
 import axios from "axios";
-
-// const SeoulMuseum_artwork_URL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/ListExhibitionOfSeoulMOAInfo/${START_INDEX}/${END_INDEX}`;
-// const SeoulMuseum_artwork_URL2 = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/ListExhibitionOfSeoulMOAInfo/${START_INDEX}/${END_INDEX}/`;
-// ${process.env.REACT_APP_OPENAPI_KEY}/json/ListExhibitionOfSeoulMOAInfo/1/30/
+import Swal from "sweetalert2";
+import { errorAlert_NetworkErr } from "../modules/AlertModule";
 
 //서울시 문화시설현황
 // const GalleyURL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/SebcArtGalleryKor/1/30/`;
 //서울시 관광명소 - Eng
 const VisitSeoulURL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/TbVwAttractions/1/30/`;
 
-// export const baseURL = axios.create({
-//   baseURL: URL,
-//   headers: {
-//     "Access-Control-Allow-Origin": "*",
-//     accept: "application/json",
-//   },
-// });
+const ErrorCheck = (err: any) => {
+  switch (err.code) {
+    case "ERR_NETWORK":
+      // window.location.replace("/error");
+      return errorAlert_NetworkErr();
+
+    case "":
+      return console.log(100);
+
+    default:
+      return console.log("default");
+  }
+};
 
 //서울시립미술관 전시 정보-ArtworkPage
 export const SeoulArtMuseum_ArtWork_OpenData = async (
@@ -35,6 +39,7 @@ export const SeoulArtMuseum_ArtWork_OpenData = async (
     return data;
   } catch (err) {
     console.error(err);
+    return ErrorCheck(err);
   }
 };
 
@@ -53,6 +58,7 @@ export const MainPage = async (START_INDEX: number, END_INDEX: number) => {
     return data;
   } catch (err) {
     console.error(err);
+    return ErrorCheck(err);
   }
 };
 
@@ -74,6 +80,7 @@ export const Seoul_Museum_Gallery_OpenData = async (
     return data;
   } catch (err) {
     console.error(err);
+    return ErrorCheck(err);
   }
 };
 
@@ -90,6 +97,7 @@ export const Visit_Seoul_OpenData = async () => {
     return data;
   } catch (err) {
     console.error(err);
+    return ErrorCheck(err);
   }
 };
 
@@ -102,5 +110,6 @@ export const SearchingInfo = async () => {
     return data;
   } catch (err) {
     console.error(err);
+    return ErrorCheck(err);
   }
 };

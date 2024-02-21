@@ -19,6 +19,8 @@ import { db, storage } from "../Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { ref, listAll, getDownloadURL } from "@firebase/storage";
 import CommentModal from "../component/CommentModal";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 interface LikedReviewInfo {
   Review_Uid: string;
@@ -27,7 +29,7 @@ interface LikedReviewInfo {
 
 export default function Review() {
   const { currentUser } = useAuth();
-  // const [selectedReview, setSelectedReview] = useState<ReviewInfo | null>(null);
+  const [selectedReview, setSelectedReview] = useState<ReviewInfo | null>(null);
   const [likeCount, setLikeCount] = useState<number>(0);
   const [isLike, setIsLike] = useState<boolean>(false);
   const [isWriting, setIsWriting] = useState<boolean>(false);
@@ -72,7 +74,16 @@ export default function Review() {
   //Modal ON-OFF
   const openModal = () => {
     // setSelectedReview(review);
-    setIsWriting(true);
+    if (!currentUser) {
+      UserCheckHandler();
+    } else {
+      setIsWriting(true);
+    }
+  };
+
+  const CommentModalClose = () => {
+    setIsCommentOpen(false);
+    setSelectedReview(null);
   };
 
   const closeModal = () => {
@@ -80,6 +91,7 @@ export default function Review() {
     setIsWriting(false);
   };
 
+  console.log(MyLikeReviewInfo);
   const [image, setImage] = useState<any>("");
   const imageRef = ref(storage, `images`);
 
@@ -95,24 +107,36 @@ export default function Review() {
     });
   }, []);
 
+  //My Liked-Review Checker
+  const isLiked = (reviewUid: string) => {
+    return MyLikeReviewInfo?.some((item) => item.Review_Uid === reviewUid);
+  };
+
   //Like Btn
   const onLikeCountHandler = async (
     id: string,
-    title: string,
-    like: number
+    like: number,
+    title: string
   ) => {
-    setLikeCount(like + 1);
-    setIsLike(true);
-    try {
-      await updateDoc(doc(AllReviewRef, id), { Like_Cnt: like + 1 });
-      await setDoc(doc(db, `userInfo/${currentUser?.uid}/MyLikeReviews`, id), {
-        // Reviewer_Id: AllReview.User_ID,
-        Title: title,
-        Review_Uid: id,
-      });
-      console.log(`like successfully`);
-    } catch (error) {
-      console.error(`Error updating document: ${error}`);
+    if (!currentUser) {
+      UserCheckHandler();
+    } else {
+      setLikeCount(like + 1);
+      setIsLike(true);
+      try {
+        await updateDoc(doc(AllReviewRef, id), { Like_Cnt: like + 1 });
+        await setDoc(
+          doc(db, `userInfo/${currentUser?.uid}/MyLikeReviews`, id),
+          {
+            // Reviewer_Id: AllReview.User_ID,
+            Title: title,
+            Review_Uid: id,
+          }
+        );
+        console.log(`like successfully`);
+      } catch (error) {
+        console.error(`Error updating document: ${error}`);
+      }
     }
   };
 
@@ -131,14 +155,40 @@ export default function Review() {
     }
   };
 
-  // const MyReviewChecker = () =>{
-  //   MyReviewInfo
-  // }
+  //Loggin-User Check
+  const UserCheckHandler = () => {
+    Swal.fire({
+      width: "300px",
+      position: "center",
+      icon: "warning",
+      showCancelButton: true,
+      title: "로그인 후 이용가능합니다.",
+      html: "로그인을 누르실 경우 로그인페이지로 이동합니다",
+      confirmButtonColor: "#608D00", // confrim 버튼 색깔 지정
+      cancelButtonColor: "#6F6F6F", // cancel 버튼 색깔 지정
+      confirmButtonText: "로그인", // confirm 버튼 텍스트 지정
+      cancelButtonText: "취소", // cancel 버튼 텍스트 지정
+      timer: 30000,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        navigate("/login");
+      }
+      if (result.isDenied) {
+        navigate("/review");
+      }
+    });
+  };
 
   //Comment
   const [isCommentOpen, setIsCommentOpen] = useState(false);
-  const onCommentHandler = () => {
-    setIsCommentOpen(true);
+  const navigate = useNavigate();
+  const onCommentHandler = (review: ReviewInfo) => {
+    if (!currentUser) {
+      UserCheckHandler();
+    } else {
+      setIsCommentOpen(true);
+      setSelectedReview(review);
+    }
   };
 
   return (
@@ -200,9 +250,8 @@ export default function Review() {
                   </div>
                   <div className="w-5/6 mx-auto border-t-2 border-black flex space-x-4">
                     <div className="flex space-x-2">
-                      {isLike ? (
+                      {isLiked(list.Review_Uid) ? (
                         <ToDislike
-                          key={index}
                           onClick={() =>
                             onDislikeCountHandler(
                               list.Review_Uid,
@@ -212,42 +261,20 @@ export default function Review() {
                         />
                       ) : (
                         <ToLike
-                          key={index}
                           onClick={() =>
                             onLikeCountHandler(
                               list.Review_Uid,
-                              list.Title,
-                              list.Like_Cnt
+                              list.Like_Cnt,
+                              list.Title
                             )
                           }
                         />
                       )}
-
-                      {/* {ComparedReview &&
-                      (ComparedReview as LikedReviewInfo).Review_Uid ? (
-                        <ToDislike
-                          key={index}
-                          onClick={() =>
-                            onDislikeCountHandler(
-                              list.Review_Uid,
-                              list.Like_Cnt
-                            )
-                          }
-                        />
-                      ) : (
-                        <ToLike
-                          key={index}
-                          onClick={() =>
-                            onLikeCountHandler(list.Review_Uid, list.Like_Cnt)
-                          }
-                        />
-                      )} */}
-
                       <p>{list.Like_Cnt} 좋아요</p>
                     </div>
                     <div
                       className="flex space-x-2 cursor-pointer"
-                      onClick={onCommentHandler}
+                      onClick={() => onCommentHandler(list)}
                     >
                       <img alt="comment-count" src={loadImg.Menu_List} />
                       <p>댓글</p>
@@ -272,7 +299,8 @@ export default function Review() {
             {isCommentOpen ? (
               <CommentModal
                 isOpen={isCommentOpen}
-                closeModal={closeModal}
+                ReviewInfo={selectedReview}
+                closeModal={CommentModalClose}
                 currentUser={currentUser}
               />
             ) : null}

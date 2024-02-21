@@ -12,8 +12,8 @@ interface AuthContextProps {
   login: (email: string, password: string) => Promise<any>;
   signup: (
     email: string,
-    password: string,
-    displayName: string
+    password: string
+    // displayName: string
   ) => Promise<any>;
   signupWithGoogle: () => void;
   logout: () => Promise<void>;
@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  const signup = (email: string, password: string, displayName: string) => {
+  const signup = (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
@@ -53,11 +53,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // const [userInfo, setUserInfo] = useState<UserInfo>();
 
+  console.log(currentUser);
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
       setLoading(false);
-
       // if (currentUser) {
       //   // setUserInfo(currentUser);
       //   localStorage.setItem("user_name", currentUser.displayName);

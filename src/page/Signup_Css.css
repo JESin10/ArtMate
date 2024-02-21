@@ -1,0 +1,48 @@
+.Email-Input:focus + .Email-Label {
+  visibility: visible;
+  transform: translateY(16px);
+  font-size: 10px;
+  transition: transform 0.5s ease, font-size 0.5s ease;
+
+  /* transform-duration: 1000ms; */
+}
+
+.Email-Input:focus {
+  height: 25px;
+}
+
+.Email-Input:focus::placeholder {
+  opacity: 0;
+}
+
+.Email-Label {
+  visibility: hidden;
+  font-size: 13px;
+}
+
+.Email-Input {
+  width: 100%;
+}
+
+.PW-Input:focus + .PW-Label {
+  visibility: visible;
+  transform: translateY(16px);
+  font-size: 10px;
+  transition: transform 0.5s ease, font-size 0.5s ease;
+}
+.PW-Input:focus {
+  height: 25px;
+}
+
+.PW-Input:focus::placeholder {
+  opacity: 0;
+}
+
+.PW-Label {
+  visibility: hidden;
+  font-size: 13px;
+}
+
+.PW-Input {
+  width: 100%;
+}

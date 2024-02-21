@@ -18,6 +18,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { ref, uploadBytes, listAll, getDownloadURL } from "@firebase/storage";
 import { BiSolidImageAdd } from "react-icons/bi";
+import { updateProfile } from "firebase/auth";
 
 export default function Mypage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -26,7 +27,7 @@ export default function Mypage() {
   // const UserUid = uidv();
   const [userInfo, setUserInfo] = useState<UserInfo>();
   const [nickname, setNickName] = useState<string>("");
-  const [ProfileImage, setProfileImage] = useState<string>("");
+  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [IsEditMode, setIsEditMode] = useState<boolean>(false);
 
   // const UserlistRef = collection(db, `userInfo/${currentUser?.uid}/UserInfo`);
@@ -45,31 +46,41 @@ export default function Mypage() {
   // const NowUserInfo = useCollectionData(UserlistRef);
   // const MyArtworkInfo = useCollectionData(SavinglistRef)[0];
   const LoginUserUid = uidv();
-  const BasicImage = ref(storage, "Basic/");
+  // const BasicImage = ref(storage, "Basic");
+  // const [basicImageUrl, setBasicImageUrl] = useState<string[]>([]);
 
-  const Test = async () => {
-    const BasicImageURL = await getDownloadURL(BasicImage);
-    console.log(BasicImageURL);
-    setProfileImage(BasicImageURL);
-  };
-  // console.log(NowUserInfo);
+  const [ProfileImageUpload, setProfileImageUpload] = useState<File | null>(
+    null
+  );
+  const [profileImgUrl, setProfileImgURL] = useState<string[]>([]);
+  const ProfileImage = ref(storage, `UserProfile/${currentUser.uid}`);
+  const CommentRef = collection(db, `userInfo/${currentUser?.uid}/MyReviews`);
+  const MyCommentList = useCollectionData(CommentRef)[0];
+  // console.log(ProfileImage);
 
   useEffect(() => {
     if (!currentUser) {
       navigate("/login");
     } else {
+      // const getImageUrl = async () => {
+      //   const imageUrl = await getDownloadURL(BasicImage);
+      //   setBasicImageUrl([imageUrl]);
+      // };
       setUserInfo({
         userId: LoginUserUid,
         uid: currentUser.uid,
         name: currentUser.displayName,
-        profileURL: currentUser.photoURL,
+        profileURL: ["./favicon.ico"],
+        // profileURL: currentUser.photoURL,
         email: currentUser.email,
         // access_token?: string;
       });
       // UserSaving();
+      // getImageUrl();
     }
   }, []);
 
+  //Log-out
   const googleLogoutHandler = async () => {
     try {
       await logout();
@@ -114,33 +125,59 @@ export default function Mypage() {
 
   const onUserInfoEditHandler = async () => {
     setIsEditMode(true);
-    // const isConfirmed = window.confirm("tnwjd");
-    // const userRef = doc(
-    //   db,
-    //   "userInfo/",
-    //   `${currentUser.uid}/UserInfo/${currentUser.email}/`
-    // );
-    // if (currentUser) {
-    //   try {
-    //     //Cloud userInfo 삭제구문
-    //     await updateDoc(userRef, {
-    //       // NickName : UpdatedNickName,
-    //       // profileURL : UpdatedImage
-    //     })
-    //       .then(() => {
-    //         console.log(`Update ${currentUser.email} 's Info successfully!`);
-    //       })
-    //       .catch((err) => console.error(err));
-    //     //Authentication User 삭제구문
-    //   } catch (error) {
-    //     console.error(`Error! : ${error}`);
-    //   }
-    // } else return;
+  };
+
+  const onImageUpload = async (profileImage: any) => {
+    if (profileImage !== null) {
+      const imageRef = ref(
+        storage,
+        `UserProfile/${currentUser.uid}/${profileImage.name}`
+      );
+      await uploadBytes(imageRef, profileImage);
+      const imageURL = await getDownloadURL(imageRef);
+      setProfileImgURL([imageURL]);
+      console.log(imageURL);
+    }
+    console.log(typeof profileImgUrl, profileImgUrl);
+    return profileImgUrl;
   };
   // console.log(currentUser);
 
+  const onEditCompleteHandler = async () => {
+    setIsEditMode(false);
+    if (currentUser.displayName !== nickname) {
+      await updateProfile(currentUser, {
+        displayName: nickname,
+      });
+      await updateDoc(
+        doc(db, `userInfo/${currentUser.uid}/UserInfo/${currentUser.email}`),
+        { NickName: nickname }
+      );
+    }
+    if (currentUser.photoURL !== profileImage) {
+      onImageUpload(profileImage);
+      // if (ProfileImageUpload !== null) {
+      //   const imageRef = ref(
+      //     storage,
+      //     `UserProfile/${currentUser.uid}/${ProfileImageUpload.name}`
+      //   );
+      //   await uploadBytes(imageRef, ProfileImageUpload);
+      //   const imageURL = await getDownloadURL(imageRef);
+      //   setProfileImgURL(imageURL);
+      // }
+      // await updateProfile(currentUser, { photoURL: profileImgUrl });
+      await updateDoc(
+        doc(db, `userInfo/${currentUser.uid}/UserInfo/${currentUser.email}`),
+        { ProfileURL: profileImgUrl }
+      );
+    }
+    navigate("/");
+  };
+
+  // console.log(profileImage);
+
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen mb-[70px]">
       <div className="flex w-full justify-end px-4 space-x-2 pt-5 cursor-pointer">
         <button>
           <img alt="notify_icon" src={"./icons/Outline/notification.svg"} />
@@ -171,24 +208,30 @@ export default function Mypage() {
                     className="w-[80px] h-[80px] mx-3 bg-white shadow-lg rounded-full"
                   />
                 )}
-                <div className=" cursor-pointer w-auto h-6 inline-block absolute bottom-0 right-0">
-                  <BiSolidImageAdd size="100%" color="white">
-                    <input
-                      className="text-black hidden"
-                      id="Profile-Image"
-                      type="file"
-                      placeholder={currentUser.photoURL}
-                      value={ProfileImage}
-                      onChange={(e) => setProfileImage(e.target.value)}
-                    />
-                  </BiSolidImageAdd>
+                <div className="  w-auto h-6 inline-block absolute bottom-0 right-0">
+                  {/* <BiSolidImageAdd size="100%" color="white"> */}
+                  <input
+                    className="text-black cursor-pointer"
+                    id="Profile-Image"
+                    type="file"
+                    placeholder={currentUser.photoURL}
+                    // value={profileImage}
+                    // onChange={(e) => setProfileImage(e.target.value)}
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files.length > 0) {
+                        setProfileImage(e.target.files[0]);
+                      }
+                    }}
+                  />
+                  {/* <button onClick={onImageUpload}>업로드</button> */}
+                  {/* </BiSolidImageAdd> */}
                 </div>
               </div>
               <div className="text-white flex flex-col justify-center ml-4 ">
                 <div className=" font-extrabold flex space-x-3 text-center items-center justify-center my-auto">
                   <p className="text-xl h-fit overflow-hidden text-center items-center">
                     <input
-                      className="text-black w-32 indent-1 font-normal  outline-none rounded-sm"
+                      className="text-black w-32 indent-1 font-normal text-base outline-none rounded-sm"
                       id="NickNameInput"
                       type="text"
                       placeholder={currentUser.displayName}
@@ -199,7 +242,7 @@ export default function Mypage() {
                   <div className="flex space-x-2 justify-center w-6">
                     <button
                       className="cursor-pointer "
-                      onClick={() => setIsEditMode(false)}
+                      onClick={onEditCompleteHandler}
                     >
                       <CheckBtn size="100%" />
                     </button>
@@ -237,7 +280,7 @@ export default function Mypage() {
               <div className="text-white flex flex-col justify-center ml-4 ">
                 <div className=" font-extrabold flex space-x-3 text-left items-center justify-center my-auto">
                   {currentUser && currentUser.displayName ? (
-                    <p className="text-xl w-32 h-fit overflow-hidden text-center items-center">
+                    <p className="text-xl w-32 h-fit overflow-hidden text-left items-center">
                       {currentUser.displayName}
                     </p>
                   ) : (
@@ -324,6 +367,23 @@ export default function Mypage() {
           )}
           {/* </div> */}
           {/* </ReviewContainer> */}
+        </div>
+        <div>
+          <p className="w-fit mt-10 mx-2 font-extrabold text-lg">
+            내가 작성한 댓글
+          </p>
+          {MyCommentList &&
+            MyCommentList.map((comment: any, index: number) => (
+              <div>
+                <div className="text-xs text-primary-Gray">
+                  {comment.Comment_ID}
+                </div>
+                <div className="flex justify-between" key={index}>
+                  <div>{comment.Comment}</div>
+                  <div>{comment.Written_Date}</div>
+                </div>
+              </div>
+            ))}
         </div>
       </div>
       {isModalOpen && (
