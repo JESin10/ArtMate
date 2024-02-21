@@ -18,6 +18,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { ref, uploadBytes, listAll, getDownloadURL } from "@firebase/storage";
 import { BiSolidImageAdd } from "react-icons/bi";
+import { updateProfile } from "firebase/auth";
 
 export default function Mypage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -45,29 +46,37 @@ export default function Mypage() {
   // const NowUserInfo = useCollectionData(UserlistRef);
   // const MyArtworkInfo = useCollectionData(SavinglistRef)[0];
   const LoginUserUid = uidv();
-  const BasicImage = ref(storage, "Basic/");
+  // const BasicImage = ref(storage, "Basic");
+  // const [basicImageUrl, setBasicImageUrl] = useState<string[]>([]);
+
   const [ProfileImageUpload, setProfileImageUpload] = useState<File | null>(
     null
   );
   const [profileImgUrl, setProfileImgURL] = useState<string[]>([]);
-  const ProfileImage = ref(storage, "UserProfile/");
+  const ProfileImage = ref(storage, `UserProfile/${currentUser.uid}`);
   const CommentRef = collection(db, `userInfo/${currentUser?.uid}/MyReviews`);
   const MyCommentList = useCollectionData(CommentRef)[0];
-  // console.log(MyCommentList);
+  // console.log(ProfileImage);
 
   useEffect(() => {
     if (!currentUser) {
       navigate("/login");
     } else {
+      // const getImageUrl = async () => {
+      //   const imageUrl = await getDownloadURL(BasicImage);
+      //   setBasicImageUrl([imageUrl]);
+      // };
       setUserInfo({
         userId: LoginUserUid,
         uid: currentUser.uid,
         name: currentUser.displayName,
-        profileURL: currentUser.photoURL,
+        profileURL: ["./favicon.ico"],
+        // profileURL: currentUser.photoURL,
         email: currentUser.email,
         // access_token?: string;
       });
       // UserSaving();
+      // getImageUrl();
     }
   }, []);
 
@@ -118,28 +127,53 @@ export default function Mypage() {
     setIsEditMode(true);
   };
 
+  const onImageUpload = async (profileImage: any) => {
+    if (profileImage !== null) {
+      const imageRef = ref(
+        storage,
+        `UserProfile/${currentUser.uid}/${profileImage.name}`
+      );
+      await uploadBytes(imageRef, profileImage);
+      const imageURL = await getDownloadURL(imageRef);
+      setProfileImgURL([imageURL]);
+      console.log(imageURL);
+    }
+    console.log(typeof profileImgUrl, profileImgUrl);
+    return profileImgUrl;
+  };
   console.log(currentUser);
 
   const onEditCompleteHandler = async () => {
     setIsEditMode(false);
     if (currentUser.displayName !== nickname) {
-      await currentUser.updateProfile({ displayName: nickname });
+      await updateProfile(currentUser, {
+        displayName: nickname,
+      });
+      await updateDoc(
+        doc(db, `userInfo/${currentUser.uid}/UserInfo/${currentUser.email}`),
+        { NickName: nickname }
+      );
     }
     if (currentUser.photoURL !== profileImage) {
-      if (ProfileImageUpload !== null) {
-        const imageRef = ref(
-          storage,
-          `UserProfile/${currentUser.uid}/${ProfileImageUpload.name}`
-        );
-        await uploadBytes(imageRef, ProfileImageUpload);
-        const imageURL = await getDownloadURL(imageRef);
-        setProfileImgURL([imageURL]);
-      }
-      await currentUser.updateProfile({ photoURL: profileImgUrl });
+      onImageUpload(profileImage);
+      // if (ProfileImageUpload !== null) {
+      //   const imageRef = ref(
+      //     storage,
+      //     `UserProfile/${currentUser.uid}/${ProfileImageUpload.name}`
+      //   );
+      //   await uploadBytes(imageRef, ProfileImageUpload);
+      //   const imageURL = await getDownloadURL(imageRef);
+      //   setProfileImgURL(imageURL);
+      // }
+      // await updateProfile(currentUser, { photoURL: profileImgUrl });
+      await updateDoc(
+        doc(db, `userInfo/${currentUser.uid}/UserInfo/${currentUser.email}`),
+        { ProfileURL: profileImgUrl }
+      );
     }
   };
 
-  // console.log(currentUser);
+  // console.log(profileImage);
 
   return (
     <div className="w-full h-screen mb-[70px]">
@@ -173,22 +207,23 @@ export default function Mypage() {
                     className="w-[80px] h-[80px] mx-3 bg-white shadow-lg rounded-full"
                   />
                 )}
-                <div className=" cursor-pointer w-auto h-6 inline-block absolute bottom-0 right-0">
-                  <BiSolidImageAdd size="100%" color="white">
-                    <input
-                      className="text-black hidden"
-                      id="Profile-Image"
-                      type="file"
-                      placeholder={currentUser.photoURL}
-                      // value={profileImage}
-                      // onChange={(e) => setProfileImage(e.target.value)}
-                      onChange={(e) => {
-                        if (e.target.files && e.target.files.length > 0) {
-                          setProfileImage(e.target.files[0]);
-                        }
-                      }}
-                    />
-                  </BiSolidImageAdd>
+                <div className="  w-auto h-6 inline-block absolute bottom-0 right-0">
+                  {/* <BiSolidImageAdd size="100%" color="white"> */}
+                  <input
+                    className="text-black cursor-pointer"
+                    id="Profile-Image"
+                    type="file"
+                    placeholder={currentUser.photoURL}
+                    // value={profileImage}
+                    // onChange={(e) => setProfileImage(e.target.value)}
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files.length > 0) {
+                        setProfileImage(e.target.files[0]);
+                      }
+                    }}
+                  />
+                  {/* <button onClick={onImageUpload}>업로드</button> */}
+                  {/* </BiSolidImageAdd> */}
                 </div>
               </div>
               <div className="text-white flex flex-col justify-center ml-4 ">
@@ -244,7 +279,7 @@ export default function Mypage() {
               <div className="text-white flex flex-col justify-center ml-4 ">
                 <div className=" font-extrabold flex space-x-3 text-left items-center justify-center my-auto">
                   {currentUser && currentUser.displayName ? (
-                    <p className="text-xl w-32 h-fit overflow-hidden text-center items-center">
+                    <p className="text-xl w-32 h-fit overflow-hidden text-left items-center">
                       {currentUser.displayName}
                     </p>
                   ) : (

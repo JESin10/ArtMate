@@ -12,6 +12,7 @@ import {
   errorAlert_verB,
   errorAlert_verC,
 } from "../modules/AlertModule";
+import "../page/Signup_Css.css";
 // import { UserInfo } from "./Home";
 // import { v4 as uidv } from "uuid";
 // import { doc, setDoc } from "firebase/firestore";
@@ -44,13 +45,13 @@ export default function Signup() {
       setLoading(true);
       if (
         emailRef.current &&
-        passwordRef.current &&
-        nicknameRef.current?.value
+        passwordRef.current
+        // nicknameRef.current?.value
       ) {
         await signup(
           emailRef.current.value,
-          passwordRef.current.value,
-          nicknameRef.current?.value
+          passwordRef.current.value
+          // nicknameRef.current?.value
         );
       }
       // window.alert("Welcome!");
@@ -93,47 +94,28 @@ export default function Signup() {
           className="w-fit my-5 flex flex-col space-y-4"
           onSubmit={BasicLoginHandler}
         >
-          <AuthInput>
+          <AuthInput className="relative">
             <input
-              className="w-full"
+              className="Email-Input h-full indent-1"
               type="text"
               placeholder="이메일"
               ref={emailRef}
             />
-            <p className="text-xs text-primary-Gray">이메일을 입력해주세요.</p>
+            <p className="Email-Label text-primary-Gray absolute top-4">
+              이메일을 입력해주세요.
+            </p>
           </AuthInput>
-          <AuthInput>
+          <AuthInput className="relative">
             <input
-              className="w-full"
-              type="text"
-              placeholder="닉네임"
-              ref={nicknameRef}
-            />
-            <p className="text-xs text-primary-Gray">2-10자로 구성해주세요.</p>
-          </AuthInput>
-
-          <AuthInput>
-            <input
-              className="w-full"
+              className="PW-Input h-full indent-1"
               type="text"
               placeholder="비밀번호"
               ref={passwordRef}
             />
-            <p className="text-xs text-primary-Gray">
+            <p className="PW-Label text-primary-Gray absolute top-4">
               비밀번호는 8-20자 사이여야 합니다.
             </p>
           </AuthInput>
-          {/* <div>
-            <AuthInput
-              type="text"
-              placeholder="비밀번호 확인"
-              ref={passwordRef}
-            />
-            <p className="text-xs indent-2 text-primary-Gray">
-              비밀번호가 일치하지않습니다.
-            </p>
-          </div> */}
-
           <button
             // onClick={UserSaving}
             className="bg-primary-YellowGreen rounded-3xl text-white w-[320px] h-[42px]"

@@ -20,7 +20,7 @@ export interface UserInfo {
   userId: string;
   uid: string;
   name: string;
-  profileURL: string;
+  profileURL: string[];
   email: string;
   access_token?: string;
 }
@@ -55,14 +55,14 @@ export default function Home() {
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const MyArtworkInfo = useCollectionData(listRef)[0];
 
-  // console.log(baseArray);
-  // console.log(selectedArtwork);
+  console.log(baseArray);
+  // console.log("LoginedUserInfo:",LoginedUserInfo);
 
   useEffect(() => {
     // console.log(currentUser.uid);
     UserSaving();
     fetchData();
-    if (LoginedUserInfo && currentUser?.email !== LoginedUserInfo[0].Email) {
+    if (LoginedUserInfo && currentUser?.email !== LoginedUserInfo[0]?.Email) {
       setUserInfo({
         userId: LoginUserUid,
         uid: currentUser.Uid,
@@ -70,19 +70,22 @@ export default function Home() {
         profileURL: currentUser.photoURL || "",
         email: currentUser.email,
       });
+    } else {
+      return;
     }
   }, []);
 
+  console.log(currentUser);
   console.log(userInfo);
 
   const fetchData = async () => {
-    // const response = await MainPage(1, 10);
-    // setBaseArray(response.ListExhibitionOfSeoulMOAInfo.row);
-    // setLatestArray([...response.ListExhibitionOfSeoulMOAInfo.row].reverse());
-    // return response;
+    const response = await MainPage(1, 10);
+    setBaseArray(response.ListExhibitionOfSeoulMOAInfo.row);
+    setLatestArray([...response.ListExhibitionOfSeoulMOAInfo.row].reverse());
+    return response;
   };
 
-  console.log(currentUser);
+  // console.log(currentUser);
 
   const UserSaving = async () => {
     try {
@@ -96,7 +99,7 @@ export default function Home() {
             Uid: currentUser?.uid,
             userId: LoginUserUid,
             Email: currentUser.email,
-            NickName: currentUser.displayName,
+            NickName: currentUser.displayNam || "",
             ProfileURL: currentUser.photoURL,
             FollowerCnt: 0,
             FollowingCnt: 0,
@@ -147,7 +150,7 @@ export default function Home() {
         <div className="w-11/12 mx-auto">
           {currentUser && LoginedUserInfo ? (
             <>
-              {currentUser && LoginedUserInfo[0].NickName ? (
+              {LoginedUserInfo[0]?.NickName ? (
                 <h1 className="w-fit text-lg px-4 my-2 flex">
                   <p className="mr-2 font-extrabold">
                     {LoginedUserInfo[0].NickName}
