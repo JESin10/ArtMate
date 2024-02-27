@@ -16,7 +16,14 @@ import {
 } from "firebase/firestore";
 import { ReactComponent as AddIcon } from "../assets/customSvg/Adding.svg";
 // import { ref } from "@firebase/storage";
-import { ref, uploadBytes, listAll, getDownloadURL } from "@firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  listAll,
+  getDownloadURL,
+  StorageReference,
+  uploadBytesResumable,
+} from "@firebase/storage";
 
 interface ReviewProps {
   isOpen: boolean;
@@ -52,6 +59,8 @@ export default function ReviewModal({
   const TitleRef = useRef<HTMLInputElement | null>(null);
   const ContentRef = useRef<HTMLTextAreaElement | null>(null);
   const DateRef = useRef<HTMLInputElement | null>(null);
+  const [isDone, setIsDone] = useState<boolean>(false);
+
   // const ReviewList = collection(db, `userInfo/${currentUser?.uid}/Reviews`);
   // const AllReviewList = collection(
   //   db,
@@ -60,7 +69,7 @@ export default function ReviewModal({
 
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [imageList, setImageList] = useState<string[]>([]);
-  // const [imageURL, setImageURL] = useState<string>("");
+  const [imageURL, setImageURL] = useState<string>("");
 
   if (!isOpen) return null;
 
@@ -75,6 +84,7 @@ export default function ReviewModal({
   //   });
   // };
 
+  // const uploadTask = uploadBytesResumable(imageRef, imageUpload);
   //리뷰 작성 폼
   const SubmitReviewHandler = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,39 +97,69 @@ export default function ReviewModal({
             storage,
             `ReviewImage/${ReviewUid}/${imageUpload.name}`
           );
-          await uploadBytes(imageRef, imageUpload);
-          const imageURL = await getDownloadURL(imageRef);
-          setImageList([imageURL]);
-        }
-        console.log(imageList);
-        // console.log("imageURL", imageURL);
-        if (imageList) {
-          await setDoc(
-            doc(db, `userInfo/${currentUser?.uid}/Reviews`, ReviewUid),
-            {
-              Review_Uid: ReviewUid,
-              User_Uid: currentUser.uid,
-              User_ID: currentUser.email,
-              Title: TitleRef.current?.value,
-              Content: ContentRef.current?.value,
-              Img: imageList,
-              Visited_Date: DateRef.current?.value,
-              // Like_Cnt: 0,
-              Comment_Uid: CommentUid,
+          // await uploadBytes(imageRef, imageUpload);
+
+          // UploadTask 객체 생성
+          const uploadTask = uploadBytesResumable(imageRef, imageUpload);
+
+          // UploadTask의 state_changed 이벤트 구독하여 업로드 진행률 추적
+          uploadTask.on(
+            "state_changed",
+            (snapshot: any) => {
+              // 업로드 진행률 계산하여 설정
+              const progress = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+              console.log("Upload is " + progress + "% done");
+              // 진행률 상태를 사용할 수 있도록 설정
+              if (progress === 100) {
+                setIsDone(true);
+              }
+            },
+            (error: any) => {
+              // 업로드 도중 오류 발생 시 처리
+              console.error(error);
+            },
+            async () => {
+              const imageURL = await getDownloadURL(imageRef);
+              setImageList([imageURL]);
+
+              await setDoc(
+                doc(db, `userInfo/${currentUser?.uid}/Reviews`, ReviewUid),
+                {
+                  Review_Uid: ReviewUid,
+                  User_Uid: currentUser.uid,
+                  User_ID: currentUser.email,
+                  Title: TitleRef.current?.value,
+                  Content: ContentRef.current?.value,
+                  Img: imageList,
+                  Visited_Date: DateRef.current?.value,
+                  // Like_Cnt: 0,
+                  Comment_Uid: CommentUid,
+                }
+              );
+              await setDoc(doc(db, "AllReview", ReviewUid), {
+                Review_Uid: ReviewUid,
+                User_Uid: currentUser.uid,
+                User_ID: currentUser.email,
+                Title: TitleRef.current?.value,
+                Content: ContentRef.current?.value,
+                Img: imageList,
+                Visited_Date: DateRef.current?.value,
+                Like_Cnt: 0,
+                Comment_Uid: CommentUid,
+              });
+              console.log("saved your Review");
+              setIsDone(false);
+
+              // 업로드가 완료되었을 때 처리
+
+              console.log(imageList);
+              console.log("Upload completed");
             }
           );
-          await setDoc(doc(db, "AllReview", ReviewUid), {
-            Review_Uid: ReviewUid,
-            User_Uid: currentUser.uid,
-            User_ID: currentUser.email,
-            Title: TitleRef.current?.value,
-            Content: ContentRef.current?.value,
-            Img: imageList,
-            Visited_Date: DateRef.current?.value,
-            Like_Cnt: 0,
-            Comment_Uid: CommentUid,
-          });
         }
+        // const imageURL = await getDownloadURL(imageRef);
 
         // if (imageUpload === null) return;
 
@@ -131,7 +171,7 @@ export default function ReviewModal({
         //   });
         // });
 
-        // 업로드 진행률을 모니터링, 업로드 진행률 퍼센트로 상태 지정
+        //업로드 진행률을 모니터링, 업로드 진행률 퍼센트로 상태 지정
         // const task = uploadBytesResumable(storageRef, file);
         // task.on("state_changed", (snapshot) => {
         //   setProgress(
@@ -142,11 +182,12 @@ export default function ReviewModal({
         // });
         TitleRef.current.value = "";
         ContentRef.current.value = "";
-        console.log("Successfully upload the review!");
+
+        // console.log("Successfully upload the review!");
         // return getDownloadURL(imageRef);
       }
     } catch (err) {
-      console.error(err);
+      console.error("Error:", err);
     }
   };
 

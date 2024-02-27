@@ -62,15 +62,16 @@ export default function Home() {
     // console.log(currentUser.uid);
     UserSaving();
     fetchData();
-    // if (LoginedUserInfo && currentUser?.email !== LoginedUserInfo[0]?.Email) {
-    setUserInfo({
-      userId: LoginUserUid,
-      uid: currentUser.uid,
-      name: currentUser.displayName || "",
-      profileURL: currentUser.photoURL || "",
-      email: currentUser.email,
-    });
-    // } else {
+    if (LoginedUserInfo && currentUser?.email !== LoginedUserInfo[0]?.Email) {
+      setUserInfo({
+        userId: LoginUserUid,
+        uid: currentUser.Uid,
+        name: currentUser.displayName || "",
+        profileURL: currentUser.photoURL || "",
+        email: currentUser.email,
+      });
+    }
+    // else {
     //   return;
     // }
   }, [userInfo?.name || userInfo?.profileURL]);
@@ -228,7 +229,7 @@ export default function Home() {
                       >
                         <div className="w-[130px] h-[90px] bg-white">
                           <img
-                            className="w-full h-full mr-2 object-cover"
+                            className="w-full h-full mr-2 object-cover "
                             src={list.DP_MAIN_IMG}
                           />
                         </div>

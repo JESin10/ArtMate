@@ -129,34 +129,34 @@ export default function ArtworkModal({
     }
   };
 
-  // function parseAndStyleInfo(info: string) {
-  //   const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
-  //     return `<span style="font-weight: bold;">${content}</span>`;
-  //   });
-  //   return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
-  // }
-
   function parseAndStyleInfo(info: string) {
-    const lines = info.split(/\r\n/);
-
-    const styledLines = lines.map((line, index) => {
-      if (line.trim() === "") {
-        return null;
-      }
-
-      if (line.includes("휴관일")) {
-        return (
-          <div key={index}>
-            <span style={{ color: "red" }}>{line}</span>
-          </div>
-        );
-      }
-
-      return <div key={index}>{line}</div>;
+    const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
+      return `<span style="font-weight: bold;">${content}</span>`;
     });
-
-    return <div>{styledLines}</div>;
+    return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
   }
+
+  // function parseAndStyleInfo(info: string) {
+  //   const lines = info.split(/\r\n/);
+
+  //   const styledLines = lines.map((line, index) => {
+  //     if (line.trim() === "") {
+  //       return null;
+  //     }
+
+  //     if (line.includes("휴관일")) {
+  //       return (
+  //         <div key={index}>
+  //           <span style={{ color: "red" }}>{line}</span>
+  //         </div>
+  //       );
+  //     }
+
+  //     return <div key={index}>{line}</div>;
+  //   });
+
+  //   return <div>{styledLines}</div>;
+  // }
 
   //Copy
   const handleCopyClipBoard = async (artworkInfo: ArtworkInfo) => {
