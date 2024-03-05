@@ -1,6 +1,5 @@
 import axios from "axios";
-import Swal from "sweetalert2";
-import { errorAlert_NetworkErr } from "../modules/AlertModule";
+import { errorAlert_NetworkErr, errorAlert_verA } from "../modules/AlertModule";
 
 //서울시 문화시설현황
 // const GalleyURL = `http://openapi.seoul.go.kr:8088/${process.env.REACT_APP_OPENAPI_KEY}/json/SebcArtGalleryKor/1/30/`;
@@ -13,11 +12,11 @@ const ErrorCheck = (err: any) => {
       // window.location.replace("/error");
       return errorAlert_NetworkErr();
 
-    case "":
-      return console.log(100);
+    // case "":
+    //   return console.log(100);
 
     default:
-      return console.log("default");
+      return errorAlert_verA();
   }
 };
 
