@@ -303,7 +303,7 @@ export default function Review() {
                       <p>{list.User_ID}</p>
                     </div>
                     <div>
-                      {list.User_Uid === currentUser.uid ? (
+                      {currentUser && list.User_Uid === currentUser.uid ? (
                         <div className="flex">
                           <button>
                             <ReviewEditBtn />
