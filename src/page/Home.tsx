@@ -55,7 +55,7 @@ export default function Home() {
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const MyArtworkInfo = useCollectionData(listRef)[0];
 
-  console.log(baseArray);
+  console.log("currentUser", currentUser);
   // console.log("LoginedUserInfo:",LoginedUserInfo);
 
   useEffect(() => {
@@ -180,13 +180,13 @@ export default function Home() {
                   key={list.DP_EX_NO}
                   className="h-[500px] object-cover px-2 rounded-xl bg-transparent"
                 >
-                  <div className="w-full h-full rounded-xl border-primary-YellowGreen border-4">
+                  <div className="w-full h-full rounded-xl border-primary-YellowGreen bg-primary-YellowGreen border-4">
                     <img
-                      className="rounded-t-lg h-[75%] w-full object-cover shadow-md object-center"
+                      className="rounded-t-lg h-[72%] w-full object-cover shadow-md object-center"
                       src={list.DP_MAIN_IMG}
                       alt={`list-${list.DP_EX_NO}`}
                     />
-                    <div className="w-full h-[25%] rounded-b-lg bg-primary-YellowGreen  border-primary-YellowGreen border-t-4 flex flex-col">
+                    <div className="w-full h-[28%] rounded-b-lg pb-1 bg-primary-YellowGreen border-primary-YellowGreen border-t-4 flex flex-col">
                       <div className="h-fit flex flex-wrap">
                         {list.DP_ART_PART === "" ? (
                           <>
@@ -270,9 +270,7 @@ export default function Home() {
                             src={loadImg.Menu_User}
                           />
                         </div>
-                        <p className="text-sm w-[50px] mx-auto my-2 text-center">
-                          {list.DP_ARTIST.split(",", 1)}
-                        </p>
+                        <ArtistName>{list.DP_ARTIST.split(",", 1)}</ArtistName>
                       </div>
                     )}
                   </div>
@@ -300,6 +298,11 @@ export default function Home() {
 
 const Tag = tw.p`
   text-xs text-primary-YellowGreen font-semibold
-  border-primary-YellowGreen border-2 bg-white rounded-2xl
-  w-fit h-fit py-1 px-3 m-1
+  border-primary-YellowGreen border-2 bg-white rounded-[14px]
+  w-fit h-fit py-1 px-2 m-1
+`;
+
+const ArtistName = tw.p`
+  text-sm w-[50px] h-[20px] mx-auto my-2 text-center
+  overflow-hidden
 `;
