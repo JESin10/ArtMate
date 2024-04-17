@@ -105,20 +105,19 @@ export default function KaKaoMap({ mapMode, setMapMode }: MapModeProps) {
         // option={geolocationOptions}
       /> */}
       <div className="flex justify-between">
-        <h1 className="text-3xl font-extrabold my-2 text-transparent">
-          내 주변 갤러리_공백
-        </h1>
+        <h1 className="text-3xl font-extrabold my-2  ml-3">Nearby</h1>
+
         <div className="flex space-x-2 mr-3">
-          <button onClick={() => handleSuccess}>
+          <MapModeBtn onClick={() => handleSuccess}>
             <img alt="current-location" src={loadImg.Map_current1} />
-          </button>
-          <button onClick={() => MapModeHandler(false)}>
+          </MapModeBtn>
+          <MapModeBtn onClick={() => MapModeHandler(false)}>
             <img alt="gallery-list" src={loadImg.Menu_List} />
-          </button>
+          </MapModeBtn>
         </div>
       </div>
       {/* map */}
-      <div className=" border-red-400 border-4 w-full h-[70%]">
+      <div className=" w-full h-[70%]">
         {/* <MyMap
           id="map"
           center={{ lat: location.latitude, lng: location.longitude }} // 지도의 중심 좌표
@@ -140,4 +139,8 @@ export default function KaKaoMap({ mapMode, setMapMode }: MapModeProps) {
 
 const MyMap = tw(Map)`
 w-full h-full
+`;
+
+const MapModeBtn = tw.button`
+  hover:scale-105 hover:duration-150
 `;
