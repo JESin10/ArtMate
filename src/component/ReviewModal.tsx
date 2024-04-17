@@ -60,12 +60,7 @@ export default function ReviewModal({
   const ContentRef = useRef<HTMLTextAreaElement | null>(null);
   const DateRef = useRef<HTMLInputElement | null>(null);
   const [isDone, setIsDone] = useState<boolean>(false);
-
-  // const ReviewList = collection(db, `userInfo/${currentUser?.uid}/Reviews`);
-  // const AllReviewList = collection(
-  //   db,
-  //   `userInfo/${currentUser?.uid}/AllReview`
-  // );
+  const ImageRef = useRef<HTMLInputElement | null>(null);
 
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [imageList, setImageList] = useState<string[]>([]);
@@ -191,17 +186,34 @@ export default function ReviewModal({
     }
   };
 
+  const ImageCancelHandler = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+    // setImageList([]);
+    if (ImageRef.current) {
+      ImageRef.current.value = "";
+    }
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-30">
       <ModalContainer>
         <CloseBtn onClick={closeModal}>
           <IoIosCloseCircleOutline size="100%" />
         </CloseBtn>
-        <div className="w-11/12 h-4/5 flex flex-col py-4 mx-auto bg-black/10">
-          <div className="text-2xl font-extrabold">후기 작성</div>
-          <form onSubmit={SubmitReviewHandler}>
+        <div className="w-11/12 h-4/5 flex flex-col py-4 mx-auto ">
+          <div className="text-2xl font-extrabold w-fit flex">
+            <img
+              className="h-8 justify-center mr-2"
+              src={"./favicon.ico"}
+            ></img>
+            MY REVIEW
+          </div>
+          <form className="my-4" onSubmit={SubmitReviewHandler}>
             <div className="flex space-x-2 my-2">
-              <p className="w-20">전시회명</p>
+              <ReviewSub>전시회명</ReviewSub>
               <input
                 type="text"
                 ref={TitleRef}
@@ -210,33 +222,39 @@ export default function ReviewModal({
               />
             </div>
             <div className="flex space-x-2 my-2">
-              <p className="w-20">방문 후기</p>
+              <ReviewSub>방문 후기</ReviewSub>
               <textarea
                 ref={ContentRef}
                 placeholder="content"
-                className="w-2/3 h-32 border-primary-Gray border-2 p-2 rounded-sm"
+                className="w-2/3 h-56 border-primary-Gray border-2 p-2 rounded-sm"
               />
             </div>
             <div className="flex space-x-2 my-2">
-              <p className="w-20">방문일자</p>
+              <ReviewSub>방문일자</ReviewSub>
               <input ref={DateRef} type="date" placeholder="Date" />
             </div>
-            <div className="flex space-x-2 my-2">
-              <p className="w-20">사진추가</p>
-              <input
-                type="file"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files.length > 0) {
-                    setImageUpload(e.target.files[0]);
-                  }
-                }}
-              />
+            <div className="flex space-x-2">
+              <ReviewSub>사진추가</ReviewSub>
+              <div className="w-2/3 flex justify-between">
+                <input
+                  type="file"
+                  ref={ImageRef}
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      setImageUpload(e.target.files[0]);
+                    }
+                  }}
+                />
+                <ImageCancelBtn onClick={ImageCancelHandler}>
+                  <IoIosCloseCircleOutline size="100%" />
+                </ImageCancelBtn>
+              </div>
               {/* <button onClick={ImageUploadHandeler}>
                 <p>✔️</p>
               </button> */}
             </div>
             <SubmitBtnContainer>
-              <button>제출하기</button>
+              <button>Post My Review!</button>
             </SubmitBtnContainer>
           </form>
         </div>
@@ -267,8 +285,19 @@ const Adding = tw(AddIcon)`
 `;
 
 const SubmitBtnContainer = tw.div`
-  w-20 p-2 mx-auto text-center cursor-pointer font-bold
+  w-full p-2 my-8 mx-auto text-center cursor-pointer font-bold
   border-primary-YellowGreen border-2 rounded-lg bg-white
 hover:bg-primary-YellowGreen 
   hover:font-extrabold hover:text-white
+`;
+
+const ReviewSub = tw.p`
+  w-20
+`;
+
+const ImageCancelBtn = tw.button`
+justify-center rounded-full 
+w-8 h-8 ml-2
+hover:text-red-500
+
 `;

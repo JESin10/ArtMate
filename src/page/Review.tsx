@@ -331,7 +331,7 @@ export default function Review() {
                   <div className="w-11/12 mx-auto h-1/2 bg-black/20">
                     <img
                       alt="review-img"
-                      className="w-full h-full object-cover mx-auto bg-black/30"
+                      className="w-full h-full object-cover mx-auto bg-black/10"
                       src={list.Img[0]}
                     />
                   </div>

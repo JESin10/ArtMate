@@ -43,7 +43,7 @@ const Carousel = ({ children }: CarouselProps) => {
     slidesToShow: 1, // 한 번에 보여질 슬라이드 수
     slidesToScroll: 1, // 스크롤 시 이동할 슬라이드 수
     autoplay: true, // 자동 재생 여부
-    autoplaySpeed: 5000, // 자동 재생 속도 (ms)
+    autoplaySpeed: 500000, // 자동 재생 속도 (ms)
     pauseOnHover: true, // 마우스 호버 시 재생 일시 정지 여부
     arrows: false, // 이전/다음 화살표 표시 여부
     prevArrow: <PrevArrow />, // 이전 화살표 커스텀 컴포넌트
