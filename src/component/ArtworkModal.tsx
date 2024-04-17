@@ -211,7 +211,7 @@ export default function ArtworkModal({
               <div className="h-fit w-full justify-end  pt-3 my-auto flex space-x-3">
                 <button
                   onClick={() => handleCopyClipBoard(artworkInfo)}
-                  className="h-8 w-auto my-auto"
+                  className="h-8 w-auto my-auto hover:scale-[105%] hover:duration-150"
                 >
                   <img
                     className="w-auto h-full"
@@ -227,7 +227,7 @@ export default function ArtworkModal({
                     />
                   </button>
                 ) : (
-                  <button className="h-fit w-fit my-auto">
+                  <button className="h-fit w-fit my-auto ">
                     <Saving onClick={ArtWorkSaving} style={{ fill: "white" }} />
                   </button>
                 )}
@@ -339,6 +339,7 @@ const ArtworkModalContent = tw.p`
 const Saving = tw(SaveIcon)`
   w-8 h-8 space-x-2
   cursor-pointer 
+  hover:scale-[105%] hover:duration-150
 `;
 
 // hover:fill-primary-YellowGreen
