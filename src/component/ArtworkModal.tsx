@@ -129,34 +129,34 @@ export default function ArtworkModal({
     }
   };
 
-  // function parseAndStyleInfo(info: string) {
-  //   const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
-  //     return `<span style="font-weight: bold;">${content}</span>`;
-  //   });
-  //   return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
-  // }
-
   function parseAndStyleInfo(info: string) {
-    const lines = info.split(/\r\n/);
-
-    const styledLines = lines.map((line, index) => {
-      if (line.trim() === "") {
-        return null;
-      }
-
-      if (line.includes("휴관일")) {
-        return (
-          <div key={index}>
-            <span style={{ color: "red" }}>{line}</span>
-          </div>
-        );
-      }
-
-      return <div key={index}>{line}</div>;
+    const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
+      return `<span style="font-weight: bold;">${content}</span>`;
     });
-
-    return <div>{styledLines}</div>;
+    return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
   }
+
+  // function parseAndStyleInfo(info: string) {
+  //   const lines = info.split(/\r\n/);
+
+  //   const styledLines = lines.map((line, index) => {
+  //     if (line.trim() === "") {
+  //       return null;
+  //     }
+
+  //     if (line.includes("휴관일")) {
+  //       return (
+  //         <div key={index}>
+  //           <span style={{ color: "red" }}>{line}</span>
+  //         </div>
+  //       );
+  //     }
+
+  //     return <div key={index}>{line}</div>;
+  //   });
+
+  //   return <div>{styledLines}</div>;
+  // }
 
   //Copy
   const handleCopyClipBoard = async (artworkInfo: ArtworkInfo) => {
@@ -211,7 +211,7 @@ export default function ArtworkModal({
               <div className="h-fit w-full justify-end  pt-3 my-auto flex space-x-3">
                 <button
                   onClick={() => handleCopyClipBoard(artworkInfo)}
-                  className="h-8 w-auto my-auto"
+                  className="h-8 w-auto my-auto hover:scale-[105%] hover:duration-150"
                 >
                   <img
                     className="w-auto h-full"
@@ -227,7 +227,7 @@ export default function ArtworkModal({
                     />
                   </button>
                 ) : (
-                  <button className="h-fit w-fit my-auto">
+                  <button className="h-fit w-fit my-auto ">
                     <Saving onClick={ArtWorkSaving} style={{ fill: "white" }} />
                   </button>
                 )}
@@ -339,6 +339,7 @@ const ArtworkModalContent = tw.p`
 const Saving = tw(SaveIcon)`
   w-8 h-8 space-x-2
   cursor-pointer 
+  hover:scale-[105%] hover:duration-150
 `;
 
 // hover:fill-primary-YellowGreen

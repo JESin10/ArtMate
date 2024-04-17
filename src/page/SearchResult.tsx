@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchBar from "../modules/SearchBar";
 import tw from "tailwind-styled-components";
 // import GalleryModal from "../component/GalleryModal";
@@ -9,6 +9,8 @@ import { useAuth } from "./context/AuthContext";
 import { collection } from "firebase/firestore";
 import { db } from "../Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import { getCookie } from "../api/Cookie";
+import { SearchingInfo } from "../api/Gallery_OpenApi";
 
 export interface SearchInfo {
   keyword?: string;
@@ -16,17 +18,22 @@ export interface SearchInfo {
   searchResults?: any;
 }
 
-export default function SearchResult({
-  keyword,
-  searchMode,
-  searchResults,
-}: SearchInfo) {
+export default function SearchResult() {
+  //{
+  //   keyword,
+  //   searchMode,
+  //   searchResults,
+  // }: SearchInfo
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkInfo | null>(
     null
   );
   const { currentUser } = useAuth();
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const MyArtworkInfo = useCollectionData(listRef)[0];
+  const keyword = getCookie("searchKeyword");
+  const isSearching = getCookie("searchMode");
+  // const Results = getCookie("searchResults");
+  const [searchResults, setSearchResults] = useState<[]>([]);
 
   //Modal
   const openModal = (artwork: ArtworkInfo) => {
@@ -37,17 +44,41 @@ export default function SearchResult({
     setSelectedArtwork(null);
   };
 
-  console.log("keyword;", keyword);
-  console.log("searchMode;", searchMode);
-  console.log("searchResults;", searchResults);
+  useEffect(() => {
+    onSearch();
+  }, [searchResults]);
+
+  const onSearch = async () => {
+    try {
+      const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo.row;
+      // 검색어가 포함된 결과만 필터링
+      const Results = response.filter((item: any) => {
+        // DP_ARTIST 또는 DP_NAME 중에 검색어가 포함되어 있는지 확인
+        return (
+          item.DP_ARTIST?.toLowerCase().includes(keyword.toLowerCase()) ||
+          item.DP_NAME?.toLowerCase().includes(keyword.toLowerCase())
+        );
+      });
+      setSearchResults(Results);
+      // return (
+      //   <SearchResult
+      //     searchMode={searchMode}
+      //     keyword={searchInput}
+      // searchResults={searchResults}
+      //   />
+      // );
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
-      {/* <SearchBar /> */}
+      <SearchBar />
       <PageContainer>
         <div className="w-full h-fit">
           {/* gallery zip */}
-          {searchMode ? (
+          {isSearching ? (
             <div className="w-11/12 mx-auto">
               {searchResults && searchResults.length > 0 ? (
                 <>

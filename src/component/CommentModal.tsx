@@ -57,11 +57,10 @@ export default function CommentModal({
   const userName = (LoginedUserInfo: any) => {
     if (LoginedUserInfo) {
       if (LoginedUserInfo[0].NickName === null || "") {
-        console.log(LoginedUserInfo[0].Email);
+        // console.log(LoginedUserInfo[0].Email);
         return LoginedUserInfo[0].Email;
       } else {
-        console.log(LoginedUserInfo[0].NickName);
-
+        // console.log(LoginedUserInfo[0].NickName);
         return LoginedUserInfo[0].NickName;
       }
     }
@@ -216,6 +215,9 @@ export default function CommentModal({
     });
   };
 
+  // console.log(currentUser);
+  // console.log(CommentList);
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-30">
       <ModalContainer>
@@ -224,12 +226,13 @@ export default function CommentModal({
         </CloseBtn>
         {/* 댓글조회 영역 */}
         <CommentsBox>
-          {CommentList &&
+          {CommentList && CommentList.length > 0 ? (
             CommentList.map((list: any, index: number) => (
               <div className=" my-auto w-full flex-col h-fit" key={index}>
                 <CommentTitle>
-                  <div className=" text-sm my-auto text-primary-DarkGray">
-                    {list.User_Name}
+                  <div className="w-full flex justify-between text-primary-DarkGray">
+                    <CommentDate>{list.User_Name}</CommentDate>
+                    <CommentDate>{list.Written_Date} 작성</CommentDate>
                   </div>
                   {isMyComment(list.User_Uid, list.Comment_ID) ? (
                     <div className=" w-full flex justify-between">
@@ -260,7 +263,7 @@ export default function CommentModal({
                         </div>
                       ) : (
                         <>
-                          <div className="w-11/12 px-2">{list.Comment}</div>
+                          <div className="w-11/12 py-1">{list.Comment}</div>
                           <div className="flex">
                             <button
                               id="Comment-EditButton"
@@ -281,12 +284,19 @@ export default function CommentModal({
                       )}
                     </div>
                   ) : (
-                    <div className="w-10/12 px-2">{list.Comment}</div>
+                    <div className="w-10/12 py-1">{list.Comment}</div>
                   )}
                 </CommentTitle>
-                <CommentDate>{list.Written_Date} 작성</CommentDate>
               </div>
-            ))}
+            ))
+          ) : (
+            <div className="flex flex-col w-fit py-28 mx-auto text-center space-y-2">
+              <div className="text-lg font-semibold">아직 댓글이 없습니다.</div>
+              <p className="text-sm text-primary-DarkGray">
+                첫번째 댓글을 달아보세요!
+              </p>
+            </div>
+          )}
         </CommentsBox>
 
         {/* 댓글작성 영역 */}
@@ -300,7 +310,7 @@ export default function CommentModal({
           />
           <button
             onClick={() => onCommentUpdateHandler(comment)}
-            className="px-2 hover:text-primary-YellowGreen hover:font-extrabold"
+            className="px-2 mr-2 hover:text-primary-YellowGreen hover:font-extrabold"
           >
             확인
           </button>
@@ -325,26 +335,25 @@ const CloseBtn = tw.button`
 
 const CommentInput = tw.input`
   w-10/12 h-10 flex mx-auto
-  outline-none indent-2
+  outline-none indent-2 
 `;
 
 const CommentsBox = tw.div`
   w-11/12 mx-auto h-4/5 mt-4 overflow-scroll
-  border-2 border-solid border-blue-400
 `;
 
 const CommentTitle = tw.div`
-  flex px-2 my-2
+  flex px-2 my-2 flex-col
 `;
 
 const CommentDate = tw.p`
-  text-xs text-right  text-primary-DarkGray
+  text-xs text-primary-DarkGray
 `;
 
 const CommentInputBox = tw.div`
-  w-11/12 h-fit p-2 
+  w-11/12 h-fit 
   mx-auto flex justify-between
-  bg-red-100 
+  border-2 border-solid border-primary-YellowGreen rounded-lg
 `;
 
 const CommentEditBtn = tw(WriteBtn)`

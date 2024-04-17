@@ -5,7 +5,6 @@ import { GalleryInfo } from "../page/Gallery";
 import tw from "tailwind-styled-components";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import KaKaoMap from "../modules/KaKaoMap";
 
 interface ModalProps {
   isOpen: boolean;
@@ -104,6 +103,7 @@ export default function GalleryModal({
              {parseAndStyleInfo(galleryInfo.DP_INFO)}
           </p> */}
             {/* 위치 map */}
+            {/* <GalleryLocation address={galleryInfo.KOR_ADD} /> */}
           </div>
         </GalleryModalContainer>
       )}

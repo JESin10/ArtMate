@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import SearchResultPage from "../page/SearchResultPage";
 import Swal from "sweetalert2";
+import { removeCookie, setCookie } from "../api/Cookie";
 
 interface SearchMode {
   isSearchOn: boolean;
@@ -38,6 +39,13 @@ export default function SearchBar(): JSX.Element {
     }
   };
 
+  const Refresh = (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    window.location.replace("/");
+    removeCookie("searchMode");
+  };
+
   const onSearchHandler = async () => {
     if (searchInput.trim() === "") {
       Swal.fire({
@@ -54,24 +62,28 @@ export default function SearchBar(): JSX.Element {
       return;
     } else {
       try {
-        const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo
-          .row;
-        // 검색어가 포함된 결과만 필터링
-        const Results = response.filter((item: any) => {
-          // DP_ARTIST 또는 DP_NAME 중에 검색어가 포함되어 있는지 확인
-          return (
-            item.DP_ARTIST?.toLowerCase().includes(searchInput.toLowerCase()) ||
-            item.DP_NAME?.toLowerCase().includes(searchInput.toLowerCase())
-          );
-        });
-        setSearchResults(Results);
-        return (
-          <SearchResult
-            searchMode={searchMode}
-            keyword={searchInput}
-            searchResults={searchResults}
-          />
-        );
+        // const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo
+        //   .row;
+        // // 검색어가 포함된 결과만 필터링
+        // const Results = response.filter((item: any) => {
+        //   // DP_ARTIST 또는 DP_NAME 중에 검색어가 포함되어 있는지 확인
+        //   return (
+        //     item.DP_ARTIST?.toLowerCase().includes(searchInput.toLowerCase()) ||
+        //     item.DP_NAME?.toLowerCase().includes(searchInput.toLowerCase())
+        //   );
+        // });
+        // setSearchResults(Results);
+        setCookie("searchKeyword", searchInput);
+        setCookie("searchMode", true);
+        // setCookie("searchResults", searchResults);
+        navigate(`/search/:${searchInput}`);
+        // return (
+        //   <SearchResult
+        //     searchMode={searchMode}
+        //     keyword={searchInput}
+        // searchResults={searchResults}
+        //   />
+        // );
       } catch (err) {
         console.error(err);
       }
@@ -86,7 +98,7 @@ export default function SearchBar(): JSX.Element {
             <>
               <MainBarContainer>
                 <div className="ml-6 flex w-60">
-                  <MainTextLogo />
+                  <MainTextLogo onClick={Refresh} />
                 </div>
                 <button
                   onClick={handleSearchClick}
@@ -118,7 +130,7 @@ export default function SearchBar(): JSX.Element {
           ) : (
             <MainBarContainer>
               <div className="ml-6 flex w-60">
-                <MainTextLogo />
+                <MainTextLogo onClick={Refresh} />
               </div>
               <button
                 onClick={handleSearchClick}

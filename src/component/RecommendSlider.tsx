@@ -28,7 +28,7 @@ export default function RecommendSlider() {
       "DP_EX_NO",
       {
         START_INDEX: 1,
-        END_INDEX: 10,
+        END_INDEX: 12,
       },
     ],
     async () => {
@@ -72,6 +72,8 @@ export default function RecommendSlider() {
   const closeModal = () => {
     setSelectedArtwork(null);
   };
+
+  console.log(currentItems);
 
   return (
     <>

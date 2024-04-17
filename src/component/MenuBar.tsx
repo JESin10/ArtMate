@@ -16,9 +16,9 @@ export default function MenuBar() {
   return (
     <Menubar>
       <MenubarContainer>
-        <HomeMenuIcon onClick={() => navigate("/")} />
-        <ArtworkMenuIcon onClick={() => navigate("/artwork")} />
         <GalleryMenuIcon onClick={() => navigate("/gallery")} />
+        <ArtworkMenuIcon onClick={() => navigate("/artwork")} />
+        <HomeMenuIcon onClick={() => navigate("/")} />
         <ReviewMenuIcon onClick={() => navigate("/review")} />
         <UserMenuIcon onClick={() => navigate("/my-page")} />
       </MenubarContainer>

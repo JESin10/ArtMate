@@ -4,7 +4,8 @@ import { loadImg } from "../assets/images";
 import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
 import { ReactComponent as LikeIcon } from "../assets/customSvg/Heart.svg";
 import { ReactComponent as AddIcon } from "../assets/customSvg/Adding.svg";
-
+import { ReactComponent as WriteBtn } from "../assets/customSvg/write.svg";
+import { ReactComponent as DeleteBtn } from "../assets/customSvg/delete.svg";
 import tw from "tailwind-styled-components";
 import ReviewModal, { ReviewInfo } from "../component/ReviewModal";
 import { useAuth } from "./context/AuthContext";
@@ -91,7 +92,7 @@ export default function Review() {
     setIsWriting(false);
   };
 
-  console.log(MyLikeReviewInfo);
+  // console.log(MyLikeReviewInfo);
   const [image, setImage] = useState<any>("");
   const imageRef = ref(storage, `images`);
 
@@ -191,6 +192,83 @@ export default function Review() {
     }
   };
 
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [EditReviewTitle, setEditReviewTitle] = useState<string>("");
+  const [EditReviewComment, setEditReviewComment] = useState<string>("");
+
+  //Review Edit-Mode
+  const ReivewEditHandler = () => {
+    setEditReviewTitle("");
+    setEditReviewComment("");
+    setIsEditMode(true);
+  };
+
+  //Edit Review
+  const onEditHandler = async (ReviewId: string) => {
+    // if (EditingComment.trim() === "") {
+    //   Swal.fire({
+    //     width: "300px",
+    //     position: "center",
+    //     icon: "warning",
+    //     showCancelButton: true,
+    //     title: "Please fill the blank",
+    //     text: "수정할 내용을 입력해주세요!",
+    //     confirmButtonColor: "#608D00",
+    //     cancelButtonColor: "#6F6F6F",
+    //     confirmButtonText: "확인",
+    //     timer: 3000,
+    //   });
+    //   return setIsEditMode(false);
+    // } else {
+    //   try {
+    //     await updateDoc(
+    //       doc(db, `AllComment/${ReviewInfo?.Review_Uid}/Comments/${CommentID}`),
+    //       { Comment: EditingComment }
+    //     );
+    //     await updateDoc(
+    //       doc(db, `userInfo/${currentUser.uid}/MyComments/${CommentID}`),
+    //       { Comment: EditingComment }
+    //     );
+    //     console.log(`Comment edit successfully`);
+    //     return setIsEditMode(false);
+    //   } catch (error) {
+    //     console.error(`Error Edit-Comment document: ${error}`);
+    //   }
+    // }
+  };
+
+  console.log(AllReviewInfo);
+  //Delete Reivew
+  const onReviewDeleteHandler = async (ReviewID: string) => {
+    Swal.fire({
+      width: "300px",
+      position: "center",
+      icon: "warning",
+      showCancelButton: true,
+      title: "Delete Comment",
+      text: "정말 삭제하시겠습니까?",
+      confirmButtonColor: "#d33", // confrim 버튼 색깔 지정
+      cancelButtonColor: "#6F6F6F", // cancel 버튼 색깔 지정
+      confirmButtonText: "삭제", // confirm 버튼 텍스트 지정
+      cancelButtonText: "취소", // cancel 버튼 텍스트 지정
+      timer: 10000,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteDoc(doc(db, "AllReview", ReviewID));
+          await deleteDoc(
+            doc(db, `userInfo/${currentUser.uid}/Reviews`, ReviewID)
+          );
+          console.log(`Delete successfully`);
+        } catch (error) {
+          console.error(`Error Delete document: ${error}`);
+        }
+      }
+    });
+  };
+
+  // console.log(AllReviewInfo);
+
   return (
     <>
       <SearchBar />
@@ -215,13 +293,31 @@ export default function Review() {
                   key={index}
                   className="border-primary-YellowGreen border-2 rounded-xl w-11/12 mx-auto h-[450px] mt-3"
                 >
-                  <div className="flex items-center space-x-4 m-4">
-                    <img
-                      alt="profile-img"
-                      src={loadImg.Main_Logo}
-                      className="w-10 h-10 rounded-full p-[1px] border-primary-Gray border"
-                    />
-                    <p>{list.User_ID}</p>
+                  <div className="flex justify-between items-center m-4">
+                    <div className="flex items-center space-x-2">
+                      <img
+                        alt="profile-img"
+                        src={loadImg.Main_Logo}
+                        className="w-10 h-10 rounded-full p-[1px] border-primary-Gray border"
+                      />
+                      <p>{list.User_ID}</p>
+                    </div>
+                    <div>
+                      {currentUser && list.User_Uid === currentUser.uid ? (
+                        <div className="flex">
+                          <button>
+                            <ReviewEditBtn />
+                          </button>
+                          <button
+                            onClick={() =>
+                              onReviewDeleteHandler(list.Review_Uid)
+                            }
+                          >
+                            <ReviewDeleteBtn />
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
                   {/* map돌려서 슬라이더? 작게보기로 수정할것 */}
                   {/* {list.Img.map((img: any, i: number) => (
@@ -235,7 +331,7 @@ export default function Review() {
                   <div className="w-11/12 mx-auto h-1/2 bg-black/20">
                     <img
                       alt="review-img"
-                      className="w-full h-full object-cover mx-auto bg-black/30"
+                      className="w-full h-full object-cover mx-auto bg-black/10"
                       src={list.Img[0]}
                     />
                   </div>
@@ -338,4 +434,12 @@ const ToLike = tw(LikeIcon)`
 fill-white
 hover:fill-red-500
   cursor-pointer
+`;
+
+const ReviewEditBtn = tw(WriteBtn)`
+  h-fit w-5 fill-black hover:fill-primary-YellowGreen
+`;
+
+const ReviewDeleteBtn = tw(DeleteBtn)`
+  h-fit w-5 ml-2 fill-black hover:fill-red-600 
 `;

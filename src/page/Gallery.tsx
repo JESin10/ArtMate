@@ -87,12 +87,12 @@ export default function Gallery() {
               <div className="flex justify-between">
                 <h1 className="text-3xl font-extrabold my-2  ml-3">Gallery</h1>
                 <div className="flex space-x-2 mx-2">
-                  <button>
+                  <MapModeBtn>
                     <img src={loadImg.Map_current1} alt="current-location" />
-                  </button>
-                  <button onClick={MapModeHandler}>
+                  </MapModeBtn>
+                  <MapModeBtn onClick={MapModeHandler}>
                     <img src={loadImg.Map_all} alt="map-mode" />
-                  </button>
+                  </MapModeBtn>
                 </div>
               </div>
               {GalleryOpenData.length > 0 &&
@@ -152,4 +152,8 @@ border-black border-2
 const GalleryMockupIMG = tw.img`
 w-full h-full rounded-2xl border-2
 shadow-md
+`;
+
+const MapModeBtn = tw.button`
+  hover:scale-105 hover:duration-150
 `;
