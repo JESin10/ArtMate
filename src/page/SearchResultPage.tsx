@@ -7,19 +7,20 @@ interface SearchInfo {
   searchResults?: any;
 }
 
-export default function SearchResultPage({
-  keyword,
-  searchMode,
-  searchResults,
-}: SearchInfo) {
-  console.log("searchResults:", searchResults);
-  console.log("searchMode:", searchMode);
+export default function SearchResultPage() {
+  //{
+  //   keyword,
+  //   searchMode,
+  //   searchResults,
+  // }: SearchInfo
+  // console.log("searchResults:", searchResults);
+  // console.log("searchMode:", searchMode);
 
   return (
     <SearchResult
-      searchMode={searchMode}
-      keyword={keyword}
-      searchResults={searchResults}
+    // searchMode={searchMode}
+    // keyword={keyword}
+    // searchResults={searchResults}
     />
   );
 }
