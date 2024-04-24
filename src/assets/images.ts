@@ -1,8 +1,3 @@
-import { ReactComponent as DescLogo } from "./customSvg/Menubar_gallery.svg";
-import { ReactComponent as MainLogo } from "../assets/customSvg/main_text_logo.svg";
-
-export { DescLogo, MainLogo };
-
 export const BannerZip = [
   "./images/Main_Banner_no1.svg",
   "./images/Main_Banner_no2.svg",
