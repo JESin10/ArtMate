@@ -23,7 +23,7 @@ const rotateY = plugin(function ({ addUtilities }) {
 });
 
 module.exports = {
-  purge: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   darkmode: "class",
   // main color setting 가능
   theme: {
