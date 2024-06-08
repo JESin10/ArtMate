@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "typeRoots": ["node_modules/@types", "custom_typings"],
-    "types": ["duplexify"]
+    "types": []
   },
   "include": ["src", "custom.d.ts"]
 }
