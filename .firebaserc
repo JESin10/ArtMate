@@ -1,0 +1,26 @@
+{
+  "projects": {
+    "default": "artmate-ver100"
+  },
+  "targets": {
+    "test": {
+      "hosting": {
+        "qa": [
+          "devtest"
+        ],
+        "master": [
+          "test"
+        ]
+      }
+    },
+    "artmate-ver100": {
+      "hosting": {
+        "master": [
+          "artmate-ver100"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}
