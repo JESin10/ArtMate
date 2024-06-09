@@ -4,19 +4,13 @@ import tw from "tailwind-styled-components";
 // import GalleryModal from "../component/GalleryModal";
 import { GalleryInfo } from "./Gallery";
 import ArtworkModal from "../component/ArtworkModal";
-import { ArtworkInfo } from "./Artwork";
 import { useAuth } from "./context/AuthContext";
 import { collection } from "firebase/firestore";
 import { db } from "../Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { getCookie } from "../api/Cookie";
 import { SearchingInfo } from "../api/Gallery_OpenApi";
-
-export interface SearchInfo {
-  keyword?: string;
-  searchMode?: boolean;
-  searchResults?: any;
-}
+import { ArtworkInfo } from "../assets/interface";
 
 export default function SearchResult() {
   //{

@@ -96,8 +96,8 @@ import { useEffect, useState } from "react";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../Firebase";
 import { v4 as uidv } from "uuid";
-import { UserInfo } from "../page/Home";
 import { useAuth } from "../page/context/AuthContext";
+import { UserInfo } from "../assets/interface";
 
 export default function UserAuthGoogle() {
   const { currentUser } = useAuth();

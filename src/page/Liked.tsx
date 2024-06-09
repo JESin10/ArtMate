@@ -8,7 +8,6 @@ import { collection, deleteDoc, doc } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
 import { SeoulArtMuseum_ArtWork_OpenData } from "../api/Gallery_OpenApi";
-import { ArtworkInfo } from "./Artwork";
 import { FaFilePen } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 

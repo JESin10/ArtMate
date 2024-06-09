@@ -4,17 +4,13 @@ import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { RxSlash } from "react-icons/rx";
-import { ArtworkInfo } from "../page/Artwork";
 import ArtworkModal from "./ArtworkModal";
 import { useAuth } from "../page/context/AuthContext";
 import { collection } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
+import { ArtworkInfo } from "../assets/interface";
 
-interface RecommendArtworkInfo {
-  index: number;
-  DP_MAIN_IMG: string;
-}
 export default function RecommendSlider() {
   const [recentArray, setRecentArray] = useState<React.ReactNode[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -73,7 +69,7 @@ export default function RecommendSlider() {
     setSelectedArtwork(null);
   };
 
-  console.log(currentItems);
+  // console.log(currentItems);
 
   return (
     <>

@@ -1,54 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 // import { loadImg } from "../assets/images";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { ArtworkInfo } from "../page/Artwork";
 import tw from "tailwind-styled-components";
 import { ReactComponent as SaveIcon } from "../assets/customSvg/bookmark.svg";
 import { db, storage } from "../Firebase";
 import { v4 as uidv4 } from "uuid";
-import {
-  doc,
-  setDoc,
-  collection,
-  deleteDoc,
-  getDoc,
-  Timestamp,
-} from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { ReactComponent as AddIcon } from "../assets/customSvg/Adding.svg";
 // import { ref } from "@firebase/storage";
-import {
-  ref,
-  uploadBytes,
-  listAll,
-  getDownloadURL,
-  StorageReference,
-  uploadBytesResumable,
-} from "@firebase/storage";
-
-interface ReviewProps {
-  isOpen: boolean;
-  closeModal: () => void;
-  currentUser: any;
-}
-
-export interface ReviewInfo {
-  Review_Uid: string;
-  User_ID: string;
-  Title: string;
-  Content: string;
-  Img?: string | null;
-  Visited_Date: Date;
-  Like_Cnt?: number;
-  Comment_Uid: string;
-}
-
-export interface ReviewCommentInfo {
-  Uid: string;
-  Comment_Uid: string;
-  User_ID: string;
-  Content: string;
-  Updated_Date: Date;
-}
+import { ref, getDownloadURL, uploadBytesResumable } from "@firebase/storage";
+import { ReviewProps } from "../assets/interface";
 
 export default function ReviewModal({
   isOpen,

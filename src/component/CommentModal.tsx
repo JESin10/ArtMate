@@ -11,26 +11,12 @@ import {
 } from "firebase/firestore";
 import { db } from "../Firebase";
 import { v4 as uidv4 } from "uuid";
-import { ReviewInfo } from "./ReviewModal";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { ReactComponent as WriteBtn } from "../assets/customSvg/write.svg";
 import { ReactComponent as DeleteBtn } from "../assets/customSvg/delete.svg";
 import { ReactComponent as CheckBtn } from "../assets/customSvg/check.svg";
 import { ReactComponent as CancelBtn } from "../assets/customSvg/cancel.svg";
-
-interface CommentProps {
-  isOpen: boolean;
-  closeModal: () => void;
-  currentUser: any;
-  ReviewInfo: ReviewInfo | null;
-}
-
-// interface UserComment {
-//   commentId: string;
-//   name: string;
-//   comment: string;
-//   date: string | Date;
-// }
+import { CommentProps } from "../assets/interface";
 
 export default function CommentModal({
   isOpen,

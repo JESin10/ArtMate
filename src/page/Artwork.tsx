@@ -11,28 +11,7 @@ import { db } from "../Firebase";
 
 import { collection, doc } from "firebase/firestore";
 import FilterModal from "../component/FilterModal";
-
-export interface ArtworkInfo {
-  DP_ARTIST?: string;
-  DP_ART_CNT?: number;
-  DP_ART_PART: string;
-  DP_START: Date;
-  DP_END: Date;
-  DP_DATE: Date;
-  DP_EVENT?: string | null;
-  DP_EX_NO?: number;
-  DP_HOMEPAGE?: string | null;
-  DP_INFO: string;
-  DP_LNK?: string;
-  DP_MAIN_IMG?: string;
-  DP_NAME?: string;
-  DP_PLACE?: string;
-  DP_SEQ?: number;
-  DP_SPONSOR?: string;
-  DP_SUBNAME?: string | null;
-  DP_VIEWPOINT?: string | null;
-  DP_VIEWTIME: string;
-}
+import { ArtworkInfo } from "../assets/interface";
 
 export default function Artwork() {
   const [artworkList, setArtWorkList] = useState<Array<ArtworkInfo>>([]);
@@ -46,11 +25,12 @@ export default function Artwork() {
   const MyArtworkInfo = useCollectionData(listRef)[0];
   const [filterMode, setFilterMode] = useState(false);
   const [selectedTag, setSelectedTag] = useState<string>("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   // 페이지 렌딩과 동시에 데이터 가져오기
   const fetchData = async () => {
-    const response = await SeoulArtMuseum_ArtWork_OpenData(1, 100);
+    const response = await SeoulArtMuseum_ArtWork_OpenData(1, 10);
+    console.log(response);
     setArtWorkList(response.ListExhibitionOfSeoulMOAInfo.row);
     return response;
   };
@@ -102,7 +82,7 @@ export default function Artwork() {
                   {filterMode ? (
                     // <FilterModalDiv id="mousedown">
                     <FilterModal
-                      isOpen={() => setIsOpen(true)}
+                      isOpen={isOpen}
                       closeModal={IsFilterMode}
                       artworkInfo={selectedArtwork}
                       currentUser={currentUser}
@@ -131,26 +111,26 @@ export default function Artwork() {
                         <img
                           className="w-full h-full object-cover rounded-xl justify-center shadow-Ver1"
                           alt="gallery"
-                          src={list.DP_MAIN_IMG}
+                          src={list.dp_main_img}
                         />
                       </div>
                       <div className="w-36 h-fit flex flex-col my-auto justify-center">
                         <div className="h-[22px] mb-2 font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
-                          {list.DP_NAME}
+                          {list.dp_name}
                         </div>
-                        {list.DP_ARTIST === "" ? (
+                        {list.dp_artist === "" ? (
                           <ArtworkDesc className="text-primary-Gray">
                             unknown
                           </ArtworkDesc>
                         ) : (
-                          <ArtworkDesc>{list.DP_ARTIST}</ArtworkDesc>
+                          <ArtworkDesc>{list.dp_artist}</ArtworkDesc>
                         )}
-                        {list.DP_ART_PART === "" ? (
+                        {list.dp_art_part === "" ? (
                           <ArtworkDesc className="text-primary-Gray">
                             etc
                           </ArtworkDesc>
                         ) : (
-                          <ArtworkDesc>{list.DP_ART_PART}</ArtworkDesc>
+                          <ArtworkDesc>{list.dp_art_part}</ArtworkDesc>
                         )}
                       </div>
                     </ArtworkContainer>

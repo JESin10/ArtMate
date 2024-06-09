@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 // import { ReactComponent as BookMarkIcon } from "../assets/CustomSvg/bookmark.svg";
 // import { ReactComponent as LikeIcon } from "../assets/CustomSvg/like.svg";
 import tw from "tailwind-styled-components";
-import { UserInfo } from "./Home";
 import { useAuth } from "./context/AuthContext";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
@@ -19,6 +18,7 @@ import Swal from "sweetalert2";
 import { ref, uploadBytes, listAll, getDownloadURL } from "@firebase/storage";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { updateProfile } from "firebase/auth";
+import { UserInfo } from "../assets/interface";
 
 export default function Mypage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
