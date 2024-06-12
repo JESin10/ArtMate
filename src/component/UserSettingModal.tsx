@@ -122,21 +122,21 @@ fixed inset-0 flex items-center justify-center z-30
 `;
 
 const SettingModalContainer = tw.div`
-w-[350px] h-1/3  pb-[70px]
+w-[350px] h-1/3 mb-2 
 rounded-xl shadow-lg overflow-y-auto
 bg-white border-primary-Gray/30 border-2
 `;
 
 const CloseBtn = tw.button`
 w-8 h-8 rounded-full
-my-4 ml-[300px] justify-center
+my-2 ml-[300px] justify-center
 bg-white hover:text-primary-YellowGreen
 `;
 
 const SettingBtn = tw.button`
-w-10/12 h-14 p-2 my-2 mx-auto rounded-lg
+w-10/12 h-12 p-2 my-2 mx-auto rounded-lg
 bg-primary-Gray/80
 hover:bg-primary-DarkGray hover:font-extrabold
-text-lg text-white font-semibold
+text-md  text-white font-semibold
 tracking-widest
 `;

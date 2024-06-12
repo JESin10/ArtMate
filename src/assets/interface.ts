@@ -33,11 +33,11 @@ export interface ArtWorkSaveInfo {
   Uid: string;
   // Artwork_No : number;
   isSaved: boolean;
-  dp_name: string;
-  dp_ex_no: number;
-  dp_main_img: string;
-  dp_end: Date;
-  dp_art_part: string;
+  DP_NAME: string;
+  DP_EX_NO: number;
+  DP_MAIN_IMG: string;
+  DP_END: Date;
+  DP_ART_PART: string;
 }
 
 export interface CommentProps {

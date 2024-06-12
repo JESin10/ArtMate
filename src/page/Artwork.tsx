@@ -12,6 +12,7 @@ import { db } from "../Firebase";
 import { collection, doc } from "firebase/firestore";
 import FilterModal from "../component/FilterModal";
 import { ArtworkInfo } from "../assets/interface";
+import { SeoulArtMuseum_ArtWorkData } from "../api/RTDatabase";
 
 export default function Artwork() {
   const [artworkList, setArtWorkList] = useState<Array<ArtworkInfo>>([]);
@@ -28,11 +29,29 @@ export default function Artwork() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   // 페이지 렌딩과 동시에 데이터 가져오기
+  // const fetchData = async () => {
+  //   const response = await SeoulArtMuseum_ArtWork_OpenData(1, 10);
+  //   console.log(response);
+  //   setArtWorkList(response.ListExhibitionOfSeoulMOAInfo.row);
+  //   return response;
+  // };
+
   const fetchData = async () => {
-    const response = await SeoulArtMuseum_ArtWork_OpenData(1, 10);
-    console.log(response);
-    setArtWorkList(response.ListExhibitionOfSeoulMOAInfo.row);
-    return response;
+    const response = await SeoulArtMuseum_ArtWorkData();
+
+    // Get the current date
+    const currentDate = new Date();
+
+    // Filter the artworks based on the dp_end date
+    const filteredResponse = response.filter((artwork: any) => {
+      const endDate = new Date(artwork.dp_end);
+      return endDate > currentDate;
+    });
+
+    setArtWorkList(response);
+    // setLatestArray(filteredResponse);
+
+    return filteredResponse;
   };
   useEffect(() => {
     fetchData();

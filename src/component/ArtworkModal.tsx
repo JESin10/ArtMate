@@ -22,13 +22,15 @@ export default function ArtworkModal({
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const docRef = doc(listRef, artworkInfo?.dp_name);
   // const [artworkList] = useCollectionData(listRef);
+
   const targetArtwork =
     CloudInfo &&
     Array.isArray(CloudInfo) &&
     CloudInfo.find(
-      (item: ArtWorkSaveInfo) => item.dp_name === artworkInfo?.dp_name
+      (item: ArtWorkSaveInfo) => item.DP_NAME === artworkInfo?.dp_name
     );
 
+  console.log(CloudInfo);
   // 모달이외 공간 터치시 modal close
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -95,7 +97,7 @@ export default function ArtworkModal({
         setIsSaved(true);
         console.log(`Document saved successfully`);
         return ArtworkRef;
-      } else if ((targetArtwork as ArtWorkSaveInfo).isSaved) {
+      } else if (DocSnap.data()?.isSaved && artworkInfo?.dp_name) {
         const docRef = doc(listRef, artworkInfo?.dp_name);
 
         if (artworkInfo?.dp_name) {
@@ -171,6 +173,7 @@ export default function ArtworkModal({
     }
   };
 
+  console.log(targetArtwork);
   return (
     <ArtworkModalDiv>
       {artworkInfo && (

@@ -177,7 +177,7 @@ export default function Mypage() {
   // console.log(profileImage);
 
   return (
-    <div className="w-full h-screen mb-[70px]">
+    <div className="w-full h-screen mb-40">
       <div className="flex w-full justify-end px-4 space-x-2 pt-5 cursor-pointer">
         <button>
           <img alt="notify_icon" src={"./icons/Outline/notification.svg"} />
@@ -372,7 +372,7 @@ export default function Mypage() {
           <p className="w-fit mt-10 mx-2 font-extrabold text-lg">
             내가 작성한 댓글
           </p>
-          {MyCommentList &&
+          {MyCommentList && MyCommentList.length > 0 ? (
             MyCommentList.map((comment: any, index: number) => (
               <div>
                 <div className="text-xs text-primary-Gray">
@@ -383,7 +383,14 @@ export default function Mypage() {
                   <div>{comment.Written_Date}</div>
                 </div>
               </div>
-            ))}
+            ))
+          ) : (
+            <div className="  flex my-8 mx-auto">
+              <div className="text-xs flex mx-auto text-primary-Gray">
+                작성된 댓글이 없습니다.
+              </div>
+            </div>
+          )}
         </div>
       </div>
       {isModalOpen && (
