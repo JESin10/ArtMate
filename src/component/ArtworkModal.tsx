@@ -247,7 +247,7 @@ export default function ArtworkModal({
                     </>
                   ) : (
                     <ArtworkModalContent>
-                      {parseAndStyleInfo(artworkInfo.dp_viewtime)}
+                      {artworkInfo.dp_viewtime}
                     </ArtworkModalContent>
                   )}
                 </div>

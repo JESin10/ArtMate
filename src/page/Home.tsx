@@ -54,19 +54,30 @@ export default function Home() {
     // }
   }, [userInfo?.name || userInfo?.profileURL]);
 
-  // console.log(currentUser);
-  // console.log(userInfo);
-
   const fetchData = async () => {
     const response = await SeoulArtMuseum_ArtWorkData();
-    console.log(response);
-    setBaseArray(response.slice(0, 11));
-    setLatestArray([...response].reverse().slice(0, 10));
 
-    return response;
+    // Get the current date
+    const currentDate = new Date();
+
+    // Filter the artworks based on the dp_end date
+    const filteredResponse = response.filter((artwork: any) => {
+      const endDate = new Date(artwork.dp_end);
+      return endDate > currentDate;
+    });
+
+    // Set the baseArray and latestArray state
+    // setBaseArray(filteredResponse.slice(0, 11));
+    setBaseArray(response.slice(0, 11));
+    // setTestArr(response);
+    setLatestArray(filteredResponse);
+
+    return filteredResponse;
   };
 
-  console.log(latestArray);
+  console.log("baseArray", baseArray);
+  console.log("latestArray", latestArray);
+  // console.log("testArr", testArr);
 
   const UserSaving = async () => {
     try {
@@ -169,7 +180,7 @@ export default function Home() {
                           </>
                         )}
                       </div>
-                      <div className="p-2 text-xl font-extrabold text-white my-auto flex items-center overflow-hidden">
+                      <div className="p-2 text-xl font-extrabold text-white my-auto block items-center text-ellipsis overflow-hidden">
                         {list.dp_name}
                       </div>
                     </div>
@@ -187,9 +198,9 @@ export default function Home() {
               종료예정 전시 모음
             </h1>
             <div className="overflow-scroll w-full">
-              {latestArray &&
+              {latestArray.length > 0 &&
                 latestArray.map((list: ArtworkInfo) =>
-                  list.dp_end > list.dp_date ? (
+                  list.dp_end > list.dp_start ? (
                     <div className="w-11/12 mx-auto" key={list.dp_ex_no}>
                       <div
                         onClick={() => openModal(list)}
