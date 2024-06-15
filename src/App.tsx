@@ -8,12 +8,14 @@ const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <React.Fragment>
-        <BrowserRouter>
-          <Page />
-        </BrowserRouter>
-      </React.Fragment>
-    </QueryClientProvider>
+    <div className="bg-primary-YellowGreen/50">
+      <QueryClientProvider client={queryClient}>
+        <React.Fragment>
+          <BrowserRouter>
+            <Page />
+          </BrowserRouter>
+        </React.Fragment>
+      </QueryClientProvider>
+    </div>
   );
 }
