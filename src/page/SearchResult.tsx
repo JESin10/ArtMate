@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import SearchBar from "../modules/SearchBar";
 import tw from "tailwind-styled-components";
 // import GalleryModal from "../component/GalleryModal";
-import { GalleryInfo } from "./Gallery";
 import ArtworkModal from "../component/ArtworkModal";
 import { useAuth } from "./context/AuthContext";
 import { collection } from "firebase/firestore";
@@ -11,6 +10,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { getCookie } from "../api/Cookie";
 import { SearchingInfo } from "../api/Gallery_OpenApi";
 import { ArtworkInfo } from "../assets/interface";
+import { SeoulArtMuseum_ArtWorkData } from "../api/RTDatabase";
 
 export default function SearchResult() {
   //{
@@ -44,13 +44,14 @@ export default function SearchResult() {
 
   const onSearch = async () => {
     try {
-      const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo.row;
+      const response = await SeoulArtMuseum_ArtWorkData();
+      // const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo.row;
       // 검색어가 포함된 결과만 필터링
       const Results = response.filter((item: any) => {
-        // DP_ARTIST 또는 DP_NAME 중에 검색어가 포함되어 있는지 확인
+        // dp_artist 또는 dp_name 중에 검색어가 포함되어 있는지 확인
         return (
-          item.DP_ARTIST?.toLowerCase().includes(keyword.toLowerCase()) ||
-          item.DP_NAME?.toLowerCase().includes(keyword.toLowerCase())
+          item.dp_artist?.toLowerCase().includes(keyword.toLowerCase()) ||
+          item.dp_name?.toLowerCase().includes(keyword.toLowerCase())
         );
       });
       setSearchResults(Results);
@@ -90,17 +91,17 @@ export default function SearchResult() {
                         <div className="w-28 h-24 my-2 bg-primary-YellowGreen rounded-2xl">
                           <ResultMockupIMG
                             alt="gallery_mockup"
-                            src={list.DP_MAIN_IMG}
+                            src={list.dp_main_img}
                           />
                         </div>
                         <div className="flex flex-col w-44 h-fit my-auto justify-center">
                           <div className="flex justify-between w-full h-6 ">
                             <div className=" w-3/5 h-6  font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
-                              {list.DP_NAME}
+                              {list.dp_name}
                             </div>
-                            {list.DP_ARTIST ? (
+                            {list.dp_artist ? (
                               <div className="text-sm my-auto text-right w-12 overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
-                                {list.DP_ARTIST}
+                                {list.dp_artist}
                               </div>
                             ) : (
                               <div className="text-sm text-right w-12 my-auto">
@@ -109,24 +110,24 @@ export default function SearchResult() {
                             )}
                           </div>
 
-                          <div className="text-sm">{list.DP_PLACE}</div>
+                          <div className="text-sm">{list.dp_place}</div>
                           <div className="text-xs my-2 text-primary-Gray">
-                            {list.DP_END}까지
+                            {list.dp_end}까지
                           </div>
                           {/* <div className="text-right text-sm">00m</div> */}
                         </div>
                       </ResultContainer>
-                      {selectedArtwork && (
-                        <ArtworkModal
-                          isOpen={true}
-                          closeModal={closeModal}
-                          artworkInfo={selectedArtwork}
-                          currentUser={currentUser}
-                          CloudInfo={MyArtworkInfo}
-                        />
-                      )}
                     </div>
                   ))}
+                  {selectedArtwork && (
+                    <ArtworkModal
+                      isOpen={true}
+                      closeModal={closeModal}
+                      artworkInfo={selectedArtwork}
+                      currentUser={currentUser}
+                      CloudInfo={MyArtworkInfo}
+                    />
+                  )}
                 </>
               ) : (
                 <>

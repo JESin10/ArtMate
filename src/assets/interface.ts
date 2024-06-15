@@ -117,3 +117,17 @@ export interface LatestArtworkInfo {
   dp_ex_no: number;
   dp_art_part: string;
 }
+
+export interface GalleryInfo {
+  category: string;
+  eng_name: string;
+  home_page?: string | null;
+  kor_add: string;
+  kor_add_road: string;
+  kor_gu: string;
+  kor_name: string;
+  main_key: number;
+  opening_year: number;
+  phone: string | null;
+  zip_code: number;
+}

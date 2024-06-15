@@ -2,29 +2,12 @@
 import React, { useEffect, useState } from "react";
 import KaKaoMap from "../modules/KaKaoMap";
 import { loadImg } from "../assets/images";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "../modules/SearchBar";
 import tw from "tailwind-styled-components";
 import GalleryModal from "../component/GalleryModal";
-import { useQuery } from "react-query";
-import {
-  Seoul_Museum_Gallery_OpenData,
-  Visit_Seoul_OpenData,
-} from "../api/Gallery_OpenApi";
-
-export interface GalleryInfo {
-  CATEGORY: string;
-  ENG_NAME: string;
-  HOME_PAGE?: string | null;
-  KOR_ADD: string;
-  KOR_ADD_ROAD: string;
-  KOR_GU: string;
-  KOR_NAME: string;
-  MAIN_KEY: number;
-  OPENING_YEAR: number;
-  PHONE: string | null;
-  ZIP_CODE: number;
-}
+import { Seoul_Museum_GalleryData } from "../api/RTDatabase";
+import { GalleryInfo } from "../assets/interface";
 
 export default function Gallery() {
   const navigate = useNavigate();
@@ -35,9 +18,14 @@ export default function Gallery() {
   );
 
   // 페이지 렌딩과 동시에 데이터 가져오기
+  // const fetchData = async () => {
+  //   const response = await Seoul_Museum_Gallery_OpenData(1, 30);
+  //   setGalleryOpenData(response.SebcArtGalleryKor.row);
+  //   return response;
+  // };
   const fetchData = async () => {
-    const response = await Seoul_Museum_Gallery_OpenData(1, 30);
-    setGalleryOpenData(response.SebcArtGalleryKor.row);
+    const response = await Seoul_Museum_GalleryData();
+    setGalleryOpenData(response);
     return response;
   };
 
@@ -45,7 +33,7 @@ export default function Gallery() {
     fetchData();
   }, []);
 
-  const { data, isLoading } = useQuery(["DP_EX_NO"], fetchData);
+  console.log(GalleryOpenData);
 
   //지도모드
   const MapModeHandler = () => {
@@ -99,7 +87,7 @@ export default function Gallery() {
                 GalleryOpenData.map((list: GalleryInfo, index: number) => (
                   <div className="flex flex-col space-y-2" key={index}>
                     <GalleryContainer onClick={() => openModal(list)}>
-                      <div className="w-36 h-36 my-2 bg-blue-200 rounded-2xl">
+                      <div className="w-36 h-36 my-2 bg-primary-YellowGreen rounded-2xl">
                         <GalleryMockupIMG
                           alt="gallery_mockup"
                           src={loadImg.Gallery_MockUP}
@@ -107,10 +95,10 @@ export default function Gallery() {
                       </div>
                       <div className="flex flex-col w-40 h-fit my-auto justify-center">
                         <div className=" w-fit h-[22px] font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap my-1">
-                          {list.KOR_NAME}
+                          {list.kor_name}
                         </div>
-                        <div className="text-sm">{list.KOR_ADD}</div>
-                        <div className="text-sm">{list.KOR_GU}</div>
+                        <div className="text-sm">{list.kor_add}</div>
+                        <div className="text-sm">{list.kor_gu}</div>
                         <div className="text-right text-sm">00m</div>
                       </div>
                     </GalleryContainer>

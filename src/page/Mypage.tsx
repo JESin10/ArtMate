@@ -54,9 +54,9 @@ export default function Mypage() {
   );
   const [profileImgUrl, setProfileImgURL] = useState<string[]>([]);
   const ProfileImage = ref(storage, `UserProfile/${currentUser.uid}`);
-  const CommentRef = collection(db, `userInfo/${currentUser?.uid}/MyReviews`);
+  const CommentRef = collection(db, `userInfo/${currentUser?.uid}/MyComments`);
   const MyCommentList = useCollectionData(CommentRef)[0];
-  // console.log(ProfileImage);
+  console.log(MyCommentList);
 
   useEffect(() => {
     if (!currentUser) {

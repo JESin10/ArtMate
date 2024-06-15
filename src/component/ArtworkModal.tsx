@@ -163,9 +163,10 @@ export default function ArtworkModal({
         icon: "success",
         titleText: "COPY SUCCESS!",
         html: "클립보드에 복사되었습니다.",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#608D00",
-        timer: 300000,
+        showConfirmButton: false,
+        // confirmButtonText: "OK",
+        // confirmButtonColor: "#608D00",
+        timer: 1000,
       });
     } catch (err) {
       window.alert("복사에 실패하였습니다. 다시 시도 해주세요");

@@ -38,24 +38,17 @@ export default function Artwork() {
 
   const fetchData = async () => {
     const response = await SeoulArtMuseum_ArtWorkData();
-
-    // Get the current date
     const currentDate = new Date();
-
-    // Filter the artworks based on the dp_end date
     const filteredResponse = response.filter((artwork: any) => {
       const endDate = new Date(artwork.dp_end);
       return endDate > currentDate;
     });
-
     setArtWorkList(response);
-    // setLatestArray(filteredResponse);
-
     return filteredResponse;
   };
+
   useEffect(() => {
     fetchData();
-    // test();
   }, []);
 
   const handleFilterChange = (filteredData: Array<ArtworkInfo>) => {

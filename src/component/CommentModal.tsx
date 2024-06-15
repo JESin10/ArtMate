@@ -39,6 +39,8 @@ export default function CommentModal({
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [EditingComment, setEditingComment] = useState<string>("");
 
+  console.log(CommentList);
+
   //UserNickName Checker
   const userName = (LoginedUserInfo: any) => {
     if (LoginedUserInfo) {
