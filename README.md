@@ -26,16 +26,6 @@ Deployment : FireBase
 
 ## 📌 서비스 예시
 
-<details><summary> in Mobile </summary>
-
-<img width="25%" alt="Page_ex1" src="https://github.com/JESin10/ArtMate/assets/119720123/e7216398-04af-4401-a5fb-9c970dcf2cd8">
-<img width="25%" alt="Page_ex2" src="https://github.com/JESin10/ArtMate/assets/119720123/0526dba7-1bbc-4790-a574-c0cdc050d5d1">
-<img width="25%" alt="Page_ex3" src="https://github.com/JESin10/ArtMate/assets/119720123/d79c4f86-e389-47c3-abd1-b15922300a19">
-
-</details>
-
-## 📌 서비스 구현 상세
-
 <details><summary> 🎨 WireFrame </summary>
 
 <img width="52%" alt="Initial_wireframe" src="https://github.com/JESin10/ArtMate/assets/119720123/284f422f-a318-425d-98dc-845c05f60ccc">
@@ -43,6 +33,18 @@ Deployment : FireBase
 [Link to Figma](https://www.figma.com/design/0iw4lYmsIkfaZHq0X9uad2/artmate?node-id=610-3192&t=hLvZTYrFwyppFcAY-1)
 
 </details>
+
+<details><summary> Mobile </summary>
+
+<img width="25%" alt="Page_ex1" src="https://github.com/JESin10/ArtMate/assets/119720123/e7216398-04af-4401-a5fb-9c970dcf2cd8">
+<img width="25%" alt="Page_ex2" src="https://github.com/JESin10/ArtMate/assets/119720123/0526dba7-1bbc-4790-a574-c0cdc050d5d1">
+<img width="25%" alt="Page_ex3" src="https://github.com/JESin10/ArtMate/assets/119720123/d79c4f86-e389-47c3-abd1-b15922300a19">
+
+</details>
+
+
+## 📌 서비스 구현 상세
+
 
 ✅ Firebase
 
