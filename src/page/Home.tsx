@@ -118,7 +118,7 @@ export default function Home() {
   };
 
   return (
-    <div className="h-fit border-2 border-blue-400">
+    <div className="h-fit">
       <SearchBar />
       <>
         <div className="my-3">
