@@ -66,6 +66,5 @@ export default Page;
 
 const BasicDiv = tw.div`
 w-mobileWidth h-full mx-auto
-border-2 border-dotted border-black
-
+bg-white
 `;
