@@ -7,7 +7,7 @@ import { ReactComponent as AddIcon } from "../assets/customSvg/Adding.svg";
 import { ReactComponent as WriteBtn } from "../assets/customSvg/write.svg";
 import { ReactComponent as DeleteBtn } from "../assets/customSvg/delete.svg";
 import tw from "tailwind-styled-components";
-import ReviewModal, { ReviewInfo } from "../component/ReviewModal";
+import ReviewModal from "../component/ReviewModal";
 import { useAuth } from "./context/AuthContext";
 import {
   collection,
@@ -22,11 +22,7 @@ import { ref, listAll, getDownloadURL } from "@firebase/storage";
 import CommentModal from "../component/CommentModal";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-
-interface LikedReviewInfo {
-  Review_Uid: string;
-  Uid?: string;
-}
+import { ReviewInfo } from "../assets/interface";
 
 export default function Review() {
   const { currentUser } = useAuth();

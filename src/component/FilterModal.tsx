@@ -1,30 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ArtworkInfo } from "../page/Artwork";
 import tw from "tailwind-styled-components";
 import { RiArrowDropUpLine, RiArrowDropDownLine } from "react-icons/ri";
 import FilterDropdown from "../modules/FilterDropdown";
 import { SearchingInfo } from "../api/Gallery_OpenApi";
-
-interface ModalProps {
-  isOpen: any;
-  closeModal: () => void;
-  // selectedKeyword: any;
-  artworkInfo: ArtworkInfo | null;
-  currentUser: any;
-  // CloudInfo?: Object | null;
-  onFilterChange: (filteredData: ArtworkInfo[]) => void; // Add this line
-}
-
-export interface FilterInfo {
-  Uid: string;
-  // Artwork_No : number;
-  // isSaved: boolean;
-  DP_NAME: string;
-  DP_EX_NO: number;
-  DP_MAIN_IMG: string;
-  DP_END: Date;
-  DP_ART_PART: string;
-}
+import { ArtworkInfo, ModalProps } from "../assets/interface";
 
 export default function FilterModal({
   isOpen,

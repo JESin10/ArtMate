@@ -1,20 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
 import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { RxSlash } from "react-icons/rx";
-import { ArtworkInfo } from "../page/Artwork";
 import ArtworkModal from "./ArtworkModal";
 import { useAuth } from "../page/context/AuthContext";
 import { collection } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
+import { ArtworkInfo } from "../assets/interface";
+import { SeoulArtMuseum_ArtWorkData } from "../api/RTDatabase";
 
-interface RecommendArtworkInfo {
-  index: number;
-  DP_MAIN_IMG: string;
-}
 export default function RecommendSlider() {
   const [recentArray, setRecentArray] = useState<React.ReactNode[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -22,26 +19,6 @@ export default function RecommendSlider() {
   const { currentUser } = useAuth();
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const MyArtworkInfo = useCollectionData(listRef)[0];
-
-  const { data } = useQuery(
-    [
-      "DP_EX_NO",
-      {
-        START_INDEX: 1,
-        END_INDEX: 12,
-      },
-    ],
-    async () => {
-      const response = await MainPage(1, 12);
-      return response;
-    },
-    {
-      onSuccess: (data) => {
-        setRecentArray(data.ListExhibitionOfSeoulMOAInfo.row);
-      },
-    }
-  );
-
   const startIndex = (currentPage - 1) * PerItem;
   const endIndex = startIndex + PerItem;
   const currentItems = recentArray.slice(startIndex, endIndex);
@@ -49,6 +26,26 @@ export default function RecommendSlider() {
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkInfo | null>(
     null
   );
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const response = await SeoulArtMuseum_ArtWorkData();
+
+    // Get the current date
+    const currentDate = new Date();
+
+    // Filter the artworks based on the dp_end date
+    const filteredResponse = response.filter((artwork: any) => {
+      const endDate = new Date(artwork.dp_end);
+      return endDate > currentDate;
+    });
+    setRecentArray(filteredResponse.slice(0, 12));
+
+    return filteredResponse;
+  };
 
   // 이전 페이지로 이동하는 함수
   const goToPrevPage = () => {
@@ -73,7 +70,7 @@ export default function RecommendSlider() {
     setSelectedArtwork(null);
   };
 
-  console.log(currentItems);
+  // console.log(currentItems);
 
   return (
     <>
@@ -89,13 +86,13 @@ export default function RecommendSlider() {
                   {index % 4 === 0 && (
                     <RecommendImgVer1
                       alt={index.toString()}
-                      src={data.DP_MAIN_IMG}
+                      src={data.dp_main_img}
                     />
                   )}
                   {index % 4 === 1 && (
                     <RecommendImgVer2
                       alt={index.toString()}
-                      src={data.DP_MAIN_IMG}
+                      src={data.dp_main_img}
                     />
                   )}
                 </div>
@@ -107,13 +104,13 @@ export default function RecommendSlider() {
                   {index % 4 === 2 && (
                     <RecommendImgVer2
                       alt={index.toString()}
-                      src={data.DP_MAIN_IMG}
+                      src={data.dp_main_img}
                     />
                   )}
                   {index % 4 === 3 && (
                     <RecommendImgVer1
                       alt={index.toString()}
-                      src={data.DP_MAIN_IMG}
+                      src={data.dp_main_img}
                     />
                   )}
                 </div>

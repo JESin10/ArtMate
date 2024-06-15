@@ -1,10 +1,10 @@
 // import React, { useEffect } from "react";
 import { loadImg } from "../assets/images";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { GalleryInfo } from "../page/Gallery";
 import tw from "tailwind-styled-components";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { GalleryInfo } from "../assets/interface";
 
 interface ModalProps {
   isOpen: boolean;
@@ -57,12 +57,12 @@ export default function GalleryModal({
             src={loadImg.Gallery_MockUP}
           />
           <div className="px-4">
-            <h2 className="text-xl font-bold my-3">{galleryInfo.KOR_NAME}</h2>
+            <h2 className="text-xl font-bold my-3">{galleryInfo.kor_name}</h2>
             {/* 상세정보 */}
             <div className="space-y-1">
               <div className="flex">
                 <GalleryModalLabel>주소 </GalleryModalLabel>
-                <GalleryModalContent>{galleryInfo.KOR_ADD}</GalleryModalContent>
+                <GalleryModalContent>{galleryInfo.kor_add}</GalleryModalContent>
               </div>
               <div className="flex">
                 <GalleryModalLabel>운영시간 </GalleryModalLabel>
@@ -78,10 +78,10 @@ export default function GalleryModal({
               </div>
               <div className="flex">
                 <GalleryModalLabel>홈페이지 </GalleryModalLabel>
-                {galleryInfo.HOME_PAGE ? (
+                {galleryInfo.home_page ? (
                   <div className="text-sm flex">
                     <a
-                      href={galleryInfo.HOME_PAGE}
+                      href={galleryInfo.home_page}
                       target="_blank"
                       rel="noreferrer"
                       aria-label="resume-link"

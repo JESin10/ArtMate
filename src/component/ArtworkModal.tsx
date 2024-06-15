@@ -1,32 +1,14 @@
 import React, { useEffect, useState } from "react";
 // import { loadImg } from "../assets/images";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { ArtworkInfo } from "../page/Artwork";
+// import { ArtworkInfo } from "../page/Artwork";
 import tw from "tailwind-styled-components";
 import { ReactComponent as SaveIcon } from "../assets/customSvg/bookmark.svg";
 import { db } from "../Firebase";
 import { doc, setDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-
-interface ModalProps {
-  isOpen: boolean;
-  closeModal: () => void;
-  artworkInfo: ArtworkInfo | null;
-  currentUser: any;
-  CloudInfo?: Object | null;
-}
-
-export interface ArtWorkSaveInfo {
-  Uid: string;
-  // Artwork_No : number;
-  isSaved: boolean;
-  DP_NAME: string;
-  DP_EX_NO: number;
-  DP_MAIN_IMG: string;
-  DP_END: Date;
-  DP_ART_PART: string;
-}
+import { ArtWorkSaveInfo, ArtworkInfo, ModalProps } from "../assets/interface";
 
 export default function ArtworkModal({
   isOpen,
@@ -38,15 +20,17 @@ export default function ArtworkModal({
   const navigate = useNavigate();
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
-  const docRef = doc(listRef, artworkInfo?.DP_NAME);
+  const docRef = doc(listRef, artworkInfo?.dp_name);
   // const [artworkList] = useCollectionData(listRef);
+
   const targetArtwork =
     CloudInfo &&
     Array.isArray(CloudInfo) &&
     CloudInfo.find(
-      (item: ArtWorkSaveInfo) => item.DP_NAME === artworkInfo?.DP_NAME
+      (item: ArtWorkSaveInfo) => item.DP_NAME === artworkInfo?.dp_name
     );
 
+  console.log(CloudInfo);
   // 모달이외 공간 터치시 modal close
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -92,31 +76,31 @@ export default function ArtworkModal({
     if (!currentUser) {
       UserCheckHandler();
     } else {
-      if (!DocSnap.data()?.isSaved && artworkInfo?.DP_NAME) {
+      if (!DocSnap.data()?.isSaved && artworkInfo?.dp_name) {
         const ArtworkRef = await setDoc(
           doc(
             db,
             `userInfo/${currentUser?.uid}/ArtworkInfo`,
-            artworkInfo?.DP_NAME
+            artworkInfo?.dp_name
           ),
           {
             Uid: currentUser.uid,
             // Artwork_No : number,
             isSaved: true,
-            DP_NAME: artworkInfo?.DP_NAME,
-            DP_EX_NO: artworkInfo?.DP_EX_NO,
-            DP_MAIN_IMG: artworkInfo?.DP_MAIN_IMG,
-            DP_END: artworkInfo?.DP_END,
-            DP_ART_PART: artworkInfo?.DP_ART_PART,
+            DP_NAME: artworkInfo?.dp_name,
+            DP_EX_NO: artworkInfo?.dp_ex_no,
+            DP_MAIN_IMG: artworkInfo?.dp_main_img,
+            DP_END: artworkInfo?.dp_end,
+            DP_ART_PART: artworkInfo?.dp_art_part,
           }
         );
         setIsSaved(true);
         console.log(`Document saved successfully`);
         return ArtworkRef;
-      } else if ((targetArtwork as ArtWorkSaveInfo).isSaved) {
-        const docRef = doc(listRef, artworkInfo?.DP_NAME);
+      } else if (DocSnap.data()?.isSaved && artworkInfo?.dp_name) {
+        const docRef = doc(listRef, artworkInfo?.dp_name);
 
-        if (artworkInfo?.DP_NAME) {
+        if (artworkInfo?.dp_name) {
           try {
             await deleteDoc(docRef);
             setIsSaved(false);
@@ -179,9 +163,10 @@ export default function ArtworkModal({
         icon: "success",
         titleText: "COPY SUCCESS!",
         html: "클립보드에 복사되었습니다.",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#608D00",
-        timer: 300000,
+        showConfirmButton: false,
+        // confirmButtonText: "OK",
+        // confirmButtonColor: "#608D00",
+        timer: 1000,
       });
     } catch (err) {
       window.alert("복사에 실패하였습니다. 다시 시도 해주세요");
@@ -189,6 +174,7 @@ export default function ArtworkModal({
     }
   };
 
+  console.log(targetArtwork);
   return (
     <ArtworkModalDiv>
       {artworkInfo && (
@@ -204,7 +190,7 @@ export default function ArtworkModal({
           <img
             alt="example"
             className="w-full h-[350px] object-cover mt-12"
-            src={artworkInfo.DP_MAIN_IMG}
+            src={artworkInfo.dp_main_img}
           />
           <div className="px-3">
             <div className="flex-col justify-between">
@@ -233,7 +219,7 @@ export default function ArtworkModal({
                 )}
               </div>
               <h2 className="w-11/12 text-xl font-bold my-3">
-                {artworkInfo.DP_NAME}
+                {artworkInfo.dp_name}
               </h2>
             </div>
             {/* 상세정보 */}
@@ -241,20 +227,20 @@ export default function ArtworkModal({
               <div className="flex">
                 <ArtworkModalLabel>전시장소 </ArtworkModalLabel>
                 <ArtworkModalContent>
-                  {artworkInfo.DP_PLACE}
+                  {artworkInfo.dp_place}
                 </ArtworkModalContent>
               </div>
               <div className="flex">
                 <ArtworkModalLabel>전시기간 </ArtworkModalLabel>
                 <ArtworkModalContent>
-                  {artworkInfo.DP_START.toString()} ~{" "}
-                  {artworkInfo.DP_END.toString()}
+                  {artworkInfo.dp_start.toString()} ~{" "}
+                  {artworkInfo.dp_end.toString()}
                 </ArtworkModalContent>
               </div>
               <div className="flex">
                 <ArtworkModalLabel>운영시간</ArtworkModalLabel>
                 <div className="w-full">
-                  {artworkInfo.DP_VIEWTIME === "" ? (
+                  {artworkInfo.dp_viewtime === "" ? (
                     <>
                       <ArtworkModalContent>
                         평일 10:00-20:00
@@ -265,30 +251,30 @@ export default function ArtworkModal({
                     </>
                   ) : (
                     <ArtworkModalContent>
-                      {parseAndStyleInfo(artworkInfo.DP_VIEWTIME)}
+                      {artworkInfo.dp_viewtime}
                     </ArtworkModalContent>
                   )}
                 </div>
               </div>
               <div className="flex">
                 <ArtworkModalLabel>작가 </ArtworkModalLabel>
-                {artworkInfo.DP_ARTIST === "" ? (
+                {artworkInfo.dp_artist === "" ? (
                   <div className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
                     unknown
                   </div>
                 ) : (
                   <div className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
-                    {artworkInfo.DP_ARTIST}
+                    {artworkInfo.dp_artist}
                   </div>
                 )}
               </div>
               <div className="flex">
                 <ArtworkModalLabel>HOME </ArtworkModalLabel>
                 <div className="flex w-full">
-                  {artworkInfo.DP_LNK ? (
+                  {artworkInfo.dp_link ? (
                     <a
                       className="text-sm flex"
-                      href={artworkInfo.DP_LNK}
+                      href={artworkInfo.dp_link}
                       target="_blank"
                       rel="noreferrer"
                       aria-label="resume-link"
@@ -307,7 +293,7 @@ export default function ArtworkModal({
             </div>
             {/* 갤러리 상세설명 */}
             <div className="text-xs text-primary-Gray my-4 flex">
-              {parseAndStyleInfo(artworkInfo.DP_INFO)}
+              {parseAndStyleInfo(artworkInfo.dp_info)}
             </div>
           </div>
         </ArtworkModalContainer>

@@ -1,14 +1,11 @@
 {
-  "functions": {
-    "source": "functions"
-  },
   "database": {
     "rules": "database.rules.json"
   },
   "hosting": [
     {
       "target": "master",
-      "public": "public",
+      "public": "build",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
         {

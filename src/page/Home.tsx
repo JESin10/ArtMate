@@ -7,33 +7,15 @@ import SearchBar from "../modules/SearchBar";
 // import { useQuery } from "react-query";
 import { MainPage } from "../api/Gallery_OpenApi";
 import tw from "tailwind-styled-components";
-import { ArtworkInfo } from "./Artwork";
 import { useAuth } from "./context/AuthContext";
 import { collection, doc, setDoc } from "firebase/firestore";
-import { db } from "../Firebase";
+import { db, rtd } from "../Firebase";
 import { v4 as uidv } from "uuid";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import ArtworkModal from "../component/ArtworkModal";
 import MenuFooter from "../component/MenuFooter";
-
-export interface UserInfo {
-  userId: string;
-  uid: string;
-  name: string;
-  profileURL: string[];
-  email: string;
-  access_token?: string;
-}
-
-export interface LatestArtworkInfo {
-  DP_END: Date;
-  DP_MAIN_IMG: string;
-  DP_NAME: string;
-  DP_START: Date;
-  DP_ARTIST: string;
-  DP_EX_NO: number;
-  DP_ART_PART: string;
-}
+import { SeoulArtMuseum_ArtWorkData } from "../api/RTDatabase";
+import { ArtworkInfo, LatestArtworkInfo, UserInfo } from "../assets/interface";
 
 export default function Home() {
   const [baseArray, setBaseArray] = useState<LatestArtworkInfo[]>([]);
@@ -55,11 +37,7 @@ export default function Home() {
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const MyArtworkInfo = useCollectionData(listRef)[0];
 
-  console.log("currentUser", currentUser);
-  // console.log("LoginedUserInfo:",LoginedUserInfo);
-
   useEffect(() => {
-    // console.log(currentUser.uid);
     UserSaving();
     fetchData();
     if (LoginedUserInfo && currentUser?.email !== LoginedUserInfo[0]?.Email) {
@@ -76,17 +54,30 @@ export default function Home() {
     // }
   }, [userInfo?.name || userInfo?.profileURL]);
 
-  console.log(currentUser);
-  console.log(userInfo);
-
   const fetchData = async () => {
-    const response = await MainPage(1, 10);
-    setBaseArray(response.ListExhibitionOfSeoulMOAInfo.row);
-    setLatestArray([...response.ListExhibitionOfSeoulMOAInfo.row].reverse());
-    return response;
+    const response = await SeoulArtMuseum_ArtWorkData();
+
+    // Get the current date
+    const currentDate = new Date();
+
+    // Filter the artworks based on the dp_end date
+    const filteredResponse = response.filter((artwork: any) => {
+      const endDate = new Date(artwork.dp_end);
+      return endDate > currentDate;
+    });
+
+    // Set the baseArray and latestArray state
+    // setBaseArray(filteredResponse.slice(0, 11));
+    setBaseArray(response.slice(0, 11));
+    // setTestArr(response);
+    setLatestArray(filteredResponse);
+
+    return filteredResponse;
   };
 
-  // console.log(currentUser);
+  console.log("baseArray", baseArray);
+  console.log("latestArray", latestArray);
+  // console.log("testArr", testArr);
 
   const UserSaving = async () => {
     try {
@@ -117,9 +108,6 @@ export default function Home() {
     }
   };
 
-  // console.log("currentUser:", currentUser);
-  // console.log("LoginedUserInfo:", LoginedUserInfo);
-
   //Modal
   const openModal = (artwork: ArtworkInfo) => {
     setSelectedArtwork(artwork);
@@ -128,15 +116,6 @@ export default function Home() {
   const closeModal = () => {
     setSelectedArtwork(null);
   };
-
-  console.log(LoginedUserInfo);
-
-  // function parseAndStyleInfo(info: string) {
-  //   const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
-  //     return `<span style="font-weight: bold;">${content}</span>`;
-  //   });
-  //   return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
-  // }
 
   return (
     <div className="h-fit border-2 border-blue-400">
@@ -177,32 +156,32 @@ export default function Home() {
             {baseArray &&
               baseArray.map((list) => (
                 <div
-                  key={list.DP_EX_NO}
+                  key={list.dp_ex_no}
                   className="h-[500px] object-cover px-2 rounded-xl bg-transparent"
                 >
                   <div className="w-full h-full rounded-xl border-primary-YellowGreen bg-primary-YellowGreen border-4">
                     <img
                       className="rounded-t-lg h-[72%] w-full object-cover shadow-md object-center"
-                      src={list.DP_MAIN_IMG}
-                      alt={`list-${list.DP_EX_NO}`}
+                      src={list.dp_main_img}
+                      alt={`list-${list.dp_ex_no}`}
                     />
                     <div className="w-full h-[28%] rounded-b-lg pb-1 bg-primary-YellowGreen border-primary-YellowGreen border-t-4 flex flex-col">
                       <div className="h-fit flex flex-wrap">
-                        {list.DP_ART_PART === "" ? (
+                        {list.dp_art_part === "" ? (
                           <>
                             <Tag>#최신전시</Tag>
                             <Tag>#NEW</Tag>
                           </>
                         ) : (
                           <>
-                            {list.DP_ART_PART.split(",").map((tag) => (
+                            {list.dp_art_part.split(",").map((tag) => (
                               <Tag key={tag}>#{tag}</Tag>
                             ))}
                           </>
                         )}
                       </div>
-                      <div className="p-2 text-xl font-extrabold text-white my-auto flex items-center overflow-hidden">
-                        {list.DP_NAME}
+                      <div className="p-2 text-xl font-extrabold text-white my-auto block items-center text-ellipsis overflow-hidden">
+                        {list.dp_name}
                       </div>
                     </div>
                   </div>
@@ -219,10 +198,10 @@ export default function Home() {
               종료예정 전시 모음
             </h1>
             <div className="overflow-scroll w-full">
-              {latestArray &&
+              {latestArray.length > 0 &&
                 latestArray.map((list: ArtworkInfo) =>
-                  list.DP_END > list.DP_DATE ? (
-                    <div className="w-11/12 mx-auto" key={list.DP_EX_NO}>
+                  list.dp_end > list.dp_start ? (
+                    <div className="w-11/12 mx-auto" key={list.dp_ex_no}>
                       <div
                         onClick={() => openModal(list)}
                         className="flex py-2 hover:cursor-pointer"
@@ -230,19 +209,19 @@ export default function Home() {
                         <div className="w-[130px] h-[90px] bg-white">
                           <img
                             className="w-full h-full mr-2 object-cover "
-                            src={list.DP_MAIN_IMG}
+                            src={list.dp_main_img}
                           />
                         </div>
                         <div className="flex flex-col mx-2 justify-start w-40">
                           <p className="text-primary-Gray text-xs">
-                            {list.DP_ART_PART.split(",", 1)} 작품을 만나볼 시간
+                            {list.dp_art_part?.split(",", 1)} 작품을 만나볼 시간
                           </p>
                           <p className="text-black font-bold text-base my-4 hover:text-primary-YellowGreen overflow-hidden line-clamp-1 flex-wrap">
-                            {list.DP_NAME}
+                            {list.dp_name}
                           </p>
 
                           <p className="text-primary-Gray text-xs text-end">
-                            {list.DP_END.toString()}까지
+                            {list.dp_end.toString()}까지
                           </p>
                         </div>
                       </div>
@@ -261,8 +240,8 @@ export default function Home() {
             <div className="w-full flex overflow-x-scroll mx-auto my-4 px-2">
               {baseArray &&
                 baseArray.map((list) => (
-                  <div key={list.DP_EX_NO}>
-                    {list.DP_ARTIST === "" ? null : (
+                  <div key={list.dp_ex_no}>
+                    {list.dp_artist === "" ? null : (
                       <div className="w-fit flex flex-col justify-center text-center mr-4">
                         <div className="w-[72px] h-[72px] rounded-full bg-white border-black border-2 shadow-md">
                           <img
@@ -270,7 +249,7 @@ export default function Home() {
                             src={loadImg.Menu_User}
                           />
                         </div>
-                        <ArtistName>{list.DP_ARTIST.split(",", 1)}</ArtistName>
+                        <ArtistName>{list.dp_artist.split(",", 1)}</ArtistName>
                       </div>
                     )}
                   </div>

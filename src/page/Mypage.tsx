@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 // import { ReactComponent as BookMarkIcon } from "../assets/CustomSvg/bookmark.svg";
 // import { ReactComponent as LikeIcon } from "../assets/CustomSvg/like.svg";
 import tw from "tailwind-styled-components";
-import { UserInfo } from "./Home";
 import { useAuth } from "./context/AuthContext";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
@@ -19,6 +18,7 @@ import Swal from "sweetalert2";
 import { ref, uploadBytes, listAll, getDownloadURL } from "@firebase/storage";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { updateProfile } from "firebase/auth";
+import { UserInfo } from "../assets/interface";
 
 export default function Mypage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -54,9 +54,9 @@ export default function Mypage() {
   );
   const [profileImgUrl, setProfileImgURL] = useState<string[]>([]);
   const ProfileImage = ref(storage, `UserProfile/${currentUser.uid}`);
-  const CommentRef = collection(db, `userInfo/${currentUser?.uid}/MyReviews`);
+  const CommentRef = collection(db, `userInfo/${currentUser?.uid}/MyComments`);
   const MyCommentList = useCollectionData(CommentRef)[0];
-  // console.log(ProfileImage);
+  console.log(MyCommentList);
 
   useEffect(() => {
     if (!currentUser) {
@@ -177,7 +177,7 @@ export default function Mypage() {
   // console.log(profileImage);
 
   return (
-    <div className="w-full h-screen mb-[70px]">
+    <div className="w-full h-screen mb-40">
       <div className="flex w-full justify-end px-4 space-x-2 pt-5 cursor-pointer">
         <button>
           <img alt="notify_icon" src={"./icons/Outline/notification.svg"} />
@@ -372,7 +372,7 @@ export default function Mypage() {
           <p className="w-fit mt-10 mx-2 font-extrabold text-lg">
             내가 작성한 댓글
           </p>
-          {MyCommentList &&
+          {MyCommentList && MyCommentList.length > 0 ? (
             MyCommentList.map((comment: any, index: number) => (
               <div>
                 <div className="text-xs text-primary-Gray">
@@ -383,7 +383,14 @@ export default function Mypage() {
                   <div>{comment.Written_Date}</div>
                 </div>
               </div>
-            ))}
+            ))
+          ) : (
+            <div className="  flex my-8 mx-auto">
+              <div className="text-xs flex mx-auto text-primary-Gray">
+                작성된 댓글이 없습니다.
+              </div>
+            </div>
+          )}
         </div>
       </div>
       {isModalOpen && (
