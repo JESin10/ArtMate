@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 // import { loadImg } from "../assets/images";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import tw from "tailwind-styled-components";
-import { ReactComponent as SaveIcon } from "../assets/customSvg/bookmark.svg";
 import { db, storage } from "../Firebase";
 import { v4 as uidv4 } from "uuid";
 import { doc, setDoc } from "firebase/firestore";
@@ -51,7 +50,7 @@ export default function ReviewModal({
         if (imageUpload !== null) {
           const imageRef = ref(
             storage,
-            `ReviewImage/${ReviewUid}/${imageUpload.name}`
+            `ReviewImage/${ReviewUid}/${imageUpload.name}`,
           );
           // await uploadBytes(imageRef, imageUpload);
 
@@ -64,7 +63,7 @@ export default function ReviewModal({
             (snapshot: any) => {
               // 업로드 진행률 계산하여 설정
               const progress = Math.round(
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
               );
               console.log("Upload is " + progress + "% done");
               // 진행률 상태를 사용할 수 있도록 설정
@@ -92,7 +91,7 @@ export default function ReviewModal({
                   Visited_Date: DateRef.current?.value,
                   // Like_Cnt: 0,
                   Comment_Uid: CommentUid,
-                }
+                },
               );
               await setDoc(doc(db, "AllReview", ReviewUid), {
                 Review_Uid: ReviewUid,
@@ -112,7 +111,7 @@ export default function ReviewModal({
 
               console.log(imageList);
               console.log("Upload completed");
-            }
+            },
           );
         }
         // const imageURL = await getDownloadURL(imageRef);
@@ -148,7 +147,7 @@ export default function ReviewModal({
   };
 
   const ImageCancelHandler = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     event.preventDefault();
     event.stopPropagation();
