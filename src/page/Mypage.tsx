@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { loadImg } from "../assets/images";
 import { useNavigate } from "react-router-dom";
-// import { ReactComponent as BookMarkIcon } from "../assets/CustomSvg/bookmark.svg";
-// import { ReactComponent as LikeIcon } from "../assets/CustomSvg/like.svg";
 import tw from "tailwind-styled-components";
 import { useAuth } from "./context/AuthContext";
 import { useCollectionData } from "react-firebase-hooks/firestore";

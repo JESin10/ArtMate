@@ -2,11 +2,11 @@
 // import { loadImg } from "../assets/images";
 import tw from "tailwind-styled-components";
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as MenuHome } from "../assets/customSvg/Menubar_home.svg";
-import { ReactComponent as MenuArtwork } from "../assets/customSvg/Menubar_image.svg";
-import { ReactComponent as MenuGallery } from "../assets/customSvg/Menubar_gallery.svg";
-import { ReactComponent as MenuReview } from "../assets/customSvg/Menubar_bookmark.svg";
-import { ReactComponent as MenuUser } from "../assets/customSvg/Menubar_user.svg";
+import { ReactComponent as MenuHome } from "../../assets/customSvg/Menubar_home.svg";
+import { ReactComponent as MenuArtwork } from "../../assets/customSvg/Menubar_image.svg";
+import { ReactComponent as MenuGallery } from "../../assets/customSvg/Menubar_gallery.svg";
+import { ReactComponent as MenuReview } from "../../assets/customSvg/Menubar_bookmark.svg";
+import { ReactComponent as MenuUser } from "../../assets/customSvg/Menubar_user.svg";
 import { useAuth } from "../page/context/AuthContext";
 
 export default function MenuBar() {
