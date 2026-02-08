@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { SeoulArtMuseum_ArtWork_OpenData } from "../api/Gallery_OpenApi";
 import SearchBar from "../modules/SearchBar";
-import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
+import { ReactComponent as ReloadIcon } from "../../assets/customSvg/reload.svg";
 import tw from "tailwind-styled-components";
 import ArtworkModal from "../component/ArtworkModal";
 import { useAuth } from "./context/AuthContext";

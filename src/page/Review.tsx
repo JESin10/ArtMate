@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import SearchBar from "../modules/SearchBar";
 import { loadImg } from "../assets/images";
-import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
-import { ReactComponent as LikeIcon } from "../assets/customSvg/Heart.svg";
-import { ReactComponent as AddIcon } from "../assets/customSvg/Adding.svg";
-import { ReactComponent as WriteBtn } from "../assets/customSvg/write.svg";
-import { ReactComponent as DeleteBtn } from "../assets/customSvg/delete.svg";
+import { ReactComponent as ReloadIcon } from "../../assets/customSvg/reload.svg";
+import { ReactComponent as LikeIcon } from "../../assets/customSvg/Heart.svg";
+import { ReactComponent as AddIcon } from "../../assets/customSvg/Adding.svg";
+import { ReactComponent as WriteBtn } from "../../assets/customSvg/write.svg";
+import { ReactComponent as DeleteBtn } from "../../assets/customSvg/delete.svg";
 import tw from "tailwind-styled-components";
 import ReviewModal from "../component/ReviewModal";
 import { useAuth } from "./context/AuthContext";
