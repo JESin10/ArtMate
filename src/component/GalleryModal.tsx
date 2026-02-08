@@ -19,7 +19,7 @@ export default function GalleryModal({
 }: ModalProps) {
   const { galleryId } = useParams();
 
-  // console.log(galleryInfo);
+  console.log(galleryInfo);
 
   // 모달이외 공간 터치시 modal close
   useEffect(() => {
@@ -39,6 +39,16 @@ export default function GalleryModal({
 
   if (!isOpen) return null;
 
+  const siteThumbnail = (url?: string, w = 600) => {
+    if (!url) return null;
+    try {
+      const u = url.startsWith("http") ? url : `https://${url}`;
+      return `https://s.wordpress.com/mshots/v1/${encodeURIComponent(u)}?w=${w}`;
+    } catch {
+      return null;
+    }
+  };
+
   return (
     <GalleryModalDiv>
       {galleryInfo && (
@@ -51,13 +61,27 @@ export default function GalleryModal({
               <IoIosCloseCircleOutline size="100%" />
             </button>
           </div>
-          <img
+          {/* <img
             alt="example"
             className="w-full h-[350px] object-contain mt-12 bg-white"
             src={loadImg.Gallery_MockUP}
+          /> */}
+          <img
+            className="w-full h-full object-cover rounded-xl justify-center shadow-Ver1"
+            alt="gallery"
+            src={
+              (galleryInfo as any).dp_main_img ||
+              (galleryInfo as any).imgUrl ||
+              siteThumbnail(
+                (galleryInfo as any).home_page || (galleryInfo as any).placeUrl,
+              ) ||
+              loadImg.Gallery_MockUP
+            }
           />
           <div className="px-4">
-            <h2 className="text-xl font-bold my-3">{galleryInfo.kor_name}</h2>
+            <h2 className="text-xl font-bold my-3">
+              {galleryInfo.kor_name} / {galleryInfo.category}
+            </h2>
             {/* 상세정보 */}
             <div className="space-y-1">
               <div className="flex">

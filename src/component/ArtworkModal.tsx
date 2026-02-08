@@ -9,6 +9,8 @@ import { doc, setDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { ArtWorkSaveInfo, ArtworkInfo, ModalProps } from "../assets/interface";
+import { SeoulArtMuseum_Detail_OpenData } from "../api/Gallery_OpenApi";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 
 export default function ArtworkModal({
   isOpen,
@@ -21,18 +23,71 @@ export default function ArtworkModal({
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const docRef = doc(listRef, artworkInfo?.dp_name);
-  // const [artworkList] = useCollectionData(listRef);
-
+  const [artworkList] = useCollectionData(listRef);
+  const [detailData, setDetailData] = useState<ArtworkInfo>();
   const targetArtwork =
     CloudInfo &&
     Array.isArray(CloudInfo) &&
     CloudInfo.find(
-      (item: ArtWorkSaveInfo) => item.DP_NAME === artworkInfo?.dp_name
+      (item: ArtWorkSaveInfo) => item.DP_NAME === artworkInfo?.dp_name,
     );
+  const getDetailArtwork = async (num?: number) => {
+    if (!num) return null;
+    try {
+      const response = await SeoulArtMuseum_Detail_OpenData(num);
 
-  console.log(CloudInfo);
+      const jsonItems =
+        response?.response?.body?.items?.item ||
+        response?.body?.items?.item ||
+        response?.items?.item ||
+        response?.items ||
+        null;
+      if (jsonItems) {
+        const arr = Array.isArray(jsonItems) ? jsonItems : [jsonItems];
+        setDetailData(arr[0] as any);
+        return arr;
+      }
+
+      if (typeof response === "string" && response.trim().startsWith("<")) {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(response, "text/xml");
+        const itemNodes = xml.getElementsByTagName("item");
+        const arr = Array.from(itemNodes).map((node) => {
+          const getText = (tag: string) =>
+            node.getElementsByTagName(tag)[0]?.textContent || "";
+          return {
+            dp_ex_no: getText("seq"),
+            dp_name: getText("title"),
+            dp_main_img: getText("imgUrl"),
+            dp_art_part: getText("realmName") || getText("serviceName"),
+            dp_artist: "",
+            dp_start: getText("startDate"),
+            dp_end: getText("endDate"),
+            dp_place: getText("place"),
+            dp_area: getText("area"),
+            dp_sigungu: getText("sigungu"),
+            dp_price: getText("price"),
+            dp_link: getText("url") || getText("placeUrl"),
+            dp_phone: getText("phone"),
+            dp_info: getText("contents1") || getText("contents"),
+            dp_viewtime: getText("viewTime"),
+            dp_placeAdrs: getText("placeAddr"),
+            dp_gpsX: getText("gpsX"),
+            dp_gpsY: getText("gpsY"),
+          } as any;
+        });
+        setDetailData(arr[0] as any);
+        return arr;
+      }
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  };
+
   // 모달이외 공간 터치시 modal close
   useEffect(() => {
+    getDetailArtwork(Number(artworkInfo?.dp_ex_no));
     const handleOutsideClick = (event: MouseEvent) => {
       const modalContainer = document.getElementById("ArtworkModal");
       if (modalContainer && !modalContainer.contains(event.target as Node)) {
@@ -72,53 +127,57 @@ export default function ArtworkModal({
   };
 
   const ArtWorkSaving = async () => {
-    const DocSnap = await getDoc(docRef);
     if (!currentUser) {
       UserCheckHandler();
-    } else {
-      if (!DocSnap.data()?.isSaved && artworkInfo?.dp_name) {
-        const ArtworkRef = await setDoc(
-          doc(
-            db,
-            `userInfo/${currentUser?.uid}/ArtworkInfo`,
-            artworkInfo?.dp_name
-          ),
-          {
-            Uid: currentUser.uid,
-            // Artwork_No : number,
-            isSaved: true,
-            DP_NAME: artworkInfo?.dp_name,
-            DP_EX_NO: artworkInfo?.dp_ex_no,
-            DP_MAIN_IMG: artworkInfo?.dp_main_img,
-            DP_END: artworkInfo?.dp_end,
-            DP_ART_PART: artworkInfo?.dp_art_part,
-          }
-        );
-        setIsSaved(true);
-        console.log(`Document saved successfully`);
-        return ArtworkRef;
-      } else if (DocSnap.data()?.isSaved && artworkInfo?.dp_name) {
-        const docRef = doc(listRef, artworkInfo?.dp_name);
+      return;
+    }
+    if (!artworkInfo?.dp_name) return;
 
-        if (artworkInfo?.dp_name) {
-          try {
-            await deleteDoc(docRef);
-            setIsSaved(false);
-            console.log(`Document deleted successfully`);
-          } catch (error) {
-            console.error(`Error deleting document: ${error}`);
-          }
-        }
-      }
+    const localDocRef = doc(listRef, artworkInfo.dp_name);
+    const DocSnap = await getDoc(localDocRef);
+
+    if (!DocSnap.exists() || !DocSnap.data()?.isSaved) {
+      await setDoc(localDocRef, {
+        Uid: currentUser.uid,
+        isSaved: true,
+        DP_NAME: artworkInfo.dp_name,
+        DP_EX_NO: artworkInfo.dp_ex_no,
+        DP_MAIN_IMG: artworkInfo.dp_main_img,
+        DP_END: artworkInfo.dp_end,
+        DP_ART_PART: artworkInfo.dp_art_part,
+      });
+      setIsSaved(true);
+      console.log("Document saved successfully");
+      return;
+    }
+
+    try {
+      await deleteDoc(localDocRef);
+      setIsSaved(false);
+      console.log("Document deleted successfully");
+    } catch (error) {
+      console.error(`Error deleting document: ${error}`);
     }
   };
 
-  function parseAndStyleInfo(info: string) {
+  // console.log("detailData:", detailData);
+
+  const formatYMD = (s: any) => {
+    if (s === null || s === undefined || s === "") return "정보없음";
+    let str = typeof s === "number" ? s.toString() : String(s);
+    str = str.replace(/\D/g, "");
+    if (str.length >= 8) {
+      return `${str.slice(0, 4)}년 ${str.slice(4, 6)}월 ${str.slice(6, 8)}일`;
+    }
+    return str;
+  };
+
+  const parseAndStyleInfo = (info: string) => {
     const styledInfo = info.replace(/\[([^\]]+)\]/g, (match, content) => {
       return `<span style="font-weight: bold;">${content}</span>`;
     });
     return <div dangerouslySetInnerHTML={{ __html: styledInfo }} />;
-  }
+  };
 
   // function parseAndStyleInfo(info: string) {
   //   const lines = info.split(/\r\n/);
@@ -174,10 +233,9 @@ export default function ArtworkModal({
     }
   };
 
-  console.log(targetArtwork);
   return (
     <ArtworkModalDiv>
-      {artworkInfo && (
+      {detailData && (
         <ArtworkModalContainer id="ArtworkModal">
           <div className="fixed z-10">
             <button
@@ -190,13 +248,18 @@ export default function ArtworkModal({
           <img
             alt="example"
             className="w-full h-[350px] object-cover mt-12"
-            src={artworkInfo.dp_main_img}
+            src={detailData.dp_main_img}
           />
-          <div className="px-3">
-            <div className="flex-col justify-between">
-              <div className="h-fit w-full justify-end  pt-3 my-auto flex space-x-3">
+          <div className="px-10">
+            <div className="w-full flex justify-between">
+              <div className="w-full flex flex-wrap text-xs justify-start items-center mt-3 whitespace-normal break-words">
+                <h3 className=" text-primary-Gray">{detailData.dp_place}</h3>
+                <span className=" text-primary-Gray mx-2">/</span>
+                <h3 className=" text-primary-Gray ">{detailData.dp_area}</h3>
+              </div>
+              <div className="h-fit w-1/3 justify-end pt-3 my-auto flex space-x-3">
                 <button
-                  onClick={() => handleCopyClipBoard(artworkInfo)}
+                  onClick={() => handleCopyClipBoard(detailData)}
                   className="h-8 w-auto my-auto hover:scale-[105%] hover:duration-150"
                 >
                   <img
@@ -205,76 +268,88 @@ export default function ArtworkModal({
                     src={"./icons/Outline/share.svg"}
                   />
                 </button>
-                {targetArtwork && (targetArtwork as ArtWorkSaveInfo).isSaved ? (
+                {targetArtwork &&
+                detailData &&
+                (targetArtwork as ArtWorkSaveInfo).isSaved ? (
                   <button className="h-fit w-fit my-auto">
                     <Saving
-                      onClick={ArtWorkSaving}
+                      onClick={() => ArtWorkSaving()}
                       style={{ fill: "#608D00" }}
                     />
                   </button>
                 ) : (
                   <button className="h-fit w-fit my-auto ">
-                    <Saving onClick={ArtWorkSaving} style={{ fill: "white" }} />
+                    <Saving
+                      onClick={() => ArtWorkSaving()}
+                      style={{ fill: "white" }}
+                    />
                   </button>
                 )}
               </div>
-              <h2 className="w-11/12 text-xl font-bold my-3">
-                {artworkInfo.dp_name}
-              </h2>
             </div>
+            <h2 className="w-11/12 text-lg font-bold my-3">
+              {detailData.dp_name}
+            </h2>
             {/* 상세정보 */}
             <div className="space-y-1">
               <div className="flex">
                 <ArtworkModalLabel>전시장소 </ArtworkModalLabel>
-                <ArtworkModalContent>
-                  {artworkInfo.dp_place}
-                </ArtworkModalContent>
+                <ArtworkModalContent>{detailData.dp_place}</ArtworkModalContent>
               </div>
               <div className="flex">
                 <ArtworkModalLabel>전시기간 </ArtworkModalLabel>
                 <ArtworkModalContent>
-                  {artworkInfo.dp_start.toString()} ~{" "}
-                  {artworkInfo.dp_end.toString()}
+                  {formatYMD(detailData?.dp_start)} ~{" "}
+                  {formatYMD(detailData?.dp_end)}
                 </ArtworkModalContent>
               </div>
               <div className="flex">
                 <ArtworkModalLabel>운영시간</ArtworkModalLabel>
                 <div className="w-full">
-                  {artworkInfo.dp_viewtime === "" ? (
+                  {detailData.dp_viewtime === "" ? (
                     <>
-                      <ArtworkModalContent>
-                        평일 10:00-20:00
-                      </ArtworkModalContent>
-                      <ArtworkModalContent>
-                        주말 10:00-19:00
-                      </ArtworkModalContent>
+                      <ArtworkModalContent>정보없음</ArtworkModalContent>
                     </>
                   ) : (
                     <ArtworkModalContent>
-                      {artworkInfo.dp_viewtime}
+                      {detailData.dp_viewtime}
+                    </ArtworkModalContent>
+                  )}
+                </div>
+              </div>
+              <div className="flex">
+                <ArtworkModalLabel>입장료</ArtworkModalLabel>
+                <div className="w-full">
+                  {detailData.dp_price === "" ? (
+                    <>
+                      <ArtworkModalContent>정보없음</ArtworkModalContent>
+                    </>
+                  ) : (
+                    <ArtworkModalContent>
+                      {detailData.dp_price}
                     </ArtworkModalContent>
                   )}
                 </div>
               </div>
               <div className="flex">
                 <ArtworkModalLabel>작가 </ArtworkModalLabel>
-                {artworkInfo.dp_artist === "" ? (
+                {detailData.dp_artist === "" ? (
                   <div className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
                     unknown
                   </div>
                 ) : (
                   <div className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
-                    {artworkInfo.dp_artist}
+                    {detailData.dp_artist}
                   </div>
                 )}
               </div>
               <div className="flex">
                 <ArtworkModalLabel>HOME </ArtworkModalLabel>
                 <div className="flex w-full">
-                  {artworkInfo.dp_link ? (
+                  {detailData.dp_link ? (
                     <a
                       className="text-sm flex"
-                      href={artworkInfo.dp_link}
+                      href={detailData.dp_link}
                       target="_blank"
                       rel="noreferrer"
                       aria-label="resume-link"
@@ -290,10 +365,20 @@ export default function ArtworkModal({
                   )}
                 </div>
               </div>
+              <div className="flex">
+                <ArtworkModalLabel>주소</ArtworkModalLabel>
+
+                <div className="text-sm  w-full h-fit flex overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
+                  {detailData.dp_placeAdrs}
+                </div>
+              </div>
             </div>
             {/* 갤러리 상세설명 */}
             <div className="text-xs text-primary-Gray my-4 flex">
-              {parseAndStyleInfo(artworkInfo.dp_info)}
+              {/* {parseAndStyleInfo(artworkInfo.dp_info)} */}
+            </div>
+            <div className="text-xs text-primary-Gray my-4 flex">
+              {detailData.dp_gpsX} /{detailData.dp_gpsY}{" "}
             </div>
           </div>
         </ArtworkModalContainer>
@@ -305,7 +390,6 @@ export default function ArtworkModal({
 const ArtworkModalDiv = tw.div`
   w-mobileWidth mx-auto  bg-black/30
   fixed inset-0 flex items-center justify-center z-30 
-  border-red-400 border-4 border-dotted
 `;
 
 const ArtworkModalContainer = tw.div`
@@ -319,14 +403,11 @@ const ArtworkModalLabel = tw.p`
 `;
 
 const ArtworkModalContent = tw.p`
-  text-sm flex w-full
+  text-sm flex w-full h-full
 `;
 
 const Saving = tw(SaveIcon)`
-  w-8 h-8 space-x-2
+  w-6 h-7 space-x-2
   cursor-pointer 
   hover:scale-[105%] hover:duration-150
 `;
-
-// hover:fill-primary-YellowGreen
-// active:fill-primary-YellowGreen
