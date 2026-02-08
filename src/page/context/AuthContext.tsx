@@ -5,7 +5,6 @@ import {
   signInWithRedirect,
 } from "@firebase/auth";
 import { auth, provider } from "../../Firebase";
-import { UserInfo } from "../Home";
 
 interface AuthContextProps {
   currentUser: any;
@@ -53,7 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // const [userInfo, setUserInfo] = useState<UserInfo>();
 
-  console.log(currentUser);
+  // console.log(currentUser);
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);

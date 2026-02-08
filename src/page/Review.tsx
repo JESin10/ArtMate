@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import SearchBar from "../modules/SearchBar";
 import { loadImg } from "../assets/images";
-import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
-import { ReactComponent as LikeIcon } from "../assets/customSvg/Heart.svg";
-import { ReactComponent as AddIcon } from "../assets/customSvg/Adding.svg";
-import { ReactComponent as WriteBtn } from "../assets/customSvg/write.svg";
-import { ReactComponent as DeleteBtn } from "../assets/customSvg/delete.svg";
+import { ReactComponent as ReloadIcon } from "../../assets/customSvg/reload.svg";
+import { ReactComponent as LikeIcon } from "../../assets/customSvg/Heart.svg";
+import { ReactComponent as AddIcon } from "../../assets/customSvg/Adding.svg";
+import { ReactComponent as WriteBtn } from "../../assets/customSvg/write.svg";
+import { ReactComponent as DeleteBtn } from "../../assets/customSvg/delete.svg";
 import tw from "tailwind-styled-components";
-import ReviewModal, { ReviewInfo } from "../component/ReviewModal";
+import ReviewModal from "../component/ReviewModal";
 import { useAuth } from "./context/AuthContext";
 import {
   collection,
@@ -22,11 +22,7 @@ import { ref, listAll, getDownloadURL } from "@firebase/storage";
 import CommentModal from "../component/CommentModal";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-
-interface LikedReviewInfo {
-  Review_Uid: string;
-  Uid?: string;
-}
+import { ReviewInfo } from "../assets/interface";
 
 export default function Review() {
   const { currentUser } = useAuth();
@@ -40,7 +36,7 @@ export default function Review() {
   const MyReviewInfo = useCollectionData(MyReviewRef)[0];
   const MyLikeReviewRef = collection(
     db,
-    `userInfo/${currentUser?.uid}/MyLikeReviews`
+    `userInfo/${currentUser?.uid}/MyLikeReviews`,
   );
   const MyLikeReviewInfo = useCollectionData(MyLikeReviewRef)[0];
 
@@ -55,7 +51,7 @@ export default function Review() {
     Array.isArray(MyLikeReviewInfo) &&
     MyLikeReviewInfo.find(
       (item: any) =>
-        item.Review_Uid === AllReviewInfo?.map((list: any) => list.Review_Uid)
+        item.Review_Uid === AllReviewInfo?.map((list: any) => list.Review_Uid),
     );
 
   const MyReviews = [];
@@ -117,7 +113,7 @@ export default function Review() {
   const onLikeCountHandler = async (
     id: string,
     like: number,
-    title: string
+    title: string,
   ) => {
     if (!currentUser) {
       UserCheckHandler();
@@ -132,7 +128,7 @@ export default function Review() {
             // Reviewer_Id: AllReview.User_ID,
             Title: title,
             Review_Uid: id,
-          }
+          },
         );
         console.log(`like successfully`);
       } catch (error) {
@@ -148,7 +144,7 @@ export default function Review() {
     try {
       await updateDoc(doc(AllReviewRef, id), { Like_Cnt: likeCount - 1 });
       await deleteDoc(
-        doc(db, `userInfo/${currentUser?.uid}/MyLikeReviews`, id)
+        doc(db, `userInfo/${currentUser?.uid}/MyLikeReviews`, id),
       );
       console.log(`dislike successfully`);
     } catch (error) {
@@ -237,7 +233,7 @@ export default function Review() {
     // }
   };
 
-  console.log(AllReviewInfo);
+  // console.log(AllReviewInfo);
   //Delete Reivew
   const onReviewDeleteHandler = async (ReviewID: string) => {
     Swal.fire({
@@ -257,7 +253,7 @@ export default function Review() {
         try {
           await deleteDoc(doc(db, "AllReview", ReviewID));
           await deleteDoc(
-            doc(db, `userInfo/${currentUser.uid}/Reviews`, ReviewID)
+            doc(db, `userInfo/${currentUser.uid}/Reviews`, ReviewID),
           );
           console.log(`Delete successfully`);
         } catch (error) {
@@ -351,7 +347,7 @@ export default function Review() {
                           onClick={() =>
                             onDislikeCountHandler(
                               list.Review_Uid,
-                              list.Like_Cnt
+                              list.Like_Cnt,
                             )
                           }
                         />
@@ -361,7 +357,7 @@ export default function Review() {
                             onLikeCountHandler(
                               list.Review_Uid,
                               list.Like_Cnt,
-                              list.Title
+                              list.Title,
                             )
                           }
                         />

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { SeoulArtMuseum_ArtWork_OpenData } from "../api/Gallery_OpenApi";
 import SearchBar from "../modules/SearchBar";
-import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
+import { ReactComponent as ReloadIcon } from "../../assets/customSvg/reload.svg";
 import tw from "tailwind-styled-components";
 import ArtworkModal from "../component/ArtworkModal";
 import { useAuth } from "./context/AuthContext";
@@ -11,33 +11,13 @@ import { db } from "../Firebase";
 
 import { collection, doc } from "firebase/firestore";
 import FilterModal from "../component/FilterModal";
-
-export interface ArtworkInfo {
-  DP_ARTIST?: string;
-  DP_ART_CNT?: number;
-  DP_ART_PART: string;
-  DP_START: Date;
-  DP_END: Date;
-  DP_DATE: Date;
-  DP_EVENT?: string | null;
-  DP_EX_NO?: number;
-  DP_HOMEPAGE?: string | null;
-  DP_INFO: string;
-  DP_LNK?: string;
-  DP_MAIN_IMG?: string;
-  DP_NAME?: string;
-  DP_PLACE?: string;
-  DP_SEQ?: number;
-  DP_SPONSOR?: string;
-  DP_SUBNAME?: string | null;
-  DP_VIEWPOINT?: string | null;
-  DP_VIEWTIME: string;
-}
+import { ArtworkInfo } from "../assets/interface";
+import { SeoulArtMuseum_ArtWorkData } from "../api/RTDatabase";
 
 export default function Artwork() {
   const [artworkList, setArtWorkList] = useState<Array<ArtworkInfo>>([]);
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkInfo | null>(
-    null
+    null,
   );
   const { currentUser } = useAuth();
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
@@ -46,17 +26,65 @@ export default function Artwork() {
   const MyArtworkInfo = useCollectionData(listRef)[0];
   const [filterMode, setFilterMode] = useState(false);
   const [selectedTag, setSelectedTag] = useState<string>("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   // 페이지 렌딩과 동시에 데이터 가져오기
-  const fetchData = async () => {
-    const response = await SeoulArtMuseum_ArtWork_OpenData(1, 100);
-    setArtWorkList(response.ListExhibitionOfSeoulMOAInfo.row);
-    return response;
+  // const fetchData = async () => {
+  //   const response = await SeoulArtMuseum_ArtWork_OpenData(1, 10);
+  //   console.log(response);
+  //   setArtWorkList(response.ListExhibitionOfSeoulMOAInfo.row);
+  //   return response;
+  // };
+
+  const basicData = async () => {
+    try {
+      const result = await SeoulArtMuseum_ArtWork_OpenData(1, 50);
+
+      // JSON 형태일 때 (axios로 파싱된 객체)
+      const jsonItems =
+        result?.response?.body?.items?.item ||
+        result?.body?.items?.item ||
+        result?.items?.item ||
+        result?.items ||
+        null;
+
+      if (jsonItems) {
+        const arr = Array.isArray(jsonItems) ? jsonItems : [jsonItems];
+        setArtWorkList(arr as any);
+        return arr;
+      }
+
+      // 문자열(XML)로 오는 경우
+      if (typeof result === "string" && result.trim().startsWith("<")) {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(result, "text/xml");
+        const itemNodes = xml.getElementsByTagName("item");
+        const arr = Array.from(itemNodes).map((node) => {
+          const getText = (tag: string) =>
+            node.getElementsByTagName(tag)[0]?.textContent || "";
+          return {
+            dp_ex_no: getText("seq"),
+            dp_name: getText("title"),
+            dp_main_img: getText("thumbnail"),
+            dp_art_part: getText("realmName") || getText("serviceName"),
+            dp_artist: "",
+            dp_start: getText("startDate"),
+            dp_end: getText("endDate"),
+            dp_place: getText("place"),
+          } as any;
+        });
+        setArtWorkList(arr as any);
+        return arr;
+      }
+    } catch (err) {
+      console.error("basicData error", err);
+      setArtWorkList([]);
+      return [];
+    }
   };
+
   useEffect(() => {
-    fetchData();
-    // test();
+    basicData();
   }, []);
 
   const handleFilterChange = (filteredData: Array<ArtworkInfo>) => {
@@ -102,7 +130,7 @@ export default function Artwork() {
                   {filterMode ? (
                     // <FilterModalDiv id="mousedown">
                     <FilterModal
-                      isOpen={() => setIsOpen(true)}
+                      isOpen={isOpen}
                       closeModal={IsFilterMode}
                       artworkInfo={selectedArtwork}
                       currentUser={currentUser}
@@ -131,26 +159,24 @@ export default function Artwork() {
                         <img
                           className="w-full h-full object-cover rounded-xl justify-center shadow-Ver1"
                           alt="gallery"
-                          src={list.DP_MAIN_IMG}
+                          src={list.dp_main_img}
                         />
                       </div>
                       <div className="w-36 h-fit flex flex-col my-auto justify-center">
                         <div className="h-[22px] mb-2 font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap">
-                          {list.DP_NAME}
+                          {list.dp_name}
                         </div>
-                        {list.DP_ARTIST === "" ? (
-                          <ArtworkDesc className="text-primary-Gray">
-                            unknown
-                          </ArtworkDesc>
-                        ) : (
-                          <ArtworkDesc>{list.DP_ARTIST}</ArtworkDesc>
-                        )}
-                        {list.DP_ART_PART === "" ? (
+                        <ArtworkDesc className="text-primary-Gray">
+                          {list.dp_place}
+                        </ArtworkDesc>
+                        {list.dp_art_part === "" ? (
                           <ArtworkDesc className="text-primary-Gray">
                             etc
                           </ArtworkDesc>
                         ) : (
-                          <ArtworkDesc>{list.DP_ART_PART}</ArtworkDesc>
+                          <ArtworkDesc className="text-primary-Gray">
+                            {list.dp_art_part}
+                          </ArtworkDesc>
                         )}
                       </div>
                     </ArtworkContainer>

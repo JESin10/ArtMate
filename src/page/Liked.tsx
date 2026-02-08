@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
-import { ReactComponent as BookmarkIcon } from "../assets/customSvg/bookmark.svg";
+import { ReactComponent as BookmarkIcon } from "../../assets/customSvg/bookmark.svg";
 import SearchBar from "../modules/SearchBar";
 import tw from "tailwind-styled-components";
 import { useAuth } from "./context/AuthContext";
@@ -8,7 +8,6 @@ import { collection, deleteDoc, doc } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../Firebase";
 import { SeoulArtMuseum_ArtWork_OpenData } from "../api/Gallery_OpenApi";
-import { ArtworkInfo } from "./Artwork";
 import { FaFilePen } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +19,7 @@ export default function Liked() {
 
   const LikedReviewRef = collection(
     db,
-    `userInfo/${currentUser?.uid}/MyLikeReviews`
+    `userInfo/${currentUser?.uid}/MyLikeReviews`,
   );
   const LikedReviewInfo = useCollectionData(LikedReviewRef)[0];
 
