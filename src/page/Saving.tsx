@@ -1,6 +1,6 @@
 import React from "react";
-import { ReactComponent as ReloadIcon } from "../../assets/customSvg/reload.svg";
-import { ReactComponent as BookmarkIcon } from "../../assets/customSvg/bookmark.svg";
+import { ReactComponent as ReloadIcon } from "../assets/customSvg/reload.svg";
+import { ReactComponent as BookmarkIcon } from "../assets/customSvg/bookmark.svg";
 import SearchBar from "../modules/SearchBar";
 import tw from "tailwind-styled-components";
 import { useAuth } from "./context/AuthContext";
