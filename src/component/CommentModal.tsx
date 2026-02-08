@@ -28,12 +28,12 @@ export default function CommentModal({
   const CommentId = uidv4();
   const LoginedUserInfoRef = collection(
     db,
-    `userInfo/${currentUser?.uid}/UserInfo`
+    `userInfo/${currentUser?.uid}/UserInfo`,
   );
   const LoginedUserInfo = useCollectionData(LoginedUserInfoRef)[0];
   const CommentRef = collection(
     db,
-    `AllComment/${ReviewInfo?.Review_Uid}/Comments`
+    `AllComment/${ReviewInfo?.Review_Uid}/Comments`,
   );
   const CommentList = useCollectionData(CommentRef)[0];
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -106,7 +106,7 @@ export default function CommentModal({
         Comment: content,
         Written_Date: formattedDate,
         Comment_ID: CommentId,
-      }
+      },
     );
     await setDoc(
       doc(db, `AllComment/${ReviewInfo?.Review_Uid}/Comments`, CommentId),
@@ -116,14 +116,14 @@ export default function CommentModal({
         Comment: content,
         Written_Date: formattedDate,
         Comment_ID: CommentId,
-      }
+      },
     );
   };
 
   //Comment Editing KeyPress
   const onEditKeyPressHandler = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    CommentID: string
+    CommentID: string,
   ) => {
     if (e.key === "Enter") {
       onCommentEditHandler(CommentID);
@@ -137,6 +137,7 @@ export default function CommentModal({
     setEditingComment("");
     setIsEditMode(true);
   };
+  // console.log(new Date().toLocaleDateString("sv-SE"));
 
   //Edit Comment
   const onCommentEditHandler = async (CommentID: string) => {
@@ -158,11 +159,17 @@ export default function CommentModal({
       try {
         await updateDoc(
           doc(db, `AllComment/${ReviewInfo?.Review_Uid}/Comments/${CommentID}`),
-          { Comment: EditingComment }
+          {
+            Comment: EditingComment,
+            Written_Date: new Date().toLocaleDateString("sv-SE"),
+          },
         );
         await updateDoc(
           doc(db, `userInfo/${currentUser.uid}/MyComments/${CommentID}`),
-          { Comment: EditingComment }
+          {
+            Comment: EditingComment,
+            Written_Date: new Date().toLocaleDateString("sv-SE"),
+          },
         );
         console.log(`Comment edit successfully`);
         return setIsEditMode(false);
@@ -190,10 +197,10 @@ export default function CommentModal({
       if (result.isConfirmed) {
         try {
           await deleteDoc(
-            doc(db, `AllComment/${ReviewInfo?.Review_Uid}/Comments`, CommentID)
+            doc(db, `AllComment/${ReviewInfo?.Review_Uid}/Comments`, CommentID),
           );
           await deleteDoc(
-            doc(db, `userInfo/${currentUser.uid}/MyComments`, CommentID)
+            doc(db, `userInfo/${currentUser.uid}/MyComments`, CommentID),
           );
           console.log(`Delete successfully`);
         } catch (error) {
@@ -233,7 +240,7 @@ export default function CommentModal({
                             onChange={(e) => setEditingComment(e.target.value)}
                             value={EditingComment || ""}
                             onKeyUp={(
-                              e: React.KeyboardEvent<HTMLInputElement>
+                              e: React.KeyboardEvent<HTMLInputElement>,
                             ) => onEditKeyPressHandler(e, list.Comment_ID)}
                           />
                           <div className="flex">

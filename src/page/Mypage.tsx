@@ -50,12 +50,12 @@ export default function Mypage() {
   // const [basicImageUrl, setBasicImageUrl] = useState<string[]>([]);
 
   const [ProfileImageUpload, setProfileImageUpload] = useState<File | null>(
-    null
+    null,
   );
   const [profileImgUrl, setProfileImgURL] = useState<string[]>([]);
   const ProfileImage = ref(storage, `UserProfile/${currentUser.uid}`);
   const CommentRef = collection(db, `userInfo/${currentUser?.uid}/MyComments`);
-  const MyCommentList = useCollectionData(CommentRef)[0];
+  const MyCommentList = useCollectionData(CommentRef)[0]?.reverse();
   console.log(MyCommentList);
 
   useEffect(() => {
@@ -131,7 +131,7 @@ export default function Mypage() {
     if (profileImage !== null) {
       const imageRef = ref(
         storage,
-        `UserProfile/${currentUser.uid}/${profileImage.name}`
+        `UserProfile/${currentUser.uid}/${profileImage.name}`,
       );
       await uploadBytes(imageRef, profileImage);
       const imageURL = await getDownloadURL(imageRef);
@@ -151,7 +151,7 @@ export default function Mypage() {
       });
       await updateDoc(
         doc(db, `userInfo/${currentUser.uid}/UserInfo/${currentUser.email}`),
-        { NickName: nickname }
+        { NickName: nickname },
       );
     }
     if (currentUser.photoURL !== profileImage) {
@@ -168,7 +168,7 @@ export default function Mypage() {
       // await updateProfile(currentUser, { photoURL: profileImgUrl });
       await updateDoc(
         doc(db, `userInfo/${currentUser.uid}/UserInfo/${currentUser.email}`),
-        { ProfileURL: profileImgUrl }
+        { ProfileURL: profileImgUrl },
       );
     }
     navigate("/");
@@ -189,8 +189,8 @@ export default function Mypage() {
           <img alt="setting_icon" src={"./icons/Outline/setting.svg"} />
         </button>
       </div>
-      <div className="w-fit mx-auto my-5">
-        <div className="bg-primary-YellowGreen w-[350px] h-[250px] rounded-xl shadow-md py-4">
+      <div className="w-fit mx-4 my-5">
+        <div className="bg-primary-YellowGreen w-[340px] h-[250px] rounded-xl shadow-md py-4">
           {IsEditMode ? (
             // Edit-Mode
             <div className="flex p-4 h-fit  my-auto">
@@ -342,10 +342,8 @@ export default function Mypage() {
             </MyPageBtn>
           </div>
         </div>
-        <div>
-          <p className="w-fit mt-10 mx-2 font-extrabold text-lg">
-            나의 후기 목록
-          </p>
+        <div className="px-4">
+          <p className="w-fit mt-10  font-extrabold text-lg">나의 후기 목록</p>
           {/* <div className="flex my-4 bg-black mx-auto justify-center"> */}
           {/* <ReviewContainer> */}
           {MyReviewInfo && MyReviewInfo.length > 0 ? (
@@ -368,16 +366,14 @@ export default function Mypage() {
           {/* </div> */}
           {/* </ReviewContainer> */}
         </div>
-        <div>
-          <p className="w-fit mt-10 mx-2 font-extrabold text-lg">
-            내가 작성한 댓글
-          </p>
+        <div className="px-4 space-y-4">
+          <p className="w-fit mt-10 font-extrabold text-lg">내가 작성한 댓글</p>
           {MyCommentList && MyCommentList.length > 0 ? (
             MyCommentList.map((comment: any, index: number) => (
               <div>
-                <div className="text-xs text-primary-Gray">
+                {/* <div className="text-xs text-primary-Gray">
                   {comment.Comment_ID}
-                </div>
+                </div> */}
                 <div className="flex justify-between" key={index}>
                   <div>{comment.Comment}</div>
                   <div>{comment.Written_Date}</div>

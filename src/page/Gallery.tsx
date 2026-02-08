@@ -8,14 +8,25 @@ import tw from "tailwind-styled-components";
 import GalleryModal from "../component/GalleryModal";
 import { Seoul_Museum_GalleryData } from "../api/RTDatabase";
 import { GalleryInfo } from "../assets/interface";
+import { Seoul_Museum_Gallery_OpenData } from "../api/Gallery_OpenApi";
 
 export default function Gallery() {
   const navigate = useNavigate();
   const [mapMode, setMapMode] = useState<boolean>(false);
-  const [GalleryOpenData, setGalleryOpenData] = useState([]);
+  const [GalleryOpenData, setGalleryOpenData] = useState<any[]>([]);
   const [selectedGallery, setSelectedGallery] = useState<GalleryInfo | null>(
-    null
+    null,
   );
+
+  const siteThumbnail = (url?: string, w = 600) => {
+    if (!url) return null;
+    try {
+      const u = url.startsWith("http") ? url : `https://${url}`;
+      return `https://s.wordpress.com/mshots/v1/${encodeURIComponent(u)}?w=${w}`;
+    } catch {
+      return null;
+    }
+  };
 
   // 페이지 렌딩과 동시에 데이터 가져오기
   // const fetchData = async () => {
@@ -24,9 +35,37 @@ export default function Gallery() {
   //   return response;
   // };
   const fetchData = async () => {
-    const response = await Seoul_Museum_GalleryData();
-    setGalleryOpenData(response);
-    return response;
+    try {
+      const response = await Seoul_Museum_Gallery_OpenData(1, 30);
+
+      if (typeof response === "string" && response?.trim().startsWith("<")) {
+        console.log(1);
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(response, "text/xml");
+        const itemNodes = xml.getElementsByTagName("item");
+        const arr = Array.from(itemNodes).map((node) => {
+          const getText = (tag: string) =>
+            node.getElementsByTagName(tag)[0]?.textContent || "";
+          return {
+            main_key: getText("seq"),
+            kor_name: getText("culName"),
+            category: getText("culGrpName"),
+            phone: getText("culTel"),
+            home_page: getText("culHomeUrl"),
+
+            gpsX: getText("gpsX"),
+            gpsY: getText("gpsY"),
+          } as any;
+        });
+        setGalleryOpenData(arr as any);
+        arr as any;
+        return arr;
+      }
+    } catch (err) {
+      console.error("GalleryOpenData error", err);
+      setGalleryOpenData([]);
+      return [];
+    }
   };
 
   useEffect(() => {
@@ -47,16 +86,6 @@ export default function Gallery() {
 
   const closeModal = () => {
     setSelectedGallery(null);
-  };
-
-  const modalOpenHandler = (gallery: GalleryInfo) => {
-    return (
-      <GalleryModal
-        isOpen={true}
-        closeModal={closeModal}
-        galleryInfo={gallery}
-      />
-    );
   };
 
   return (
@@ -90,15 +119,22 @@ export default function Gallery() {
                       <div className="w-36 h-36 my-2 bg-primary-YellowGreen rounded-2xl">
                         <GalleryMockupIMG
                           alt="gallery_mockup"
-                          src={loadImg.Gallery_MockUP}
+                          src={
+                            (list as any).dp_main_img ||
+                            (list as any).imgUrl ||
+                            siteThumbnail(
+                              (list as any).home_page || (list as any).placeUrl,
+                            ) ||
+                            loadImg.Gallery_MockUP
+                          }
                         />
                       </div>
                       <div className="flex flex-col w-40 h-fit my-auto justify-center">
                         <div className=" w-fit h-[22px] font-extrabold text-base overflow-hidden text-ellipsis break-all line-clamp-1 flex-wrap my-1">
                           {list.kor_name}
                         </div>
-                        <div className="text-sm">{list.kor_add}</div>
-                        <div className="text-sm">{list.kor_gu}</div>
+                        <div className="text-sm">{list.category}</div>
+                        <div className="text-sm">{list.phone}</div>
                         <div className="text-right text-sm">00m</div>
                       </div>
                     </GalleryContainer>

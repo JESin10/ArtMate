@@ -1,4 +1,5 @@
 export interface ArtworkInfo {
+  dp_price: string;
   dp_artist?: string;
   dp_art_cnt?: number;
   dp_art_part: string;
@@ -12,12 +13,16 @@ export interface ArtworkInfo {
   dp_link?: string;
   dp_main_img?: string;
   dp_name?: string;
+  dp_area?: string;
   dp_place?: string;
   dp_seq?: number;
   dp_sponser?: string;
   dp_subname?: string | null;
   dp_viewpoint?: string | null;
   dp_viewtime: string;
+  dp_gpsX: string;
+  dp_gpsY: string;
+  dp_placeAdrs?: string;
 }
 
 export interface ModalProps {
@@ -120,14 +125,16 @@ export interface LatestArtworkInfo {
 
 export interface GalleryInfo {
   category: string;
-  eng_name: string;
+  eng_name?: string;
   home_page?: string | null;
-  kor_add: string;
-  kor_add_road: string;
-  kor_gu: string;
+  kor_add?: string;
+  kor_add_road?: string;
+  kor_gu?: string;
   kor_name: string;
   main_key: number;
-  opening_year: number;
+  opening_year?: number;
   phone: string | null;
-  zip_code: number;
+  zip_code?: number;
+  gspX: string;
+  gspY: string;
 }

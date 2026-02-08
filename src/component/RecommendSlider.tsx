@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
 import { useQuery } from "react-query";
-import { MainPage } from "../api/Gallery_OpenApi";
+import {
+  MainPage,
+  SeoulArtMuseum_ArtWork_OpenData,
+} from "../api/Gallery_OpenApi";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { RxSlash } from "react-icons/rx";
 import ArtworkModal from "./ArtworkModal";
@@ -13,39 +16,112 @@ import { ArtworkInfo } from "../assets/interface";
 import { SeoulArtMuseum_ArtWorkData } from "../api/RTDatabase";
 
 export default function RecommendSlider() {
-  const [recentArray, setRecentArray] = useState<React.ReactNode[]>([]);
+  const [recentArray, setRecentArray] = useState<ArtworkInfo[]>([]);
+  const [basicArr, setBasicArray] = useState<ArtworkInfo[]>([]);
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const PerItem = 4;
   const { currentUser } = useAuth();
-  const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
-  const MyArtworkInfo = useCollectionData(listRef)[0];
+  // const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
+  // const MyArtworkInfo = useCollectionData(listRef)[0];
   const startIndex = (currentPage - 1) * PerItem;
   const endIndex = startIndex + PerItem;
   const currentItems = recentArray.slice(startIndex, endIndex);
   const totalPages = Math.ceil(recentArray.length / PerItem);
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkInfo | null>(
-    null
+    null,
   );
 
   useEffect(() => {
-    fetchData();
+    (async () => {
+      const arr = await fetchData();
+      await recentFunc(arr as any);
+    })();
   }, []);
 
   const fetchData = async () => {
-    const response = await SeoulArtMuseum_ArtWorkData();
+    try {
+      const result = await SeoulArtMuseum_ArtWork_OpenData(1, 50);
 
-    // Get the current date
+      // JSON 형태일 때 (axios로 파싱된 객체)
+      const jsonItems =
+        result?.response?.body?.items?.item ||
+        result?.body?.items?.item ||
+        result?.items?.item ||
+        result?.items ||
+        null;
+
+      if (jsonItems) {
+        const arr = Array.isArray(jsonItems) ? jsonItems : [jsonItems];
+        setBasicArray(arr as any);
+        return arr;
+      }
+
+      // 문자열(XML)로 오는 경우
+      if (typeof result === "string" && result.trim().startsWith("<")) {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(result, "text/xml");
+        const itemNodes = xml.getElementsByTagName("item");
+        const arr = Array.from(itemNodes).map((node) => {
+          const getText = (tag: string) =>
+            node.getElementsByTagName(tag)[0]?.textContent || "";
+          return {
+            dp_ex_no: getText("seq"),
+            dp_name: getText("title"),
+            dp_main_img: getText("thumbnail"),
+            dp_art_part: getText("realmName") || getText("serviceName"),
+            dp_artist: "",
+            dp_start: getText("startDate"),
+            dp_end: getText("endDate"),
+            dp_place: getText("place"),
+          } as any;
+        });
+        setBasicArray(arr as any);
+        return arr;
+      }
+    } catch (err) {
+      console.error("basicData error", err);
+      setBasicArray([]);
+      return [];
+    }
+    return [];
+  };
+  const parseYMD = (s: any): Date | null => {
+    if (!s) return null;
+    let str = typeof s === "number" ? s.toString() : s;
+    str = str.trim();
+    if (/^\d{8}$/.test(str)) {
+      return new Date(
+        `${str.slice(0, 4)}-${str.slice(4, 6)}-${str.slice(6, 8)}`,
+      );
+    }
+    const d = new Date(str);
+    return isNaN(d.getTime()) ? null : d;
+  };
+
+  const recentFunc = async (sourceArr?: ArtworkInfo[]) => {
+    const source = sourceArr && sourceArr.length ? sourceArr : basicArr;
+    if (!source || source.length === 0) {
+      setRecentArray([]);
+      return [];
+    }
     const currentDate = new Date();
 
-    // Filter the artworks based on the dp_end date
-    const filteredResponse = response.filter((artwork: any) => {
-      const endDate = new Date(artwork.dp_end);
-      return endDate > currentDate;
-    });
-    setRecentArray(filteredResponse.slice(0, 12));
+    const filteredAndSorted = source
+      .map((artwork: any) => {
+        const startDate = parseYMD(artwork.dp_start);
+        return { artwork, startDate };
+      })
+      // .filter((x) => x.startDate && x.startDate > currentDate)
+      .sort((a, b) => a.startDate!.getTime() - b.startDate!.getTime())
+      .map((x) => x.artwork)
+      .slice(0, 12);
 
-    return filteredResponse;
+    setRecentArray(filteredAndSorted as ArtworkInfo[]);
+    return recentArray;
   };
+
+  // console.log("recentArray", recentArray);
 
   // 이전 페이지로 이동하는 함수
   const goToPrevPage = () => {
@@ -70,13 +146,11 @@ export default function RecommendSlider() {
     setSelectedArtwork(null);
   };
 
-  // console.log(currentItems);
-
   return (
     <>
       <RecommendSliderContainer>
-        <div className="w-11/12 justify-center mx-auto my-3">
-          <h1 className="font-extrabold text-2xl w-fit px-4 my-2">
+        <div className="w-11/12 h-full justify-center mx-auto my-3">
+          <h1 className="w-full font-extrabold text-2xl px-4 my-2">
             금주의 최신 전시 모음
           </h1>
           <ImageContainer>
@@ -143,7 +217,7 @@ export default function RecommendSlider() {
             closeModal={closeModal}
             artworkInfo={selectedArtwork}
             currentUser={currentUser}
-            CloudInfo={MyArtworkInfo}
+            CloudInfo={selectedArtwork}
           />
         </div>
       )}

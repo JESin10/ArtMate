@@ -8,7 +8,10 @@ import { collection } from "firebase/firestore";
 import { db } from "../Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { getCookie } from "../api/Cookie";
-import { SearchingInfo } from "../api/Gallery_OpenApi";
+import {
+  SearchingInfo,
+  SeoulArtMuseum_ArtWork_OpenData,
+} from "../api/Gallery_OpenApi";
 import { ArtworkInfo } from "../assets/interface";
 import { SeoulArtMuseum_ArtWorkData } from "../api/RTDatabase";
 
@@ -19,15 +22,20 @@ export default function SearchResult() {
   //   searchResults,
   // }: SearchInfo
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkInfo | null>(
-    null
+    null,
   );
   const { currentUser } = useAuth();
   const listRef = collection(db, `userInfo/${currentUser?.uid}/ArtworkInfo`);
   const MyArtworkInfo = useCollectionData(listRef)[0];
-  const keyword = getCookie("searchKeyword");
-  const isSearching = getCookie("searchMode");
+  const [keywordState, setKeywordState] = useState<string>(
+    getCookie("searchKeyword") || "",
+  );
+  const [isSearchingState, setIsSearchingState] = useState<string>(
+    getCookie("searchMode") || "",
+  );
   // const Results = getCookie("searchResults");
   const [searchResults, setSearchResults] = useState<[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   //Modal
   const openModal = (artwork: ArtworkInfo) => {
@@ -40,21 +48,61 @@ export default function SearchResult() {
 
   useEffect(() => {
     onSearch();
-  }, [searchResults]);
+  }, [keywordState, isSearchingState]);
+
+  // Poll cookies so this component reacts when SearchBar updates cookies
+  useEffect(() => {
+    const id = setInterval(() => {
+      const k = getCookie("searchKeyword") || "";
+      const m = getCookie("searchMode") || "";
+      if (k !== keywordState) setKeywordState(k);
+      if (m !== isSearchingState) setIsSearchingState(m);
+    }, 500);
+    return () => clearInterval(id);
+  }, [keywordState, isSearchingState]);
 
   const onSearch = async () => {
     try {
-      const response = await SeoulArtMuseum_ArtWorkData();
+      setLoading(true);
+      // const response = await SeoulArtMuseum_ArtWorkData();
+      const result = await SeoulArtMuseum_ArtWork_OpenData(1, 100);
+
+      // 문자열(XML)로 오는 경우
+      if (typeof result === "string" && result.trim().startsWith("<")) {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(result, "text/xml");
+        const itemNodes = xml.getElementsByTagName("item");
+        const arr = Array.from(itemNodes).map((node) => {
+          const getText = (tag: string) =>
+            node.getElementsByTagName(tag)[0]?.textContent || "";
+          return {
+            dp_ex_no: getText("seq"),
+            dp_name: getText("title"),
+            dp_main_img: getText("thumbnail"),
+            dp_art_part: getText("realmName") || getText("serviceName"),
+            dp_artist: "",
+            dp_start: getText("startDate"),
+            dp_end: getText("endDate"),
+            dp_place: getText("place"),
+          } as any;
+        });
+        // setArtWorkList(arr as any);
+
+        const Results = arr.filter((item: any) => {
+          // dp_artist 또는 dp_name 중에 검색어가 포함되어 있는지 확인
+          return (
+            item.dp_artist
+              ?.toLowerCase()
+              .includes(keywordState.toLowerCase()) ||
+            item.dp_name?.toLowerCase().includes(keywordState.toLowerCase())
+          );
+        });
+        setSearchResults(Results as any);
+      }
+
       // const response = (await SearchingInfo()).ListExhibitionOfSeoulMOAInfo.row;
       // 검색어가 포함된 결과만 필터링
-      const Results = response.filter((item: any) => {
-        // dp_artist 또는 dp_name 중에 검색어가 포함되어 있는지 확인
-        return (
-          item.dp_artist?.toLowerCase().includes(keyword.toLowerCase()) ||
-          item.dp_name?.toLowerCase().includes(keyword.toLowerCase())
-        );
-      });
-      setSearchResults(Results);
+
       // return (
       //   <SearchResult
       //     searchMode={searchMode}
@@ -64,6 +112,8 @@ export default function SearchResult() {
       // );
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,9 +123,13 @@ export default function SearchResult() {
       <PageContainer>
         <div className="w-full h-fit">
           {/* gallery zip */}
-          {isSearching ? (
+          {isSearchingState ? (
             <div className="w-11/12 mx-auto">
-              {searchResults && searchResults.length > 0 ? (
+              {loading ? (
+                <div className="flex justify-center my-32">
+                  <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : searchResults && searchResults.length > 0 ? (
                 <>
                   <div className="flex justify-between">
                     <h1 className="text-3xl font-extrabold my-4 mx-2 ">
