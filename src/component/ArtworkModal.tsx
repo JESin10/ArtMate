@@ -250,14 +250,19 @@ export default function ArtworkModal({
             className="w-full h-[350px] object-cover mt-12"
             src={detailData.dp_main_img}
           />
-          <div className="px-10">
+          <div className="">
             <div className="w-full flex justify-between">
-              <div className="w-full flex flex-wrap text-xs justify-start items-center mt-3 whitespace-normal break-words">
-                <h3 className=" text-primary-Gray">{detailData.dp_place}</h3>
-                <span className=" text-primary-Gray mx-2">/</span>
-                <h3 className=" text-primary-Gray ">{detailData.dp_area}</h3>
+              <div
+                className="w-full flex flex-wrap text-xs justify-start 
+              items-center mt-3 whitespace-normal break-words px-10"
+              >
+                <h3 className=" text-primary-Gray">
+                  <p className="">
+                    {detailData.dp_place} / {detailData.dp_area}
+                  </p>
+                </h3>
               </div>
-              <div className="h-fit w-1/3 justify-end pt-3 my-auto flex space-x-3">
+              <div className="h-fit w-1/3 justify-end pt-3 my-auto px-10 flex space-x-3">
                 <button
                   onClick={() => handleCopyClipBoard(detailData)}
                   className="h-8 w-auto my-auto hover:scale-[105%] hover:duration-150"
@@ -287,11 +292,11 @@ export default function ArtworkModal({
                 )}
               </div>
             </div>
-            <h2 className="w-11/12 text-lg font-bold my-3">
+            <h2 className="w-full text-lg font-bold my-3 px-10 border-b border-solid border-gray-300 pb-4">
               {detailData.dp_name}
             </h2>
             {/* 상세정보 */}
-            <div className="space-y-1">
+            <div className="space-y-1 px-10">
               <div className="flex">
                 <ArtworkModalLabel>전시장소 </ArtworkModalLabel>
                 <ArtworkModalContent>{detailData.dp_place}</ArtworkModalContent>
@@ -372,14 +377,16 @@ export default function ArtworkModal({
                   {detailData.dp_placeAdrs}
                 </div>
               </div>
+              <div className="my-8">
+                <div className="text-xs text-primary-Gray my-4 flex">
+                  {/* {parseAndStyleInfo(artworkInfo.dp_info)} */}
+                </div>
+                <div className="text-xs text-primary-Gray my-4 flex">
+                  {detailData.dp_gpsX} /{detailData.dp_gpsY}{" "}
+                </div>
+              </div>
             </div>
             {/* 갤러리 상세설명 */}
-            <div className="text-xs text-primary-Gray my-4 flex">
-              {/* {parseAndStyleInfo(artworkInfo.dp_info)} */}
-            </div>
-            <div className="text-xs text-primary-Gray my-4 flex">
-              {detailData.dp_gpsX} /{detailData.dp_gpsY}{" "}
-            </div>
           </div>
         </ArtworkModalContainer>
       )}

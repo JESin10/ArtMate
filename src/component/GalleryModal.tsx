@@ -67,7 +67,7 @@ export default function GalleryModal({
             src={loadImg.Gallery_MockUP}
           /> */}
           <img
-            className="w-full h-full object-cover rounded-xl justify-center shadow-Ver1"
+            className="w-full h-full mt-12 object-cover justify-center "
             alt="gallery"
             src={
               (galleryInfo as any).dp_main_img ||
@@ -78,12 +78,15 @@ export default function GalleryModal({
               loadImg.Gallery_MockUP
             }
           />
-          <div className="px-4">
-            <h2 className="text-xl font-bold my-3">
-              {galleryInfo.kor_name} / {galleryInfo.category}
+          <div>
+            <h2 className="text-lg font-bold my-8 border-b border-solid border-gray-300 pb-4">
+              <p className="px-10">
+                {galleryInfo.kor_name} / {galleryInfo.category}
+              </p>
             </h2>
+
             {/* 상세정보 */}
-            <div className="space-y-1">
+            <div className="space-y-1 px-10">
               <div className="flex">
                 <GalleryModalLabel>주소 </GalleryModalLabel>
                 <GalleryModalContent>{galleryInfo.kor_add}</GalleryModalContent>

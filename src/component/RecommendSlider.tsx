@@ -33,9 +33,11 @@ export default function RecommendSlider() {
   );
 
   useEffect(() => {
-    fetchData();
-    recentFunc();
-  }, [recentArray.length]);
+    (async () => {
+      const arr = await fetchData();
+      await recentFunc(arr as any);
+    })();
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -82,6 +84,7 @@ export default function RecommendSlider() {
       setBasicArray([]);
       return [];
     }
+    return [];
   };
   const parseYMD = (s: any): Date | null => {
     if (!s) return null;
@@ -112,7 +115,7 @@ export default function RecommendSlider() {
       // .filter((x) => x.startDate && x.startDate > currentDate)
       .sort((a, b) => a.startDate!.getTime() - b.startDate!.getTime())
       .map((x) => x.artwork)
-      .slice(12, 24);
+      .slice(0, 12);
 
     setRecentArray(filteredAndSorted as ArtworkInfo[]);
     return recentArray;
