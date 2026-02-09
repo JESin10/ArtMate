@@ -175,7 +175,7 @@ border-black border-2
 
 const GalleryMockupIMG = tw.img`
 w-full h-full rounded-2xl border-2
-shadow-md
+shadow-md 
 `;
 
 const MapModeBtn = tw.button`

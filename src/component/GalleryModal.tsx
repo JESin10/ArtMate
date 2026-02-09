@@ -55,7 +55,7 @@ export default function GalleryModal({
         <GalleryModalContainer id="GalleryModal">
           <div className="fixed z-10">
             <button
-              className="bg-white my-2 ml-80 justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"
+              className="bg-white my-3 ml-80 justify-center w-8 h-8 rounded-full hover:text-primary-YellowGreen"
               onClick={closeModal}
             >
               <IoIosCloseCircleOutline size="100%" />
@@ -66,18 +66,21 @@ export default function GalleryModal({
             className="w-full h-[350px] object-contain mt-12 bg-white"
             src={loadImg.Gallery_MockUP}
           /> */}
-          <img
-            className="w-full h-full mt-12 object-cover justify-center "
-            alt="gallery"
-            src={
-              (galleryInfo as any).dp_main_img ||
-              (galleryInfo as any).imgUrl ||
-              siteThumbnail(
-                (galleryInfo as any).home_page || (galleryInfo as any).placeUrl,
-              ) ||
-              loadImg.Gallery_MockUP
-            }
-          />
+          <div className="w-full h-[400px] ">
+            <img
+              className="w-full h-full mt-14 object-cover justify-center "
+              alt="gallery"
+              src={
+                (galleryInfo as any).dp_main_img ||
+                (galleryInfo as any).imgUrl ||
+                siteThumbnail(
+                  (galleryInfo as any).home_page ||
+                    (galleryInfo as any).placeUrl,
+                ) ||
+                loadImg.Gallery_MockUP
+              }
+            />
+          </div>
           <div>
             <h2 className="text-lg font-bold my-8 border-b border-solid border-gray-300 pb-4">
               <p className="px-10">
