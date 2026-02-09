@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "../modules/SearchBar";
 import tw from "tailwind-styled-components";
 import GalleryModal from "../component/GalleryModal";
-import { Seoul_Museum_GalleryData } from "../api/RTDatabase";
+// import { Seoul_Museum_GalleryData } from "../api/RTDatabase";
 import { GalleryInfo } from "../assets/interface";
 import { Seoul_Museum_Gallery_OpenData } from "../api/Gallery_OpenApi";
 
