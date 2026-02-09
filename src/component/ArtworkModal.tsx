@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 // import { ArtworkInfo } from "../page/Artwork";
 import tw from "tailwind-styled-components";
-import { ReactComponent as SaveIcon } from "../../assets/customSvg/bookmark.svg";
+import { ReactComponent as SaveIcon } from "../assets/customSvg/bookmark.svg";
 import { db } from "../Firebase";
 import { doc, setDoc, collection, deleteDoc, getDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
