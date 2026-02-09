@@ -56,7 +56,7 @@ export default function Login() {
       switch (err.code) {
         case "auth/email-already-in-use":
           return errorAlert_verB();
-        case "auth/network-request-failed" || "auth/internal-error":
+        case "auth/internal-error":
           return errorAlert_verC();
         default:
           return errorAlert_verA();
@@ -66,7 +66,7 @@ export default function Login() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col mt-20 justify-center items-center">
+    <div className="w-full h-screen flex flex-col justify-center items-center">
       <div className="flex-col w-fit mx-auto justify-center mb-20">
         <MainTextLogo />
         <DescTextLogo />
@@ -78,10 +78,10 @@ export default function Login() {
         >
           <AuthInput type="text" placeholder="이메일" ref={emailRef} />
           <AuthInput type="text" placeholder="비밀번호" ref={passwordRef} />
-          <div className="flex space-x-2 items-center w-fit mx-2">
+          {/* <div className="flex space-x-2 items-center w-fit mx-2">
             <input type="checkbox" className="w-4 h-4" />
             <p className="w-fit ">자동로그인</p>
-          </div>
+          </div> */}
           <button className="bg-primary-YellowGreen rounded-3xl text-white w-[320px] h-[42px]">
             로그인
           </button>
