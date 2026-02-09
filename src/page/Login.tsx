@@ -66,8 +66,8 @@ export default function Login() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col pt-24 justify-center items-center">
-      <div className="flex-col w-fit mx-auto justify-center mb-20">
+    <div className="w-full h-screen flex flex-col  justify-center items-center">
+      <div className="flex-col w-fit mx-auto justify-center mb-20 pt-24">
         <MainTextLogo />
         <DescTextLogo />
       </div>

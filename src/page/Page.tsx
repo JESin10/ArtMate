@@ -25,7 +25,7 @@ function Page() {
   return (
     <BasicDiv>
       <MenuBar />
-      <div className="pb-[100px]">
+      <div className="pb-[50px]">
         <AuthProvider>
           <Suspense fallback={<Loading />}>
             <Routes>
